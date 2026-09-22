@@ -16,9 +16,10 @@
   const DEFAULT_SETTINGS = {
     brandName: 'PUCECO',
     slogan: 'Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học.',
-    hotline: '1900 123 456',
-    email: 'info@puceco.vn',
-    address: 'Khu Công Nghệ Cao, Hà Nội, Việt Nam',
+    hotline: '(+84) 08 272 272 59',
+    email: 'puceco2018@gmail.com',
+    address: '679/38 Quang Trung , Phường 11, Quận Gò Vấp , Thành phố Hồ Chí Minh, Việt Nam',
+    mapsUrl: 'https://maps.app.goo.gl/1Rfge7JdRQY9vLxBA',
     adminPassword: 'admin123',
     stats: {
       years: 12,
@@ -41,7 +42,7 @@
         formulation: 'Bột mịn màu vàng nhạt đến xanh lục nhạt',
         origin: 'Vùng chè hữu cơ Mộc Châu - Sơn La'
       },
-      image: 'assets/images/prod-green-tea.svg',
+      image: 'assets/images/prod-green-tea.jpg',
       bg1: '#E6F1EA',
       bg2: '#C9E3D3',
       isFeatured: true,
@@ -60,7 +61,7 @@
         formulation: 'Chất lỏng trong suốt, màu vàng óng ánh',
         origin: 'Tây Nguyên, Việt Nam'
       },
-      image: 'assets/images/prod-lemongrass.svg',
+      image: 'assets/images/prod-lemongrass.jpg',
       bg1: '#F3EFE2',
       bg2: '#E4D6B0',
       isFeatured: true,
@@ -79,7 +80,7 @@
         formulation: 'Bột nano màu vàng cam tươi, tan nước 100%',
         origin: 'Nghệ vàng Nghệ An, Việt Nam'
       },
-      image: 'assets/images/prod-curcumin.svg',
+      image: 'assets/images/prod-curcumin.jpg',
       bg1: '#E8F0EC',
       bg2: '#BBD9CA',
       isFeatured: true,
@@ -98,7 +99,7 @@
         formulation: 'Dịch chiết cô đặc hoặc bột đông khô 200:1',
         origin: 'Vùng trồng Phan Rang, Ninh Thuận'
       },
-      image: 'assets/images/prod-aloe.svg',
+      image: 'assets/images/prod-aloe.jpg',
       bg1: '#EFEFE6',
       bg2: '#D2D6B8',
       isFeatured: true,
@@ -117,7 +118,7 @@
         formulation: 'Bột chiết chuẩn hóa tỷ lệ 10:1',
         origin: 'Lâm Đồng, Việt Nam'
       },
-      image: 'assets/images/prod-turmeric-black.svg',
+      image: 'assets/images/prod-turmeric-black.jpg',
       bg1: '#E6F1EA',
       bg2: '#A6D0BC',
       isFeatured: false,
@@ -136,7 +137,7 @@
         formulation: 'Bột tinh thể màu trắng tinh khiết',
         origin: 'Việt Nam & Hợp tác quốc tế'
       },
-      image: 'assets/images/prod-stevia.svg',
+      image: 'assets/images/prod-stevia.jpg',
       bg1: '#F3EFE2',
       bg2: '#E0CFA6',
       isFeatured: false,
@@ -222,13 +223,48 @@
     }
   }
 
-  // Khởi tạo Seed Data nếu chưa có
+  // Khởi tạo Seed Data nếu chưa có & Cập nhật ảnh realistic mới
   function initData() {
-    if (!localStorage.getItem(STORAGE_KEY_SETTINGS)) {
+    const storedSettings = localStorage.getItem(STORAGE_KEY_SETTINGS);
+    if (!storedSettings) {
       localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+    } else {
+      try {
+        const s = JSON.parse(storedSettings);
+        if (s.email === 'info@puceco.vn' || s.hotline === '1900 123 456' || !s.mapsUrl) {
+          const updatedSettings = {
+            ...s,
+            email: s.email === 'info@puceco.vn' ? DEFAULT_SETTINGS.email : s.email,
+            hotline: s.hotline === '1900 123 456' ? DEFAULT_SETTINGS.hotline : s.hotline,
+            address: (s.address === 'Khu Công Nghệ Cao, Hà Nội, Việt Nam' || s.address === 'Khu Công Nghệ Cao, Hà Nội') ? DEFAULT_SETTINGS.address : s.address,
+            mapsUrl: s.mapsUrl || DEFAULT_SETTINGS.mapsUrl
+          };
+          localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updatedSettings));
+        }
+      } catch (e) {
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+      }
     }
-    if (!localStorage.getItem(STORAGE_KEY_PRODUCTS)) {
+    const storedProds = localStorage.getItem(STORAGE_KEY_PRODUCTS);
+    if (!storedProds) {
       localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(DEFAULT_PRODUCTS));
+    } else {
+      try {
+        let prods = JSON.parse(storedProds);
+        let updated = false;
+        prods = prods.map(p => {
+          if (p.image && p.image.endsWith('.svg') && p.image.includes('prod-')) {
+            p.image = p.image.replace(/\.svg$/, '.jpg');
+            updated = true;
+          }
+          return p;
+        });
+        if (updated) {
+          localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(prods));
+        }
+      } catch (e) {
+        localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(DEFAULT_PRODUCTS));
+      }
     }
     if (!localStorage.getItem(STORAGE_KEY_NEWS)) {
       localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));

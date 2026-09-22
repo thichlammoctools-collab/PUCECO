@@ -20,6 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-bind="address"]').forEach(el => el.textContent = settings.address);
     document.querySelectorAll('[data-bind="slogan"]').forEach(el => el.textContent = settings.slogan);
 
+    // Dynamic href attributes for direct click-to-call, email, and Google Maps
+    document.querySelectorAll('[data-bind="hotline-link"]').forEach(el => {
+      const cleanPhone = (settings.hotline || '').replace(/[^0-9+]/g, '');
+      el.href = `tel:${cleanPhone}`;
+    });
+    document.querySelectorAll('[data-bind="email-link"]').forEach(el => {
+      el.href = `mailto:${settings.email || ''}`;
+    });
+    document.querySelectorAll('[data-bind="address-link"]').forEach(el => {
+      if (settings.mapsUrl) {
+        el.href = settings.mapsUrl;
+      }
+    });
+
     const statYears = document.querySelector('[data-stat="years"]');
     if (statYears) statYears.dataset.count = settings.stats?.years || 12;
 

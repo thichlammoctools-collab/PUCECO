@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
     productForm.reset();
     document.getElementById('product-id').value = '';
     document.getElementById('modal-product-title').textContent = 'Thêm sản phẩm mới';
-    document.getElementById('product-image-select').value = 'assets/images/prod-green-tea.svg';
+    document.getElementById('product-image-select').value = 'assets/images/prod-green-tea.jpg';
     document.getElementById('product-image-custom').value = '';
     modalProduct.classList.add('is-open');
   };
@@ -210,11 +210,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('product-is-featured').checked = p.isFeatured !== false;
     document.getElementById('product-is-new').checked = !!p.isNew;
 
-    if (p.image && p.image.startsWith('assets/images/')) {
-      document.getElementById('product-image-select').value = p.image;
+    let currentImg = p.image || '';
+    if (currentImg.startsWith('assets/images/') && currentImg.endsWith('.svg')) {
+      currentImg = currentImg.replace(/\.svg$/, '.jpg');
+    }
+
+    if (currentImg && currentImg.startsWith('assets/images/')) {
+      document.getElementById('product-image-select').value = currentImg;
       document.getElementById('product-image-custom').value = '';
     } else {
-      document.getElementById('product-image-custom').value = p.image || '';
+      document.getElementById('product-image-custom').value = currentImg;
     }
 
     modalProduct.classList.add('is-open');
@@ -226,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const id = document.getElementById('product-id').value;
       const customImg = document.getElementById('product-image-custom').value.trim();
       const selectImg = document.getElementById('product-image-select').value;
-      const img = customImg || selectImg || 'assets/images/prod-green-tea.svg';
+      const img = customImg || selectImg || 'assets/images/prod-green-tea.jpg';
 
       const productData = {
         id: id || undefined,
@@ -457,6 +462,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settings-hotline').value = settings.hotline || '';
     document.getElementById('settings-email').value = settings.email || '';
     document.getElementById('settings-address').value = settings.address || '';
+    const mapsEl = document.getElementById('settings-maps');
+    if (mapsEl) mapsEl.value = settings.mapsUrl || '';
 
     document.getElementById('settings-stat-years').value = settings.stats?.years || 12;
     document.getElementById('settings-stat-partners').value = settings.stats?.partners || 320;
@@ -468,12 +475,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (settingsForm) {
     settingsForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      const mapsInput = document.getElementById('settings-maps');
       const updated = {
         brandName: document.getElementById('settings-brand').value.trim(),
         slogan: document.getElementById('settings-slogan').value.trim(),
         hotline: document.getElementById('settings-hotline').value.trim(),
         email: document.getElementById('settings-email').value.trim(),
         address: document.getElementById('settings-address').value.trim(),
+        mapsUrl: mapsInput ? mapsInput.value.trim() : '',
         stats: {
           years: Number(document.getElementById('settings-stat-years').value) || 12,
           partners: Number(document.getElementById('settings-stat-partners').value) || 320,

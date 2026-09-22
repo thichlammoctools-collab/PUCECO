@@ -385,3 +385,13 @@ body {
   .form-grid-2, .form-grid-4 { grid-template-columns: 1fr; }
   .admin-body { padding: 16px; }
 }
+
+.admin-table-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--admin-border);
+  display: block;
+}
+
