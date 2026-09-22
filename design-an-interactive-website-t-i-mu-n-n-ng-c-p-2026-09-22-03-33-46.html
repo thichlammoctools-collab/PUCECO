@@ -1,0 +1,1045 @@
+<!doctype html>
+<html lang="vi" data-phase="shell">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PUCECO — Nguyên liệu chiết xuất từ thiên nhiên</title>
+<meta name="description" content="PUCECO cung cấp nguyên liệu chiết xuất từ thiên nhiên, dược phẩm và mỹ phẩm chất lượng cao, đạt chuẩn GMP, ISO và USDA Organic.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+/* PUCECO design tokens — generated for the website upgrade.
+   Mood: trustworthy, botanical-medical, premium-calm
+   Brand: deep botanical green + warm ochre highlight.
+   Fonts: Fraunces (editorial serif headings) + Source Sans 3 (UI/body)
+          + IBM Plex Mono (spec / data labels)
+   Use ONLY these variables for color, type, space, radius, shadow, motion. */
+:root {
+  color-scheme: light;
+
+  /* color roles */
+  --color-bg: #F4F7F3;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #EDF2EC;
+  --color-text: #143226;
+  --color-muted: #4F6358;
+  --color-border: #D8E2D7;
+  --color-accent: #1E7A52;          /* primary fills: buttons, active, links */
+  --color-accent-strong: #125C3C;
+  --color-on-accent: #FFFFFF;
+  --color-accent-text: #15724B;     /* accent-colored text on bg */
+  --color-accent-soft: #E6F1EA;     /* tinted backgrounds */
+  --color-accent-2: #C2902C;        /* ochre secondary highlight */
+  --color-accent-2-ink: #8A5E10;    /* ochre darkened for text */
+  --color-depth: #0E3E2A;           /* deepest green, footer/hero base */
+  --color-depth-2: #114B33;
+  --color-on-depth: #EAF4EE;
+  --color-on-depth-muted: #A9C7B8;
+  --color-success: #1E7A52;
+  --color-warning: #925D02;
+  --color-danger: #A33A2B;
+  --color-on-danger: #FFFFFF;
+  --color-focus: #2E9E6B;
+
+  --accent-50: #F0F8F3;
+  --accent-100: #E6F1EA;
+  --accent-200: #C9E3D3;
+  --accent-300: #9FCCB2;
+  --accent-400: #67AE89;
+  --accent-500: #1E7A52;
+  --accent-600: #15724B;
+  --accent-700: #125C3C;
+  --accent-800: #0E3E2A;
+  --accent-900: #0B2E1F;
+
+  /* type */
+  --font-heading: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  --font-ui: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --step-n2: 0.78rem;
+  --step-n1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.45rem;
+  --step-3: 1.8rem;
+  --step-4: 2.3rem;
+  --step-5: 3rem;
+  --step-6: 3.9rem;
+  --step-7: 5rem;
+  --weight-heading: 600;
+  --tracking-heading: -0.015em;
+  --leading-body: 1.65;
+  --leading-heading: 1.1;
+  --measure: 64ch;
+
+  /* space */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+  --space-9: 96px; --space-10: 128px;
+
+  /* shape and depth */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(16, 49, 34, 0.06), 0 2px 6px rgba(16, 49, 34, 0.05);
+  --shadow-2: 0 8px 24px rgba(16, 49, 34, 0.10), 0 2px 8px rgba(16, 49, 34, 0.06);
+  --shadow-3: 0 18px 48px rgba(16, 49, 34, 0.16);
+
+  /* controls */
+  --control-sm: 38px;
+  --control-md: 44px;
+  --control-lg: 52px;
+
+  /* motion */
+  --dur-fast: 180ms;
+  --dur-slow: 420ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-slow: 0ms; }
+}
+
+</style>
+<style>
+/* PUCECO — upgraded corporate website styles.
+   Built on tokens.css. Quiet-luxury: botanical green + ochre. */
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: var(--color-accent-text); text-decoration: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-heading);
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-heading);
+  margin: 0;
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.skip-link {
+  position: absolute; left: var(--space-4); top: -60px;
+  background: var(--color-accent); color: #fff; padding: 10px 16px;
+  border-radius: var(--radius-sm); z-index: 200; transition: top var(--dur-fast);
+}
+.skip-link:focus { top: var(--space-4); }
+
+.sr-only, .visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  --bg: var(--color-accent);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-ui); font-weight: 600; font-size: var(--step-0);
+  line-height: 1; color: var(--color-on-accent); background: var(--bg);
+  border: 1.5px solid transparent; border-radius: var(--radius-pill);
+  padding: 0 var(--space-5); min-height: var(--control-md); cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease), background var(--dur-fast), box-shadow var(--dur-fast), color var(--dur-fast);
+  touch-action: manipulation;
+}
+.btn.primary { background: var(--color-accent); box-shadow: var(--shadow-2); }
+.btn.primary:hover { background: var(--color-accent-strong); transform: translateY(-2px); }
+.btn.primary:active { transform: translateY(0); }
+.btn.lg { min-height: var(--control-lg); padding: 0 var(--space-6); font-size: var(--step-1); }
+.btn.sm { min-height: var(--control-sm); padding: 0 var(--space-4); font-size: var(--step-n1); }
+.btn.ghost { background: transparent; color: var(--color-accent-text); border-color: var(--color-border); }
+.btn.ghost:hover { background: var(--color-accent-soft); border-color: var(--color-accent-300); }
+.btn.ghost.light { color: var(--color-on-depth); border-color: rgba(255,255,255,.35); }
+.btn.ghost.light:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.6); }
+
+/* ===== Header ===== */
+.site-head {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(244,247,243,.82);
+  backdrop-filter: saturate(1.2) blur(12px);
+  -webkit-backdrop-filter: saturate(1.2) blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-fast), background var(--dur-fast), box-shadow var(--dur-fast);
+}
+.site-head[data-scrolled] {
+  border-color: var(--color-border);
+  background: rgba(244,247,243,.94);
+  box-shadow: var(--shadow-1);
+}
+.head-inner {
+  max-width: 1240px; margin: 0 auto; padding: 12px var(--space-5);
+  display: flex; align-items: center; gap: var(--space-5);
+}
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--color-text); font-weight: 700; }
+.brand-mark { color: var(--color-accent); display: inline-flex; }
+.brand-text { font-family: var(--font-heading); font-size: 1.35rem; letter-spacing: .02em; }
+
+.site-nav { display: flex; gap: var(--space-5); margin-left: auto; }
+.site-nav a {
+  color: var(--color-text); font-weight: 500; font-size: var(--step-0);
+  padding: 6px 2px; position: relative;
+}
+.site-nav a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--color-accent); transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.site-nav a:hover::after, .site-nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+.head-actions { display: flex; align-items: center; gap: var(--space-3); margin-left: var(--space-4); }
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--control-md); height: var(--control-md); border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border); background: var(--color-surface);
+  color: var(--color-text); cursor: pointer; transition: background var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast);
+}
+.icon-btn:hover { background: var(--color-accent-soft); border-color: var(--color-accent-300); }
+.icon-btn:active { transform: scale(.94); }
+.nav-toggle { display: none; }
+
+/* Search bar */
+.search-bar {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: var(--space-4) var(--space-5);
+}
+.search-form {
+  max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: var(--space-3);
+  color: var(--color-muted);
+}
+.search-form input {
+  flex: 1; border: none; background: transparent; font: inherit; color: var(--color-text);
+  padding: 8px 4px; outline: none; min-height: var(--control-md);
+}
+
+/* Mobile nav */
+.mobile-nav {
+  display: none; flex-direction: column; gap: 4px;
+  padding: var(--space-4) var(--space-5) var(--space-6);
+  border-top: 1px solid var(--color-border); background: var(--color-surface);
+}
+.mobile-nav a { color: var(--color-text); font-weight: 600; padding: 12px 4px; border-radius: var(--radius-sm); }
+.mobile-nav a:hover { background: var(--color-accent-soft); }
+.mobile-nav .mobile-cta { color: var(--color-accent-text); }
+
+/* ===== Hero slider ===== */
+/* Inactive slides hide instantly; the incoming slide fades in over the hero
+   background, so two slides are never visible at once (no ghosted text). */
+.hero { position: relative; overflow: hidden; background: var(--color-depth); }
+.hero-track { position: relative; min-height: clamp(520px, 62vh, 620px); }
+.hero-slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+.hero-slide.is-active {
+  opacity: 1; visibility: visible;
+  animation: slideFade var(--dur-slow) var(--ease) both;
+}
+@keyframes slideFade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide.is-active { animation: none; }
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 140% at 78% 20%, var(--g2), var(--g1) 62%);
+}
+.hero-grid {
+  position: relative; z-index: 2; max-width: 1240px; margin: 0 auto;
+  padding: clamp(64px, 8vw, 104px) var(--space-5) clamp(130px, 13vw, 160px);
+  display: grid; grid-template-columns: 1.1fr .9fr; gap: var(--space-8); align-items: center;
+}
+.hero-copy { max-width: 36rem; }
+.eyebrow {
+  font-family: var(--font-mono); font-size: var(--step-n1); letter-spacing: .12em;
+  text-transform: uppercase; color: var(--color-accent-2-ink); font-weight: 600; margin: 0 0 var(--space-4);
+}
+.eyebrow.light { color: var(--color-accent-2); }
+.eyebrow.center { text-align: center; }
+.hero-title {
+  color: #fff; font-size: clamp(2rem, 3.9vw, var(--step-5));
+  margin-bottom: var(--space-4); text-wrap: balance;
+  max-width: 34ch;
+}
+.hero-lede { color: var(--color-on-depth-muted); font-size: var(--step-1); max-width: 34rem; margin: 0 0 var(--space-6); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+
+.hero-visual { position: relative; min-height: 280px; }
+.leaf-shape {
+  position: absolute; border-radius: 60% 40% 55% 45%;
+  background: linear-gradient(150deg, rgba(255,255,255,.22), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.25);
+}
+.leaf-a { width: 58%; aspect-ratio: 1; top: 6%; right: 6%; }
+.leaf-b { width: 38%; aspect-ratio: 1; bottom: 4%; left: 8%; }
+.leaf-c { width: 30%; aspect-ratio: 1; top: 0; left: 22%; }
+.hero-badge {
+  position: absolute; bottom: 10%; right: 2%; z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  width: 104px; height: 104px; justify-content: center; border-radius: 50%;
+  background: var(--color-accent-2); color: #1c1402; text-align: center;
+  box-shadow: var(--shadow-3);
+  animation: floaty 6s var(--ease) infinite;
+}
+.hero-badge b { font-family: var(--font-heading); font-size: 1.5rem; line-height: 1; }
+.hero-badge span { font-size: var(--step-n2); font-weight: 600; }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+.hero-controls {
+  position: absolute; left: 0; right: 0; bottom: var(--space-5); z-index: 5;
+  max-width: 1240px; margin: 0 auto; padding: 0 var(--space-5);
+  display: flex; align-items: center; gap: var(--space-4);
+}
+.hero-arrow {
+  width: 46px; height: 46px; border-radius: 50%; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.28);
+  cursor: pointer; transition: background var(--dur-fast), transform var(--dur-fast);
+}
+.hero-arrow:hover { background: rgba(255,255,255,.28); }
+.hero-arrow:active { transform: scale(.92); }
+.hero-dots { display: flex; gap: 10px; margin-left: 4px; }
+.hero-dots button {
+  width: 11px; height: 11px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 2px solid rgba(255,255,255,.5); background: transparent;
+  transition: background var(--dur-fast), transform var(--dur-fast), border-color var(--dur-fast);
+}
+.hero-dots button[aria-selected="true"] { background: #fff; border-color: #fff; transform: scale(1.15); }
+
+/* ===== Sections ===== */
+.section { max-width: 1240px; margin: 0 auto; padding: clamp(56px, 7vw, 90px) var(--space-5); }
+.section-head { max-width: 42rem; margin: 0 auto var(--space-8); text-align: left; }
+.section-head.center, .section-head .center { text-align: center; }
+.section-title { font-size: clamp(1.8rem, 3.4vw, var(--step-5)); margin-bottom: var(--space-3); text-wrap: balance; }
+.section-title.center { text-align: center; }
+.section-sub { color: var(--color-muted); font-size: var(--step-1); margin: 0; }
+
+/* Intro */
+.intro-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: var(--space-8); align-items: center; }
+.intro-text .lead { font-size: var(--step-1); color: var(--color-muted); margin: var(--space-4) 0 var(--space-5); }
+.check-list { list-style: none; padding: 0; margin: 0 0 var(--space-6); display: grid; gap: var(--space-3); }
+.check-list li { position: relative; padding-left: 32px; color: var(--color-text); }
+.check-list li::before {
+  content: ""; position: absolute; left: 0; top: 4px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--color-accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23157a52' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4 10-11'/%3E%3C/svg%3E") center/14px no-repeat;
+}
+.intro-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--shadow-1);
+}
+.stat { text-align: left; }
+.stat-num {
+  display: block; font-family: var(--font-heading); font-weight: 700;
+  font-size: clamp(2rem, 4vw, 2.8rem); color: var(--color-accent); line-height: 1;
+}
+.stat-label { color: var(--color-muted); font-size: var(--step-n1); }
+
+/* Benefits */
+.benefit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+.benefit-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-6) var(--space-5);
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast), border-color var(--dur-fast);
+}
+.benefit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-2); border-color: var(--color-accent-300); }
+.benefit-ico {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 52px; height: 52px; border-radius: var(--radius-md); margin-bottom: var(--space-4);
+  background: var(--color-accent-soft); color: var(--color-accent);
+}
+.benefit-card h3 { font-size: var(--step-2); margin-bottom: var(--space-2); }
+.benefit-card p { color: var(--color-muted); margin: 0; font-size: var(--step-0); }
+
+/* Certs */
+.certs { background: var(--color-surface-2); max-width: none; }
+.certs > * { max-width: 1240px; margin-left: auto; margin-right: auto; }
+.cert-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-4);
+}
+.cert-badge {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-5) var(--space-6); min-width: 150px;
+  box-shadow: var(--shadow-1); transition: transform var(--dur-fast) var(--ease);
+}
+.cert-badge:hover { transform: translateY(-4px); }
+.cert-badge b { font-family: var(--font-heading); font-size: 1.4rem; color: var(--color-accent); }
+.cert-badge span { color: var(--color-muted); font-size: var(--step-n1); }
+
+/* Products */
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+.product-grid.two { grid-template-columns: repeat(2, 1fr); }
+.product-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: var(--shadow-1); transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast), border-color var(--dur-fast);
+}
+.product-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-3); border-color: var(--color-accent-300); }
+.product-thumb {
+  position: relative; aspect-ratio: 4/3;
+  background: radial-gradient(120% 120% at 30% 20%, var(--c1), var(--c2));
+}
+.product-thumb.tall { aspect-ratio: 16/10; }
+.product-tag {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  font-family: var(--font-mono); font-size: var(--step-n2); font-weight: 600; letter-spacing: .04em;
+  background: var(--color-accent); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill);
+}
+.product-tag.alt { background: var(--color-accent-2); color: #1c1402; }
+.product-body { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); flex: 1; }
+.product-body h3 { font-size: var(--step-2); }
+.product-body p { color: var(--color-muted); margin: 0; flex: 1; }
+.link-arrow {
+  align-self: flex-start; margin-top: var(--space-2); font-weight: 600; color: var(--color-accent-text);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.link-arrow span { transition: transform var(--dur-fast) var(--ease); }
+.link-arrow:hover span { transform: translateX(4px); }
+
+/* News */
+.news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+.news-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-1);
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast);
+}
+.news-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-2); }
+.news-thumb { display: block; aspect-ratio: 16/9; background: radial-gradient(120% 120% at 30% 20%, var(--c1), var(--c2)); }
+.news-body { padding: var(--space-5); }
+.news-date { font-family: var(--font-mono); font-size: var(--step-n1); color: var(--color-accent-2-ink); margin: 0 0 var(--space-2); }
+.news-body h3 { font-size: var(--step-2); margin-bottom: var(--space-2); }
+.news-body p { color: var(--color-muted); margin: 0; }
+
+/* CTA */
+.cta { max-width: 1240px; }
+.cta-card {
+  background: linear-gradient(135deg, var(--color-depth-2), var(--color-depth));
+  border-radius: var(--radius-lg); padding: clamp(40px, 6vw, 72px);
+  display: grid; grid-template-columns: 1.1fr .9fr; gap: var(--space-7); align-items: center;
+  color: #fff; box-shadow: var(--shadow-3);
+}
+.cta-text h2 { color: #fff; font-size: clamp(1.7rem, 3vw, var(--step-4)); margin-bottom: var(--space-3); }
+.cta-text p { color: var(--color-on-depth-muted); margin: 0; font-size: var(--step-1); }
+.cta-form { display: flex; flex-direction: column; gap: var(--space-3); }
+.cta-form input {
+  width: 100%; border: 1.5px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08);
+  color: #fff; border-radius: var(--radius-pill); padding: 0 var(--space-5);
+  min-height: var(--control-lg); font: inherit; outline: none;
+}
+.cta-form input::placeholder { color: var(--color-on-depth-muted); }
+.cta-form input:focus-visible { border-color: var(--color-accent-2); }
+.cta-form .btn { width: 100%; }
+.demo-note { font-size: var(--step-n1); color: var(--color-on-depth-muted); margin: 4px 0 0; }
+
+/* ===== Footer ===== */
+.site-foot { background: var(--color-depth); color: var(--color-on-depth); margin-top: var(--space-8); }
+.foot-grid {
+  max-width: 1240px; margin: 0 auto; padding: var(--space-9) var(--space-5) var(--space-7);
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: var(--space-6);
+}
+.site-foot .brand { color: #fff; }
+.site-foot .brand-mark { color: var(--color-accent-2); }
+.foot-tag { color: var(--color-on-depth-muted); margin: var(--space-3) 0 0; max-width: 22rem; }
+.foot-col h4 { color: #fff; font-size: var(--step-1); margin-bottom: var(--space-3); font-family: var(--font-ui); }
+.foot-col a, .foot-col p { display: block; color: var(--color-on-depth-muted); margin: 0 0 10px; transition: color var(--dur-fast); }
+.foot-col a:hover { color: #fff; }
+.foot-bottom {
+  max-width: 1240px; margin: 0 auto; padding: var(--space-5);
+  border-top: 1px solid rgba(255,255,255,.12);
+  display: flex; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap;
+  color: var(--color-on-depth-muted); font-size: var(--step-n1);
+}
+.foot-bottom a { color: var(--color-on-depth-muted); }
+.foot-bottom a:hover { color: #fff; }
+
+/* ===== Reveal animation ===== */
+[data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+[data-reveal].in { opacity: 1; transform: none; }
+[data-stagger] > * { opacity: 0; transform: translateY(22px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
+[data-stagger].in > * { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-stagger] > * { opacity: 1 !important; transform: none !important; transition: none; }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-visual { min-height: 200px; order: -1; }
+  .intro-grid { grid-template-columns: 1fr; }
+  .benefit-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .news-grid { grid-template-columns: 1fr; }
+  .cta-card { grid-template-columns: 1fr; }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .site-nav, .head-cta { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .mobile-nav { display: flex; }
+  .benefit-grid { grid-template-columns: 1fr; }
+  .product-grid, .product-grid.two { grid-template-columns: 1fr; }
+  .foot-grid { grid-template-columns: 1fr; }
+  .section-head { text-align: left; }
+  .section-title.center { text-align: left; }
+  .eyebrow.center { text-align: left; }
+}
+
+@media (max-width: 420px) {
+  .head-inner { padding: 10px var(--space-4); }
+  .section { padding-left: var(--space-4); padding-right: var(--space-4); }
+  .intro-stats { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Bỏ qua đến nội dung</a>
+
+<!-- ===== HEADER ===== -->
+<header class="site-head" data-header>
+  <div class="head-inner">
+    <a class="brand" href="#top" aria-label="PUCECO trang chủ">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="30" height="30" fill="none">
+          <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".18"/>
+          <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand-text">PUCECO</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Điều hướng chính">
+      <a href="#gioi-thieu">Giới thiệu</a>
+      <a href="#loi-ich">Lợi ích</a>
+      <a href="#chung-nhan">Chứng nhận</a>
+      <a href="#noi-bat">Sản phẩm</a>
+      <a href="#tin-tuc">Tin tức</a>
+    </nav>
+
+    <div class="head-actions">
+      <button class="icon-btn" type="button" data-search-toggle aria-label="Tìm kiếm" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <a class="btn primary head-cta" href="#lien-he">Liên hệ</a>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-label="Mở menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-bar" data-search hidden>
+    <form class="search-form" role="search" onsubmit="return false">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input type="search" name="q" placeholder="Tìm nguyên liệu, sản phẩm…" aria-label="Tìm kiếm">
+      <button class="btn ghost sm" type="button" data-search-close>Bỏ qua</button>
+    </form>
+  </div>
+
+  <nav class="mobile-nav" data-mobile-nav hidden aria-label="Menu di động">
+    <a href="#gioi-thieu">Giới thiệu</a>
+    <a href="#loi-ich">Lợi ích</a>
+    <a href="#chung-nhan">Chứng nhận</a>
+    <a href="#noi-bat">Sản phẩm</a>
+    <a href="#tin-tuc">Tin tức</a>
+    <a class="mobile-cta" href="#lien-he">Liên hệ</a>
+  </nav>
+</header>
+
+<main id="main">
+  <!-- ===== HERO SLIDER ===== -->
+  <section id="top" class="hero" aria-roledescription="carousel" aria-label="Tin nổi bật" data-hero>
+    <div class="hero-track" data-hero-track>
+      <!-- Slide 1 -->
+      <article class="hero-slide is-active" data-slide aria-roledescription="slide" aria-label="1 trên 3">
+        <div class="hero-bg" style="--g1:#0E3E2A;--g2:#1E7A52"></div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow light">Nguyên liệu thiên nhiên · Chuẩn quốc tế</p>
+            <h1 class="hero-title">Chiết xuất từ thiên nhiên,<br>tin cậy từ khoa học</h1>
+            <p class="hero-lede">PUCECO cung cấp nguyên liệu dược phẩm và mỹ phẩm chiết xuất từ thảo mộc, đảm bảo nguồn gốc rõ ràng và quy trình kiểm soát nghiêm ngặt.</p>
+            <div class="hero-actions">
+              <a class="btn primary lg" href="#noi-bat">Khám phá sản phẩm</a>
+              <a class="btn ghost lg light" href="#gioi-thieu">Về chúng tôi</a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <img class="hero-art" src="assets/images/hero-botanical-1.svg" alt="" loading="lazy" width="240" height="240">
+            <span class="hero-badge"><b>GMP</b><span>đạt chuẩn</span></span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 2 -->
+      <article class="hero-slide" data-slide aria-roledescription="slide" aria-label="2 trên 3">
+        <div class="hero-bg" style="--g1:#114B33;--g2:#2E9E6B"></div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow light">Hợp tác bền vững</p>
+            <h1 class="hero-title">Đồng hành cùng<br>nhà sản xuất Việt</h1>
+            <p class="hero-lede">Chúng tôi liên kết vùng trồng nguyên liệu sạch, hỗ trợ nông dân địa phương và bảo vệ hệ sinh thái qua mỗi lô hàng.</p>
+            <div class="hero-actions">
+              <a class="btn primary lg" href="#loi-ich">Xem lợi ích</a>
+              <a class="btn ghost lg light" href="#chung-nhan">Chứng nhận</a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <img class="hero-art" src="assets/images/hero-botanical-2.svg" alt="" loading="lazy" width="240" height="240">
+            <span class="hero-badge"><b>100%</b><span>thiên nhiên</span></span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 3 -->
+      <article class="hero-slide" data-slide aria-roledescription="slide" aria-label="3 trên 3">
+        <div class="hero-bg" style="--g1:#0B2E1F;--g2:#15724B"></div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow light">Nghiên cứu &amp; phát triển</p>
+            <h1 class="hero-title">Đổi mới từ<br>phòng thí nghiệm</h1>
+            <p class="hero-lede">Đội ngũ R&amp;D của PUCECO phát triển các hoạt chất chiết xuất ổn định, an toàn và truy xuất được nguồn gốc.</p>
+            <div class="hero-actions">
+              <a class="btn primary lg" href="#tin-tuc">Tin nghiên cứu</a>
+              <a class="btn ghost lg light" href="#lien-he">Trở thành đối tác</a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <img class="hero-art" src="assets/images/hero-botanical-3.svg" alt="" loading="lazy" width="240" height="240">
+            <span class="hero-badge"><b>R&amp;D</b><span>nội bộ</span></span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="hero-controls">
+      <button class="hero-arrow" type="button" data-hero-prev aria-label="Slide trước">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="hero-dots" data-hero-dots role="tablist" aria-label="Chọn slide"></div>
+      <button class="hero-arrow" type="button" data-hero-next aria-label="Slide kế">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== INTRO / GIỚI THIỆU ===== -->
+  <section id="gioi-thieu" class="section intro" data-reveal>
+    <div class="intro-grid">
+      <div class="intro-text">
+        <p class="eyebrow">Về PUCECO</p>
+        <h2 class="section-title">Nguyên liệu sạch làm nền tảng cho sản phẩm của bạn</h2>
+        <p class="lead">Chúng tôi chọn lọc, chiết xuất và kiểm định nguyên liệu thiên nhiên, mang đến cho đối tác dược phẩm và mỹ phẩm những hoạt chất ổn định, truy xuất được và thân thiện với môi trường.</p>
+        <ul class="check-list">
+          <li>Nguồn gốc nguyên liệu minh bạch, hợp tác trực tiếp vùng trồng</li>
+          <li>Quy trình chiết xuất hiện đại, kiểm soát chất lượng đa điểm</li>
+          <li>Hồ sơ COA, MSDS đầy đủ cho từng lô hàng</li>
+        </ul>
+        <a class="btn primary" href="#lien-he">Hợp tác cùng chúng tôi</a>
+      </div>
+      <div class="intro-stats" aria-label="Thành tựu">
+        <div class="stat"><span class="stat-num" data-count="12">0</span><span class="stat-label">năm kinh nghiệm</span></div>
+        <div class="stat"><span class="stat-num" data-count="320">0</span><span class="stat-label">đối tác toàn cầu</span></div>
+        <div class="stat"><span class="stat-num" data-count="48">0</span><span class="stat-label">dòng nguyên liệu</span></div>
+        <div class="stat"><span class="stat-num" data-count="100" data-suffix="%">0</span><span class="stat-label">truy xuất nguồn gốc</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LỢI ÍCH ===== -->
+  <section id="loi-ich" class="section benefits" data-reveal>
+    <div class="section-head">
+      <p class="eyebrow">Tại sao chọn PUCECO</p>
+      <h2 class="section-title center">Lợi ích vượt trội cho đối tác</h2>
+    </div>
+    <div class="benefit-grid">
+      <article class="benefit-card">
+        <span class="benefit-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v9M12 12l3-2M12 14l-3-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        <h3>Nguyên liệu tự nhiên</h3>
+        <p>Chiết xuất từ thảo mộc, không biến đổi gen, thân thiện với làn da và sức khỏe.</p>
+      </article>
+      <article class="benefit-card">
+        <span class="benefit-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26"><path d="M5 13l4 4 10-11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <h3>Chuẩn chất lượng</h3>
+        <p>Hệ thống quản lý GMP, ISO 9001 và USDA Organic vận hành xuyên suốt.</p>
+      </article>
+      <article class="benefit-card">
+        <span class="benefit-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        <h3>Giao hàng nhanh</h3>
+        <p>Mạng lưới logistics ổn định, giao hàng đúng hạn trên toàn quốc và quốc tế.</p>
+      </article>
+      <article class="benefit-card">
+        <span class="benefit-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="26" height="26"><path d="M4 18c4-8 12-8 16 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="9" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </span>
+        <h3>Hỗ trợ kỹ thuật</h3>
+        <p>Đội ngũ R&amp;D đồng hành tư vấn ứng dụng, công thức và tối ưu chi phí.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== CHỨNG NHẬN ===== -->
+  <section id="chung-nhan" class="section certs" data-reveal>
+    <div class="section-head">
+      <p class="eyebrow center">Cam kết chất lượng</p>
+      <h2 class="section-title center">Chứng nhận &amp; tiêu chuẩn</h2>
+    </div>
+    <div class="cert-row">
+      <div class="cert-badge"><b>GMP</b><span>Thực hành sản xuất tốt</span></div>
+      <div class="cert-badge"><b>ISO 9001</b><span>Quản lý chất lượng</span></div>
+      <div class="cert-badge"><b>USDA</b><span>Organic</span></div>
+      <div class="cert-badge"><b>HACCP</b><span>An toàn thực phẩm</span></div>
+      <div class="cert-badge"><b>HALAL</b><span>Chứng nhận halal</span></div>
+    </div>
+  </section>
+
+  <!-- ===== SẢN PHẨM NỔI BẬT ===== -->
+  <section id="noi-bat" class="section products" data-reveal>
+    <div class="section-head">
+      <p class="eyebrow">Danh mục</p>
+      <h2 class="section-title">Sản phẩm nổi bật</h2>
+      <p class="section-sub">Các dòng nguyên liệu chiết xuất được đối tác tin dùng nhiều nhất.</p>
+    </div>
+    <div class="product-grid" data-stagger>
+      <article class="product-card">
+        <div class="product-thumb" style="--c1:#E6F1EA;--c2:#C9E3D3">
+          <img class="product-art" src="assets/images/prod-green-tea.svg" alt="Minh họa lá trà xanh" loading="lazy" width="200" height="150">
+          <span class="product-tag">Bán chạy</span>
+        </div>
+        <div class="product-body">
+          <h3>Chiết xuất Trà xanh</h3>
+          <p>EGCG cao, chống oxy hóa mạnh cho thực phẩm chức năng và mỹ phẩm.</p>
+          <a class="link-arrow" href="#lien-he">Chi tiết <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      <article class="product-card">
+        <div class="product-thumb" style="--c1:#F3EFE2;--c2:#E4D6B0">
+          <img class="product-art" src="assets/images/prod-lemongrass.svg" alt="Minh họa cây sả chanh" loading="lazy" width="200" height="150">
+          <span class="product-tag alt">Organic</span>
+        </div>
+        <div class="product-body">
+          <h3>Tinh dầu Sả chanh</h3>
+          <p>Hương liệu và kháng khuẩn tự nhiên, nguồn gốc Việt Nam.</p>
+          <a class="link-arrow" href="#lien-he">Chi tiết <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      <article class="product-card">
+        <div class="product-thumb" style="--c1:#E8F0EC;--c2:#BBD9CA">
+          <img class="product-art" src="assets/images/prod-curcumin.svg" alt="Minh họa củ nghệ curcumin" loading="lazy" width="200" height="150">
+          <span class="product-tag">Bán chạy</span>
+        </div>
+        <div class="product-body">
+          <h3>Curcumin nano</h3>
+          <p>Độ sinh khả dụng cao, ứng dụng rộng trong dược phẩm.</p>
+          <a class="link-arrow" href="#lien-he">Chi tiết <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      <article class="product-card">
+        <div class="product-thumb" style="--c1:#EFEFE6;--c2:#D2D6B8">
+          <img class="product-art" src="assets/images/prod-aloe.svg" alt="Minh họa cây lô hội" loading="lazy" width="200" height="150">
+          <span class="product-tag alt">Organic</span>
+        </div>
+        <div class="product-body">
+          <h3>Chiết xuất Lô hội</h3>
+          <p>Làm dịu và dưỡng ẩm, chuẩn hóa cho mỹ phẩm dạng gel.</p>
+          <a class="link-arrow" href="#lien-he">Chi tiết <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== SẢN PHẨM MỚI ===== -->
+  <section id="moi" class="section products-new" data-reveal>
+    <div class="section-head">
+      <p class="eyebrow">Mới ra mắt</p>
+      <h2 class="section-title">Sản phẩm mới</h2>
+    </div>
+    <div class="product-grid two" data-stagger>
+      <article class="product-card wide">
+        <div class="product-thumb tall" style="--c1:#E6F1EA;--c2:#A6D0BC">
+          <img class="product-art" src="assets/images/prod-turmeric-black.svg" alt="Minh họa nghệ đen" loading="lazy" width="200" height="150">
+          <span class="product-tag">Mới</span>
+        </div>
+        <div class="product-body">
+          <h3>Chiết xuất Nghệ đen</h3>
+          <p>Dòng hoạt chất curcuminoid thế hệ mới, ổn định nhiệt và dễ phối chế.</p>
+          <a class="link-arrow" href="#lien-he">Yêu cầu mẫu <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      <article class="product-card wide">
+        <div class="product-thumb tall" style="--c1:#F3EFE2;--c2:#E0CFA6">
+          <img class="product-art" src="assets/images/prod-stevia.svg" alt="Minh họa cây stevia" loading="lazy" width="200" height="150">
+          <span class="product-tag">Mới</span>
+        </div>
+        <div class="product-body">
+          <h3>Glycoside Stevia</h3>
+          <p>Chất tạo ngọt tự nhiên không calo, chuẩn hóa độ ngọt cao.</p>
+          <a class="link-arrow" href="#lien-he">Yêu cầu mẫu <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== TIN TỨC ===== -->
+  <section id="tin-tuc" class="section news" data-reveal>
+    <div class="section-head">
+      <p class="eyebrow">Tin tức &amp; sự kiện</p>
+      <h2 class="section-title">Tin mới nhất</h2>
+    </div>
+    <div class="news-grid" data-stagger>
+      <article class="news-card">
+        <a class="news-thumb" href="#tin-tuc" style="--c1:#E6F1EA;--c2:#C9E3D3" aria-label="Đọc bài: PUCECO đạt chứng nhận GMP mới">
+          <img class="news-art" src="assets/images/news-gmp.svg" alt="" loading="lazy" width="200" height="120">
+        </a>
+        <div class="news-body">
+          <p class="news-date">18 Thg 9, 2026</p>
+          <h3>PUCECO đạt chứng nhận GMP nâng hạng</h3>
+          <p>Nhà máy chiết xuất hoàn thiện nâng cấp dây chuyền theo tiêu chuẩn GMP mới nhất.</p>
+        </div>
+      </article>
+      <article class="news-card">
+        <a class="news-thumb" href="#tin-tuc" style="--c1:#F3EFE2;--c2:#E4D6B0" aria-label="Đọc bài: Hợp tác vùng trồng nguyên liệu sạch">
+          <img class="news-art" src="assets/images/news-farm.svg" alt="" loading="lazy" width="200" height="120">
+        </a>
+        <div class="news-body">
+          <p class="news-date">02 Thg 9, 2026</p>
+          <h3>Mở rộng vùng trồng nguyên liệu sạch</h3>
+          <p>Liên kết 5 hợp tác xã tại Tây Nguyên, đảm bảo nguồn cung bền vững.</p>
+        </div>
+      </article>
+      <article class="news-card">
+        <a class="news-thumb" href="#tin-tuc" style="--c1:#E8F0EC;--c2:#BBD9CA" aria-label="Đọc bài: Ra mắt dòng Curcumin nano">
+          <img class="news-art" src="assets/images/news-lab.svg" alt="" loading="lazy" width="200" height="120">
+        </a>
+        <div class="news-body">
+          <p class="news-date">21 Thg 8, 2026</p>
+          <h3>Ra mắt Curcumin nano thế hệ mới</h3>
+          <p>Sản phẩm R&amp;D nội bộ với độ sinh khả dụng vượt trội, sẵn sàng thương mại.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== CTA / LIÊN HỆ ===== -->
+  <section id="lien-he" class="section cta" data-reveal>
+    <div class="cta-card">
+      <div class="cta-text">
+        <h2>Trở thành đối tác của PUCECO</h2>
+        <p>Nhận báo giá, hồ sơ kỹ thuật và mẫu thử cho dự án của bạn. Đội ngũ của chúng tôi phản hồi trong 24 giờ.</p>
+      </div>
+      <form class="cta-form" data-demo-form onsubmit="return false">
+        <label class="sr-only" for="cta-email">Email của bạn</label>
+        <input id="cta-email" type="email" name="email" placeholder="Email của bạn" autocomplete="email">
+        <button class="btn primary lg" type="submit">Gửi yêu cầu</button>
+        <p class="demo-note" data-demo-note role="status" hidden>Trang demo — chưa gửi dữ liệu thực tế. Kết nối backend trong website-plan.json.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-foot" id="footer">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
+          <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".22"/>
+          <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span><span class="brand-text">PUCECO</span></a>
+      <p class="foot-tag">Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học.</p>
+    </div>
+    <nav class="foot-col" aria-label="Sản phẩm">
+      <h4>Sản phẩm</h4>
+      <a href="#noi-bat">Chiết xuất thực vật</a>
+      <a href="#noi-bat">Tinh dầu</a>
+      <a href="#moi">Sản phẩm mới</a>
+    </nav>
+    <nav class="foot-col" aria-label="Công ty">
+      <h4>Công ty</h4>
+      <a href="#gioi-thieu">Giới thiệu</a>
+      <a href="#chung-nhan">Chứng nhận</a>
+      <a href="#tin-tuc">Tin tức</a>
+    </nav>
+    <div class="foot-col">
+      <h4>Liên hệ</h4>
+      <p>Email: info@puceco.vn</p>
+      <p>Hotline: 1900 123 456</p>
+      <p>Hà Nội, Việt Nam</p>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2026 PUCECO. Bản nâng cấp giao diện demo.</p>
+    <nav aria-label="Mạng xã hội">
+      <a href="#footer">Facebook</a> · <a href="#footer">LinkedIn</a> · <a href="#footer">YouTube</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+// PUCECO — interactive behaviors for the upgraded corporate site.
+// Progressive enhancement: the page is fully usable without this script.
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ===== Header: shadow on scroll ===== */
+const header = document.querySelector('[data-header]');
+const onScroll = () => {
+  if (header) header.toggleAttribute('data-scrolled', window.scrollY > 8);
+};
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+/* ===== Mobile nav + search toggle ===== */
+const navToggle = document.querySelector('[data-nav-toggle]');
+const mobileNav = document.querySelector('[data-mobile-nav]');
+if (navToggle && mobileNav) {
+  navToggle.addEventListener('click', () => {
+    const open = mobileNav.hasAttribute('hidden');
+    mobileNav.toggleAttribute('hidden', !open);
+    navToggle.setAttribute('aria-expanded', String(open));
+    navToggle.setAttribute('aria-label', open ? 'Đóng menu' : 'Mở menu');
+  });
+  mobileNav.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', () => {
+      mobileNav.setAttribute('hidden', '');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Mở menu');
+    })
+  );
+}
+
+const searchToggle = document.querySelector('[data-search-toggle]');
+const searchBar = document.querySelector('[data-search]');
+const searchClose = document.querySelector('[data-search-close]');
+const openSearch = (open) => {
+  if (!searchBar || !searchToggle) return;
+  searchBar.toggleAttribute('hidden', !open);
+  searchToggle.setAttribute('aria-expanded', String(open));
+  if (open) searchBar.querySelector('input')?.focus();
+};
+if (searchToggle && searchBar) {
+  searchToggle.addEventListener('click', () => openSearch(searchBar.hasAttribute('hidden')));
+  searchClose?.addEventListener('click', () => openSearch(false));
+}
+
+/* ===== Hero slider ===== */
+const hero = document.querySelector('[data-hero]');
+if (hero) {
+  const slides = [...hero.querySelectorAll('[data-slide]')];
+  const track = hero.querySelector('[data-hero-track]');
+  const dotsWrap = hero.querySelector('[data-hero-dots]');
+  const prev = hero.querySelector('[data-hero-prev]');
+  const next = hero.querySelector('[data-hero-next]');
+  let index = slides.findIndex(s => s.classList.contains('is-active'));
+  if (index < 0) index = 0;
+  let timer = null;
+  const DELAY = 6500;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('role', 'tab');
+    dot.setAttribute('aria-label', `Đến slide ${i + 1}`);
+    dot.addEventListener('click', () => go(i, true));
+    dotsWrap?.appendChild(dot);
+  });
+  const dots = [...dotsWrap?.children || []];
+
+  const go = (i, user) => {
+    index = (i + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle('is-active', k === index));
+    dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === index)));
+    if (user) restart();
+  };
+  // Autoplay is disabled: users control the slider explicitly.
+  // This avoids distracting auto-advancing content and keeps screenshots/readability stable.
+  const start = () => { /* no-op */ };
+  const stop = () => { if (timer) clearInterval(timer); timer = null; };
+  const restart = () => { stop(); start(); };
+
+  prev?.addEventListener('click', () => go(index - 1, true));
+  next?.addEventListener('click', () => go(index + 1, true));
+  hero.addEventListener('mouseenter', stop);
+  hero.addEventListener('mouseleave', start);
+  hero.addEventListener('focusin', stop);
+  hero.addEventListener('focusout', start);
+  // Pause when offscreen to save resources
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? start() : stop()), { threshold: 0.3 })
+      .observe(hero);
+  } else { start(); }
+  go(index);
+}
+
+/* ===== Reveal on load (staggered entrance) ===== */
+// Everything settles within ~1s of load — robust for full-page capture,
+// print, and reduced motion; the stagger keeps the entrance feeling alive.
+const revealTargets = document.querySelectorAll('[data-reveal], [data-stagger]');
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  revealTargets.forEach((el, i) => {
+    el.style.transitionDelay = `${Math.min(i * 60, 360)}ms`;
+    el.classList.add('in');
+    // Clear the delay so hover/other transitions aren't lagged afterwards
+    el.addEventListener('transitionend', () => { el.style.transitionDelay = ''; }, { once: true });
+  });
+}));
+
+/* ===== Count-up stats ===== */
+const counters = document.querySelectorAll('[data-count]');
+const runCount = (el) => {
+  const target = Number(el.dataset.count) || 0;
+  const suffix = el.dataset.suffix || '';
+  if (reduceMotion) { el.textContent = target + suffix; return; }
+  const dur = 900; const t0 = performance.now();
+  const step = (now) => {
+    const p = Math.min(1, (now - t0) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * eased) + suffix;
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+};
+counters.forEach(runCount);
+
+/* ===== Demo contact form ===== */
+const forms = document.querySelectorAll('[data-demo-form]');
+forms.forEach(f => {
+  f.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const note = f.querySelector('[data-demo-note]');
+    if (note) note.removeAttribute('hidden');
+  });
+});
+
+</script>
+<div style="position:fixed;bottom:10px;right:12px;z-index:2147483647;font:600 11px/1 -apple-system,Segoe UI,sans-serif;color:#fff;background:rgba(20,20,22,.78);padding:6px 10px;border-radius:6px;letter-spacing:.02em;pointer-events:none">made with 1DesignTool</div></body>
+</html>
