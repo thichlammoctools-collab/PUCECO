@@ -252,8 +252,21 @@
       try {
         let prods = JSON.parse(storedProds);
         let updated = false;
+        const defaultImgMap = {
+          'prod-1': 'assets/images/prod-green-tea.jpg',
+          'prod-2': 'assets/images/prod-lemongrass.jpg',
+          'prod-3': 'assets/images/prod-curcumin.jpg',
+          'prod-4': 'assets/images/prod-aloe.jpg',
+          'prod-5': 'assets/images/prod-turmeric-black.jpg',
+          'prod-6': 'assets/images/prod-stevia.jpg'
+        };
         prods = prods.map(p => {
-          if (p.image && p.image.endsWith('.svg') && p.image.includes('prod-')) {
+          if (defaultImgMap[p.id] && (!p.image || p.image.endsWith('.svg') || p.image.includes('prod-'))) {
+            if (p.image !== defaultImgMap[p.id]) {
+              p.image = defaultImgMap[p.id];
+              updated = true;
+            }
+          } else if (p.image && p.image.endsWith('.svg') && p.image.includes('prod-')) {
             p.image = p.image.replace(/\.svg$/, '.jpg');
             updated = true;
           }

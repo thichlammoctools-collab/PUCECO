@@ -130,24 +130,37 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // ===== Mobile Navigation =====
-  const navToggle = document.querySelector('[data-nav-toggle]');
-  const mobileNav = document.querySelector('[data-mobile-nav]');
-  if (navToggle && mobileNav) {
-    navToggle.addEventListener('click', () => {
-      const open = mobileNav.hasAttribute('hidden');
-      mobileNav.toggleAttribute('hidden', !open);
-      navToggle.setAttribute('aria-expanded', String(open));
-      navToggle.setAttribute('aria-label', open ? 'Đóng menu' : 'Mở menu');
+  // ===== Mobile Bottom Navigation: Active Section Tracking =====
+  const bottomNavItems = document.querySelectorAll('.bottom-nav-item[data-nav-section]');
+  const sectionMap = {
+    'top': document.querySelector('#top'),
+    'noi-bat': document.querySelector('#noi-bat'),
+    'tin-tuc': document.querySelector('#tin-tuc'),
+    'lien-he': document.querySelector('#lien-he'),
+  };
+
+  function setActiveNav(sectionId) {
+    bottomNavItems.forEach(item => {
+      item.classList.toggle('is-active', item.dataset.navSection === sectionId);
     });
-    mobileNav.querySelectorAll('a').forEach(a =>
-      a.addEventListener('click', () => {
-        mobileNav.setAttribute('hidden', '');
-        navToggle.setAttribute('aria-expanded', 'false');
-        navToggle.setAttribute('aria-label', 'Mở menu');
-      })
-    );
   }
+
+  // Use IntersectionObserver to detect which section is visible
+  if ('IntersectionObserver' in window) {
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setActiveNav(entry.target.id);
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    Object.values(sectionMap).forEach(el => { if (el) navObserver.observe(el); });
+  }
+
+  // Set initial active state
+  setActiveNav('top');
+
 
   // ===== Live Search System =====
   const searchToggle = document.querySelector('[data-search-toggle]');
@@ -171,6 +184,15 @@ document.addEventListener('DOMContentLoaded', () => {
     searchClose?.addEventListener('click', () => openSearch(false));
   }
 
+  // Wire mobile bottom search button
+  const bottomSearchBtn = document.querySelector('[data-bottom-search]');
+  if (bottomSearchBtn) {
+    bottomSearchBtn.addEventListener('click', () => {
+      openSearch(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
   function handleSearch(query) {
     if (!searchResults) return;
     const q = query.trim().toLowerCase();
@@ -189,10 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
       (p.details?.activeIngredient && p.details.activeIngredient.toLowerCase().includes(q))
     );
 
-    const matchedNews = news.filter(n =>
+    const newsSectionExists = !!document.querySelector('#news-grid');
+    const matchedNews = newsSectionExists ? news.filter(n =>
       n.title.toLowerCase().includes(q) ||
       n.excerpt.toLowerCase().includes(q)
-    );
+    ) : [];
 
     if (matchedProducts.length === 0 && matchedNews.length === 0) {
       searchResults.removeAttribute('hidden');
