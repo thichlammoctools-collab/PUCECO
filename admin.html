@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hệ Thống Quản Trị Website — PUCECO</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+  
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+  <!-- ===== 1. MÀN HÌNH ĐĂNG NHẬP (AUTH) ===== -->
+  <div id="auth-wrapper" class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <svg viewBox="0 0 32 32" width="34" height="34" fill="none">
+          <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".2"/>
+          <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h2>PUCECO</h2>
+      </div>
+      <h3>Đăng Nhập Quản Trị</h3>
+      <p>Vui lòng nhập mật khẩu quản trị viên để tiếp tục</p>
+      
+      <form id="login-form" class="auth-form">
+        <div>
+          <label for="login-password">Mật khẩu Quản trị</label>
+          <input id="login-password" type="password" placeholder="Nhập mật khẩu..." required autofocus autocomplete="current-password">
+        </div>
+        <div id="login-error" style="color:var(--admin-danger);font-size:0.85rem;display:none;font-weight:600;">
+          Mật khẩu không chính xác! Vui lòng thử lại.
+        </div>
+        <button class="btn btn-primary" type="submit" style="padding:12px;">Đăng nhập hệ thống</button>
+        <p class="auth-hint">Mật khẩu mặc định hệ thống: <b>admin123</b></p>
+      </form>
+      
+      <div style="margin-top:20px;border-top:1px solid var(--admin-border);padding-top:16px;">
+        <a href="index.html" style="font-size:0.88rem;color:var(--admin-muted);text-decoration:none;">← Quay lại Trang chủ Website</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. KHÔNG GIAN QUẢN TRỊ ADMIN (LAYOUT) ===== -->
+  <div id="admin-layout" class="admin-layout" style="display:none;">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <svg viewBox="0 0 32 32" width="28" height="28" fill="none" style="color:var(--admin-accent)">
+          <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".2"/>
+          <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="2"/>
+          <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-title">PUCECO</span>
+        <span class="sidebar-badge">ADMIN</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dashboard">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Tổng quan
+        </button>
+        <button class="nav-item" data-tab="products">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 7v9"/></svg>
+          Quản lý Sản phẩm
+        </button>
+        <button class="nav-item" data-tab="news">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m4 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/></svg>
+          Tin tức & Bài viết
+        </button>
+        <button class="nav-item" data-tab="leads">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Yêu cầu & Khách hàng
+          <span id="badge-new-leads" class="nav-counter" style="display:none;">0</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Cấu hình & Sao lưu
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="index.html" target="_blank" class="sidebar-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Xem Trang chủ Website
+        </a>
+        <button id="logout-btn" class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,0.25);margin-top:4px;">
+          Đăng xuất
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="topbar-title">
+          <h1>Bảng Điều Khiển Quản Trị</h1>
+          <p>Hệ thống quản lý dữ liệu trực quan theo thời gian thực</p>
+        </div>
+        <div class="topbar-actions">
+          <a href="index.html" class="btn btn-secondary btn-sm" target="_blank">
+            Mở website
+          </a>
+        </div>
+      </header>
+
+      <div class="admin-body">
+
+        <!-- ===== TAB 1: DASHBOARD ===== -->
+        <section id="tab-dashboard" class="tab-content active">
+          <!-- KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/></svg>
+              </div>
+              <div class="kpi-info">
+                <h4>Tổng sản phẩm</h4>
+                <div id="kpi-products" class="kpi-num">0</div>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon gold">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/></svg>
+              </div>
+              <div class="kpi-info">
+                <h4>Yêu cầu mới</h4>
+                <div id="kpi-leads" class="kpi-num">0</div>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon blue">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/></svg>
+              </div>
+              <div class="kpi-info">
+                <h4>Bài viết tin tức</h4>
+                <div id="kpi-news" class="kpi-num">0</div>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon purple">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              </div>
+              <div class="kpi-info">
+                <h4>Đối tác toàn cầu</h4>
+                <div id="kpi-partners" class="kpi-num">320</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Leads Panel -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Yêu Cầu Liên Hệ & Xin Mẫu Thử Gần Đây</h3>
+              <button class="btn btn-secondary btn-sm" onclick="switchTab('leads')">Xem tất cả</button>
+            </div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>Khách hàng / Công ty</th>
+                      <th>Liên hệ</th>
+                      <th>Sản phẩm quan tâm</th>
+                      <th>Trạng thái</th>
+                      <th>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-leads-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB 2: PRODUCTS ===== -->
+        <section id="tab-products" class="tab-content">
+          <div class="panel">
+            <div class="panel-header">
+              <div style="display:flex;align-items:center;gap:16px;flex:1;max-width:600px;">
+                <input id="search-product-input" type="text" class="form-control" placeholder="Tìm tên nguyên liệu, hoạt chất..." style="max-width:280px;">
+                <select id="filter-product-cat" class="form-control" style="max-width:200px;">
+                  <option value="">-- Tất cả danh mục --</option>
+                  <option value="extract">Chiết xuất thực vật</option>
+                  <option value="essential_oil">Tinh dầu thiên nhiên</option>
+                  <option value="nano">Hoạt chất Nano</option>
+                  <option value="sweetener">Chất tạo ngọt tự nhiên</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" onclick="openAddProductModal()">
+                + Thêm Sản Phẩm Mới
+              </button>
+            </div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">STT</th>
+                      <th style="width:60px;">Ảnh</th>
+                      <th>Tên Sản Phẩm / Hoạt Chất</th>
+                      <th>Danh Mục</th>
+                      <th>Nhãn Tag</th>
+                      <th>Vị Trí Hiển Thị</th>
+                      <th style="width:140px;">Hành Động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="products-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB 3: NEWS ===== -->
+        <section id="tab-news" class="tab-content">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Danh Sách Tin Tức & Nghiên Cứu R&D</h3>
+              <button class="btn btn-primary" onclick="openAddNewsModal()">
+                + Viết Bài Tin Tức Mới
+              </button>
+            </div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">STT</th>
+                      <th style="width:60px;">Ảnh</th>
+                      <th>Tiêu Đề Bài Viết</th>
+                      <th>Ngày Đăng / Tác Giả</th>
+                      <th style="width:140px;">Hành Động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="news-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB 4: LEADS & INQUIRIES ===== -->
+        <section id="tab-leads" class="tab-content">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Danh Sách Yêu Cầu Liên Hệ & Báo Giá</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Tự động thu thập từ biểu mẫu trên trang chủ</p>
+              </div>
+              <button id="export-leads-btn" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Xuất File Excel (CSV)
+              </button>
+            </div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:40px;">STT</th>
+                      <th>Họ Tên / Đơn Vị</th>
+                      <th>Số Điện Thoại / Email</th>
+                      <th>Nguyên Liệu Quan Tâm</th>
+                      <th>Nội Dung Yêu Cầu</th>
+                      <th style="width:160px;">Trạng Thái Tiếp Nhận</th>
+                      <th style="width:80px;">Xóa</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leads-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB 5: SETTINGS & BACKUP ===== -->
+        <section id="tab-settings" class="tab-content">
+          <!-- Thông tin công ty -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Thông Tin Doanh Nghiệp & Chân Trang</h3>
+            </div>
+            <div class="panel-body">
+              <form id="settings-form">
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label>Tên Thương Hiệu</label>
+                    <input id="settings-brand" type="text" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Hotline Hỗ Trợ</label>
+                    <input id="settings-hotline" type="text" class="form-control" required>
+                  </div>
+                </div>
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label>Email Phòng Kinh Doanh</label>
+                    <input id="settings-email" type="email" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Địa Chỉ Nhà Máy / Trụ Sở</label>
+                    <input id="settings-address" type="text" class="form-control" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Khẩu Hiệu (Slogan)</label>
+                  <input id="settings-slogan" type="text" class="form-control">
+                </div>
+
+                <h4 style="margin:20px 0 12px;font-size:1rem;color:var(--admin-primary);">Thông Số Thống Kê Thành Tựu (Phần Về PUCECO)</h4>
+                <div class="form-grid-4">
+                  <div class="form-group">
+                    <label>Năm kinh nghiệm</label>
+                    <input id="settings-stat-years" type="number" class="form-control" min="1">
+                  </div>
+                  <div class="form-group">
+                    <label>Đối tác toàn cầu</label>
+                    <input id="settings-stat-partners" type="number" class="form-control" min="1">
+                  </div>
+                  <div class="form-group">
+                    <label>Dòng nguyên liệu</label>
+                    <input id="settings-stat-lines" type="number" class="form-control" min="1">
+                  </div>
+                  <div class="form-group">
+                    <label>Truy xuất nguồn gốc (%)</label>
+                    <input id="settings-stat-traceability" type="number" class="form-control" min="1" max="100">
+                  </div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Lưu Cập Nhật Cấu Hình</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Đổi mật khẩu -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Bảo Mật & Đổi Mật Khẩu Quản Trị</h3>
+            </div>
+            <div class="panel-body">
+              <form id="password-form" style="max-width:480px;">
+                <div class="form-group">
+                  <label>Mật khẩu hiện tại</label>
+                  <input id="old-pass" type="password" class="form-control" placeholder="Mật khẩu cũ (mặc định: admin123)" required>
+                </div>
+                <div class="form-group">
+                  <label>Mật khẩu mới (tối thiểu 6 ký tự)</label>
+                  <input id="new-pass" type="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label>Xác nhận mật khẩu mới</label>
+                  <input id="confirm-pass" type="password" class="form-control" required>
+                </div>
+                <button class="btn btn-secondary" type="submit">Cập Nhật Mật Khẩu</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Sao lưu & Phục hồi dữ liệu -->
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Sao Lưu & Phục Hồi Cơ Sở Dữ Liệu</h3>
+            </div>
+            <div class="panel-body">
+              <p style="color:var(--admin-muted);margin-bottom:16px;">
+                Xuất toàn bộ danh sách sản phẩm, tin tức, yêu cầu khách hàng và cấu hình ra file JSON để lưu trữ an toàn hoặc chuyển sang máy khác.
+              </p>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+                <button id="export-backup-btn" class="btn btn-primary">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Tải File Sao Lưu (Export JSON)
+                </button>
+                <label class="btn btn-secondary" style="margin:0;cursor:pointer;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Phục Hồi Dữ Liệu (Import JSON)
+                  <input id="import-file-input" type="file" accept=".json" style="display:none;">
+                </label>
+                <button id="reset-data-btn" class="btn btn-danger btn-outline">
+                  Khôi Phục Dữ Liệu Gốc Ban Đầu
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== MODAL THÊM / SỬA SẢN PHẨM ===== -->
+  <div id="admin-modal-product" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="modal-product-title">Thêm sản phẩm mới</h3>
+        <button type="button" class="btn btn-outline btn-sm" data-close-admin-modal style="padding:4px 8px;">✕</button>
+      </div>
+      <form id="product-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="product-id">
+          
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Tên sản phẩm / Hoạt chất *</label>
+              <input id="product-name" type="text" class="form-control" placeholder="VD: Chiết xuất Trà xanh EGCG" required>
+            </div>
+            <div class="form-group">
+              <label>Danh mục</label>
+              <select id="product-category" class="form-control">
+                <option value="extract">Chiết xuất thực vật</option>
+                <option value="essential_oil">Tinh dầu thiên nhiên</option>
+                <option value="nano">Hoạt chất Nano</option>
+                <option value="sweetener">Chất tạo ngọt tự nhiên</option>
+                <option value="herb">Dược liệu thô</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Nhãn tag nổi bật</label>
+              <select id="product-tag" class="form-control">
+                <option value="Bán chạy">Bán chạy</option>
+                <option value="Organic">Organic (Hữu cơ)</option>
+                <option value="Mới">Mới ra mắt</option>
+                <option value="Dược dụng">Chuẩn Dược dụng</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Chọn biểu tượng thảo mộc sẵn có</label>
+              <select id="product-image-select" class="form-control">
+                <option value="assets/images/prod-green-tea.svg">Lá trà xanh (Green Tea)</option>
+                <option value="assets/images/prod-lemongrass.svg">Sả chanh (Lemongrass)</option>
+                <option value="assets/images/prod-curcumin.svg">Nghệ vàng / Nano (Curcumin)</option>
+                <option value="assets/images/prod-aloe.svg">Lô hội nha đam (Aloe Vera)</option>
+                <option value="assets/images/prod-turmeric-black.svg">Nghệ đen (Black Turmeric)</option>
+                <option value="assets/images/prod-stevia.svg">Cỏ ngọt (Stevia)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Hoặc dán URL hình ảnh tùy chỉnh (tùy chọn)</label>
+            <input id="product-image-custom" type="text" class="form-control" placeholder="https://example.com/image.png">
+          </div>
+
+          <div class="form-group">
+            <label>Mô tả ngắn *</label>
+            <textarea id="product-desc" class="form-control" rows="2" placeholder="Mô tả tóm tắt tính năng và ứng dụng..." required></textarea>
+          </div>
+
+          <h4 style="margin:16px 0 10px;font-size:0.95rem;color:var(--admin-primary);">Thông Số Tiêu Chuẩn Kỹ Thuật (COA / MSDS)</h4>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Hàm lượng hoạt chất</label>
+              <input id="product-active" type="text" class="form-control" placeholder="VD: EGCG ≥ 98%, Polyphenol ≥ 99%">
+            </div>
+            <div class="form-group">
+              <label>Tiêu chuẩn kiểm nghiệm</label>
+              <input id="product-coa" type="text" class="form-control" placeholder="VD: Chuẩn USP / EP / ISO 9001">
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Quy cách / Dạng bào chế</label>
+              <input id="product-formulation" type="text" class="form-control" placeholder="VD: Bột mịn tan nước 100%">
+            </div>
+            <div class="form-group">
+              <label>Nguồn gốc vùng trồng</label>
+              <input id="product-origin" type="text" class="form-control" placeholder="VD: Mộc Châu - Sơn La, Việt Nam">
+            </div>
+          </div>
+
+          <div style="display:flex;gap:24px;margin-top:10px;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.92rem;">
+              <input id="product-is-featured" type="checkbox" checked> Hiển thị ở mục "Sản phẩm nổi bật"
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.92rem;">
+              <input id="product-is-new" type="checkbox"> Hiển thị ở mục "Sản phẩm mới ra mắt"
+            </label>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL THÊM / SỬA TIN TỨC ===== -->
+  <div id="admin-modal-news" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="modal-news-title">Viết bài tin tức mới</h3>
+        <button type="button" class="btn btn-outline btn-sm" data-close-admin-modal style="padding:4px 8px;">✕</button>
+      </div>
+      <form id="news-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="news-id">
+          
+          <div class="form-group">
+            <label>Tiêu đề bài viết *</label>
+            <input id="news-title-input" type="text" class="form-control" required placeholder="VD: PUCECO đón nhận chứng nhận tiêu chuẩn mới">
+          </div>
+
+          <div class="form-grid-3" style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;">
+            <div class="form-group">
+              <label>Ngày đăng</label>
+              <input id="news-date" type="text" class="form-control" placeholder="VD: 22 Thg 9, 2026" required>
+            </div>
+            <div class="form-group">
+              <label>Tác giả / Phòng ban</label>
+              <input id="news-author" type="text" class="form-control" placeholder="VD: Viện R&D PUCECO">
+            </div>
+            <div class="form-group">
+              <label>Hình minh họa</label>
+              <select id="news-image-select" class="form-control">
+                <option value="assets/images/news-gmp.svg">Nhà máy / Chứng nhận GMP</option>
+                <option value="assets/images/news-farm.svg">Vùng trồng nông trại hữu cơ</option>
+                <option value="assets/images/news-lab.svg">Phòng thí nghiệm R&D</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Đoạn tóm tắt mở đầu *</label>
+            <textarea id="news-excerpt" class="form-control" rows="2" placeholder="Tóm tắt ngắn gọn hiển thị trên thẻ bài viết..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Nội dung chi tiết bài viết *</label>
+            <textarea id="news-content" class="form-control" rows="5" placeholder="Nội dung bài viết đầy đủ..." required></textarea>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Lưu bài viết</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="assets/js/data-store.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

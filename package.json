@@ -1,0 +1,21 @@
+{
+  "name": "puceco-website",
+  "version": "2.0.0",
+  "description": "Website giới thiệu nguyên liệu chiết xuất thiên nhiên PUCECO và hệ thống quản trị Admin",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node -e \"const fs = require('fs'); fs.cpSync('index.html', 'dist/index.html'); fs.cpSync('admin.html', 'dist/admin.html'); fs.cpSync('assets', 'dist/assets', { recursive: true }); console.log('Build completed to dist/');\"",
+    "deploy": "wrangler pages deploy dist --project-name=puceco"
+  },
+  "keywords": [
+    "puceco",
+    "botanical",
+    "extracts",
+    "gmp",
+    "admin-dashboard",
+    "cloudflare-pages"
+  ],
+  "author": "PUCECO",
+  "license": "MIT"
+}

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
+  <defs>
+    <linearGradient id="labBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8F0EC"/>
+      <stop offset="100%" stop-color="#BBD9CA"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="120" fill="url(#labBg)" rx="8"/>
+  <g transform="translate(100, 60)">
+    <!-- Microscope -->
+    <path d="M-15 32 L35 32" stroke="#1F2937" stroke-width="4" stroke-linecap="round"/>
+    <path d="M0 32 L0 10 C0 -5 18 -15 22 -2" stroke="#374151" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <rect x="-16" y="24" width="32" height="4" fill="#6B7280"/>
+    <!-- Eyepiece & Tube -->
+    <g transform="rotate(-30 15 -10)">
+      <rect x="10" y="-35" width="8" height="24" fill="#059669" rx="2"/>
+      <rect x="8" y="-38" width="12" height="4" fill="#1F2937" rx="1"/>
+      <rect x="9" y="-10" width="10" height="6" fill="#F59E0B" rx="1"/>
+    </g>
+    <!-- Petri dish with plant extract sample -->
+    <ellipse cx="-25" cy="22" rx="16" ry="6" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="1.5"/>
+    <ellipse cx="-25" cy="22" rx="11" ry="3.5" fill="#10B981" opacity="0.8"/>
+  </g>
+</svg>

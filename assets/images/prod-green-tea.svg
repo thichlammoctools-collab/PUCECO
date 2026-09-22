@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="200" height="150">
+  <defs>
+    <linearGradient id="teaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E6F1EA"/>
+      <stop offset="100%" stop-color="#C9E3D3"/>
+    </linearGradient>
+    <linearGradient id="teaLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#15803D"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill="url(#teaBg)" rx="8"/>
+  <circle cx="100" cy="75" r="48" fill="#A7F3D0" opacity="0.4"/>
+  <!-- Fresh Green Tea Leaves -->
+  <g transform="translate(100, 75)">
+    <!-- Main leaf -->
+    <path d="M0 -42 C30 -25 35 15 0 42 C-35 15 -30 -25 0 -42 Z" fill="url(#teaLeaf)"/>
+    <path d="M0 -35 L0 38" stroke="#86EFAC" stroke-width="2" stroke-linecap="round"/>
+    <path d="M0 -15 Q12 -22 18 -12" stroke="#86EFAC" stroke-width="1.5" fill="none"/>
+    <path d="M0 5 Q14 -2 18 10" stroke="#86EFAC" stroke-width="1.5" fill="none"/>
+    <path d="M0 -15 Q-12 -22 -18 -12" stroke="#86EFAC" stroke-width="1.5" fill="none"/>
+    <path d="M0 5 Q-14 -2 -18 10" stroke="#86EFAC" stroke-width="1.5" fill="none"/>
+    <!-- Side leaf left -->
+    <path d="M-8 10 C-35 5 -45 35 -15 38 C-5 30 -5 20 -8 10 Z" fill="#16A34A" opacity="0.9"/>
+    <!-- Side leaf right -->
+    <path d="M8 12 C35 8 42 38 12 40 C5 32 5 22 8 12 Z" fill="#15803D" opacity="0.85"/>
+  </g>
+</svg>

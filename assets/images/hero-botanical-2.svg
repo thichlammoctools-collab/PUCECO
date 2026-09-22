@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <linearGradient id="flaskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="sproutGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#A7F3D0"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  <!-- Laboratory Flask with Botanical Essence -->
+  <path d="M108 50 L132 50 L132 85 L175 165 C185 182 172 200 152 200 L88 200 C68 200 55 182 65 165 L108 85 Z" fill="url(#flaskGrad)" stroke="#6EE7B7" stroke-width="3"/>
+  <rect x="102" y="44" width="36" height="8" rx="4" fill="#6EE7B7"/>
+  <!-- Liquid wave line -->
+  <path d="M78 160 Q100 150 120 160 T162 160 L172 178 C176 186 170 196 156 196 L84 196 C70 196 64 186 68 178 Z" fill="#10B981" opacity="0.8"/>
+  <!-- Sprout growing out of flask -->
+  <path d="M120 150 Q118 100 120 70" stroke="url(#sproutGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M120 75 C100 65 95 40 115 45 C125 55 122 70 120 75 Z" fill="#34D399"/>
+  <path d="M120 65 C140 55 145 30 125 35 C115 45 118 60 120 65 Z" fill="#6EE7B7"/>
+  <!-- Bubbles -->
+  <circle cx="105" cy="175" r="4" fill="#E6FFFA" opacity="0.7"/>
+  <circle cx="130" cy="180" r="5" fill="#E6FFFA" opacity="0.8"/>
+  <circle cx="120" cy="165" r="3" fill="#E6FFFA" opacity="0.9"/>
+  <circle cx="140" cy="150" r="2.5" fill="#E6FFFA" opacity="0.6"/>
+</svg>

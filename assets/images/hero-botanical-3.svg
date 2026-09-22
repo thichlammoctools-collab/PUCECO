@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <defs>
+    <linearGradient id="dnaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  <!-- Molecular / R&D Botanical Hexagon Grid -->
+  <polygon points="120,40 180,75 180,145 120,180 60,145 60,75" stroke="#34D399" stroke-width="2.5" fill="none" opacity="0.4"/>
+  <polygon points="120,60 160,83 160,137 120,160 80,137 80,83" stroke="#6EE7B7" stroke-width="2" fill="#047857" fill-opacity="0.25"/>
+  <!-- Central Molecule Nodes with Leaves -->
+  <circle cx="120" cy="110" r="14" fill="#F59E0B"/>
+  <circle cx="80" cy="85" r="9" fill="#10B981"/>
+  <circle cx="160" cy="85" r="9" fill="#10B981"/>
+  <circle cx="80" cy="135" r="9" fill="#10B981"/>
+  <circle cx="160" cy="135" r="9" fill="#10B981"/>
+  <!-- Connectors -->
+  <line x1="120" y1="110" x2="80" y2="85" stroke="#FDE68A" stroke-width="3"/>
+  <line x1="120" y1="110" x2="160" y2="85" stroke="#FDE68A" stroke-width="3"/>
+  <line x1="120" y1="110" x2="80" y2="135" stroke="#FDE68A" stroke-width="3"/>
+  <line x1="120" y1="110" x2="160" y2="135" stroke="#FDE68A" stroke-width="3"/>
+  <!-- Leaf element at center -->
+  <path d="M120 100 C128 105 128 115 120 120 C112 115 112 105 120 100 Z" fill="#FFFFFF"/>
+</svg>

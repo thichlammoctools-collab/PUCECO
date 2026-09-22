@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="200" height="150">
+  <defs>
+    <linearGradient id="steviaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3EFE2"/>
+      <stop offset="100%" stop-color="#E0CFA6"/>
+    </linearGradient>
+    <linearGradient id="steviaLeaf" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#84CC16"/>
+      <stop offset="100%" stop-color="#4D7C0F"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill="url(#steviaBg)" rx="8"/>
+  <circle cx="100" cy="75" r="48" fill="#FEF3C7" opacity="0.5"/>
+  <!-- Stevia Plant leaves with sweet crystal powder sparkles -->
+  <g transform="translate(100, 75)">
+    <!-- Main stem -->
+    <path d="M0 45 L0 -25" stroke="#65A30D" stroke-width="3" stroke-linecap="round"/>
+    <!-- Serrated Leaves Pair 1 -->
+    <path d="M0 25 C-22 22 -35 5 -20 -5 C-5 -15 0 15 0 25 Z" fill="url(#steviaLeaf)"/>
+    <path d="M0 25 C22 22 35 5 20 -5 C5 -15 0 15 0 25 Z" fill="#65A30D"/>
+    <!-- Serrated Leaves Pair 2 (smaller) -->
+    <path d="M0 5 C-18 2 -26 -10 -15 -18 C-4 -24 0 -3 0 5 Z" fill="#84CC16"/>
+    <path d="M0 5 C18 2 26 -10 15 -18 C4 -24 0 -3 0 5 Z" fill="#65A30D"/>
+    <!-- Top bud -->
+    <path d="M0 -22 C-6 -30 0 -42 0 -42 C0 -42 6 -30 0 -22 Z" fill="#A3E635"/>
+    <!-- Sweet Sparkles -->
+    <polygon points="26,-28 28,-22 34,-20 28,-18 26,-12 24,-18 18,-20 24,-22" fill="#FBBF24"/>
+    <polygon points="-24,-30 -22,-25 -17,-23 -22,-21 -24,-16 -26,-21 -31,-23 -26,-25" fill="#F59E0B"/>
+    <circle cx="30" cy="8" r="2.5" fill="#FFFFFF"/>
+    <circle cx="-28" cy="18" r="2" fill="#FFFFFF"/>
+  </g>
+</svg>

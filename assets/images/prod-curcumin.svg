@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="200" height="150">
+  <defs>
+    <linearGradient id="curcBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8F0EC"/>
+      <stop offset="100%" stop-color="#BBD9CA"/>
+    </linearGradient>
+    <linearGradient id="turmericGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="60%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill="url(#curcBg)" rx="8"/>
+  <circle cx="100" cy="75" r="48" fill="#FDE68A" opacity="0.4"/>
+  <!-- Turmeric Root & Nano spheres -->
+  <g transform="translate(100, 75)">
+    <!-- Root shape -->
+    <path d="M-38 12 C-45 -5 -25 -22 5 -15 C25 -10 45 -2 40 18 C35 32 10 25 -10 28 C-25 30 -32 24 -38 12 Z" fill="url(#turmericGrad)"/>
+    <!-- Root segments -->
+    <path d="M-22 -16 Q-18 2 -16 26" stroke="#92400E" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+    <path d="M-2 -12 Q3 5 4 25" stroke="#92400E" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+    <path d="M18 -5 Q22 8 20 22" stroke="#92400E" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+    <!-- Slice of Turmeric showing rich orange -->
+    <ellipse cx="32" cy="-5" rx="14" ry="18" fill="#F97316" stroke="#B45309" stroke-width="2.5" transform="rotate(-15 32 -5)"/>
+    <ellipse cx="32" cy="-5" rx="9" ry="12" fill="#FBBF24" opacity="0.85" transform="rotate(-15 32 -5)"/>
+    <!-- Glowing Nano particles -->
+    <circle cx="-25" cy="-25" r="5" fill="#F59E0B"/>
+    <circle cx="-15" cy="-34" r="3.5" fill="#FBBF24"/>
+    <circle cx="0" cy="-28" r="4" fill="#F59E0B"/>
+    <circle cx="18" cy="-32" r="3" fill="#FDE68A"/>
+  </g>
+</svg>

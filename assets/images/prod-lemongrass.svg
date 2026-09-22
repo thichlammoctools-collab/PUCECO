@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="200" height="150">
+  <defs>
+    <linearGradient id="grassBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3EFE2"/>
+      <stop offset="100%" stop-color="#E4D6B0"/>
+    </linearGradient>
+    <linearGradient id="stalkGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="40%" stop-color="#84CC16"/>
+      <stop offset="100%" stop-color="#4D7C0F"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="150" fill="url(#grassBg)" rx="8"/>
+  <circle cx="100" cy="75" r="48" fill="#FEF9C3" opacity="0.6"/>
+  <!-- Lemongrass bundle & droplet -->
+  <g transform="translate(100, 75)">
+    <!-- Stalks -->
+    <path d="M-12 40 C-8 0 -2 -30 15 -45" stroke="url(#stalkGrad)" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M0 42 C2 -5 10 -35 30 -42" stroke="url(#stalkGrad)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+    <path d="M-6 42 C-14 5 -20 -20 -32 -38" stroke="url(#stalkGrad)" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M6 40 C-2 15 -6 -15 2 -46" stroke="#65A30D" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <!-- Lemongrass base wrapping ring -->
+    <ellipse cx="-2" cy="28" rx="14" ry="5" fill="#CA8A04" opacity="0.6"/>
+    <!-- Essential oil drop -->
+    <g transform="translate(25, 10)">
+      <path d="M0 -14 C6 -6 10 0 10 7 A10 10 0 1 1 -10 7 C-10 0 -6 -6 0 -14 Z" fill="#EAB308"/>
+      <circle cx="-3" cy="5" r="2.5" fill="#FEF08A" opacity="0.8"/>
+    </g>
+  </g>
+</svg>
