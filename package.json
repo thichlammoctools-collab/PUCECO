@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "node -e \"const fs = require('fs'); fs.cpSync('index.html', 'dist/index.html'); fs.cpSync('admin.html', 'dist/admin.html'); fs.cpSync('assets', 'dist/assets', { recursive: true }); console.log('Build completed to dist/');\"",
-    "deploy": "wrangler pages deploy dist --project-name=puceco"
+    "build": "node -e \"const fs = require('fs'); fs.cpSync('index.html', 'dist/index.html'); fs.cpSync('admin.html', 'dist/admin.html'); if (fs.existsSync('_headers')) fs.copyFileSync('_headers', 'dist/_headers'); fs.cpSync('assets', 'dist/assets', { recursive: true }); console.log('Build completed to dist/');\"",
+    "deploy": "wrangler pages deploy dist --project-name=puceco --branch=main --commit-dirty=true"
   },
   "keywords": [
     "puceco",
