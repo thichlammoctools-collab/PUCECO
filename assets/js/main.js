@@ -88,6 +88,36 @@ document.addEventListener('DOMContentLoaded', () => {
       `).join('');
     }
 
+    // 3.5. Render Formulations (Công thức mẫu)
+    const formGrid = document.querySelector('#formulations-grid');
+    if (formGrid && store.getFormulations) {
+      const forms = store.getFormulations();
+      formGrid.innerHTML = forms.map(f => `
+        <article class="formulation-card" data-formulation-id="${f.id}">
+          <div class="formulation-thumb" onclick="openFormulationModal('${f.id}')">
+            <img src="${f.image}" alt="${f.name}" loading="lazy">
+            <span class="formulation-tag">${f.badge || 'Công thức mẫu'}</span>
+          </div>
+          <div class="formulation-body">
+            <h3>${f.name}</h3>
+            <p>${f.desc}</p>
+            <div class="formulation-meta">
+              <div><b>Dạng bào chế:</b> ${f.dosageForm || '—'}</div>
+              <div><b>Hoạt chất PUCECO:</b> ${f.mainIngredient || '—'}</div>
+            </div>
+            <div class="formulation-actions">
+              <button type="button" class="link-arrow" onclick="openFormulationModal('${f.id}')">
+                Xem công thức chi tiết <span aria-hidden="true">→</span>
+              </button>
+              <button type="button" class="btn primary sm" onclick="requestFormulationSample('${escapeHtml(f.name)}')">
+                Yêu cầu mẫu
+              </button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
     // 4. Render News
     const newsGrid = document.querySelector('#news-grid');
     if (newsGrid) {
@@ -112,8 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const prodSelect = document.querySelector('#contact-product');
     if (prodSelect) {
       const currentValue = prodSelect.value;
-      prodSelect.innerHTML = '<option value="">-- Chọn sản phẩm quan tâm --</option>' +
+      prodSelect.innerHTML = '<option value="">-- Chọn sản phẩm / công thức quan tâm --</option>' +
         products.map(p => `<option value="${p.name}">${p.name} (${p.tag || 'Chuẩn'})</option>`).join('') +
+        (store.getFormulations ? store.getFormulations().map(f => `<option value="Công thức: ${f.name}">[Công thức] ${f.name}</option>`).join('') : '') +
         '<option value="Yêu cầu tư vấn khác">Yêu cầu nghiên cứu / Khác</option>';
       if (currentValue) prodSelect.value = currentValue;
     }
@@ -134,7 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const bottomNavItems = document.querySelectorAll('.bottom-nav-item[data-nav-section]');
   const sectionMap = {
     'top': document.querySelector('#top'),
+    'gioi-thieu': document.querySelector('#gioi-thieu'),
     'noi-bat': document.querySelector('#noi-bat'),
+    'cong-thuc-mau': document.querySelector('#cong-thuc-mau'),
     'tin-tuc': document.querySelector('#tin-tuc'),
     'lien-he': document.querySelector('#lien-he'),
   };
@@ -211,13 +244,20 @@ document.addEventListener('DOMContentLoaded', () => {
       (p.details?.activeIngredient && p.details.activeIngredient.toLowerCase().includes(q))
     );
 
+    const formulations = store.getFormulations ? store.getFormulations() : [];
+    const matchedForms = formulations.filter(f =>
+      f.name.toLowerCase().includes(q) ||
+      f.desc.toLowerCase().includes(q) ||
+      (f.mainIngredient && f.mainIngredient.toLowerCase().includes(q))
+    );
+
     const newsSectionExists = !!document.querySelector('#news-grid');
     const matchedNews = newsSectionExists ? news.filter(n =>
       n.title.toLowerCase().includes(q) ||
       n.excerpt.toLowerCase().includes(q)
     ) : [];
 
-    if (matchedProducts.length === 0 && matchedNews.length === 0) {
+    if (matchedProducts.length === 0 && matchedForms.length === 0 && matchedNews.length === 0) {
       searchResults.removeAttribute('hidden');
       searchResults.innerHTML = `<div style="padding:16px;text-align:center;color:var(--color-muted);">Không tìm thấy kết quả nào cho "<b>${escapeHtml(query)}</b>"</div>`;
       return;
@@ -235,6 +275,22 @@ document.addEventListener('DOMContentLoaded', () => {
               <p>${escapeHtml(p.desc.substring(0, 75))}...</p>
             </div>
             <span class="search-badge">${p.tag || 'Sản phẩm'}</span>
+          </div>
+        `;
+      });
+    }
+
+    if (matchedForms.length > 0) {
+      html += `<div style="font-size:0.8rem;font-weight:700;color:var(--color-accent-strong);margin:14px 12px 8px;text-transform:uppercase;letter-spacing:0.05em">Công thức mẫu (${matchedForms.length})</div>`;
+      matchedForms.forEach(f => {
+        html += `
+          <div class="search-item" onclick="openFormulationModal('${f.id}'); closeSearch();">
+            <img class="search-thumb" src="${f.image}" alt="">
+            <div class="search-info">
+              <h5>${escapeHtml(f.name)}</h5>
+              <p>${escapeHtml(f.desc.substring(0, 75))}...</p>
+            </div>
+            <span class="search-badge">${f.badge || 'Công thức'}</span>
           </div>
         `;
       });
@@ -458,6 +514,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modalNews.classList.add('is-open');
     document.body.style.overflow = 'hidden';
+  };
+
+  const modalFormulation = document.querySelector('#modal-formulation');
+  window.openFormulationModal = function (id) {
+    if (!store.getFormulationById || !modalFormulation) return;
+    const f = store.getFormulationById(id);
+    if (!f) return;
+
+    modalFormulation.querySelector('#modal-f-name').textContent = f.name;
+    modalFormulation.querySelector('#modal-f-badge').textContent = f.badge || 'Công thức R&D';
+    modalFormulation.querySelector('#modal-f-desc').textContent = f.desc;
+    modalFormulation.querySelector('#modal-f-dosage').textContent = f.dosageForm || '—';
+    modalFormulation.querySelector('#modal-f-main').textContent = f.mainIngredient || '—';
+
+    const tbody = modalFormulation.querySelector('#modal-f-table-body');
+    if (tbody && Array.isArray(f.ingredients)) {
+      tbody.innerHTML = f.ingredients.map(ing => `
+        <tr>
+          <td><b>${escapeHtml(ing.name)}</b></td>
+          <td style="color:var(--color-accent-text);font-weight:600;font-family:var(--font-mono);">${escapeHtml(ing.ratio)}</td>
+          <td style="color:var(--color-muted);">${escapeHtml(ing.role)}</td>
+        </tr>
+      `).join('');
+    }
+
+    modalFormulation.querySelector('#modal-f-spec').textContent = f.spec || 'Đạt tiêu chuẩn cảm quan & phân tích kiểm nghiệm PUCECO Lab.';
+    modalFormulation.querySelector('#modal-f-directions').textContent = f.directions || 'Liên hệ chuyên viên R&D PUCECO để nhận hướng dẫn chuyển giao công nghệ.';
+
+    const reqBtn = modalFormulation.querySelector('#modal-f-request-btn');
+    if (reqBtn) {
+      reqBtn.onclick = () => {
+        closeModals();
+        requestFormulationSample(f.name);
+      };
+    }
+
+    modalFormulation.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.requestFormulationSample = function (formulaName) {
+    const contactSelect = document.querySelector('#contact-product');
+    const msgTextarea = document.querySelector('#contact-form textarea[name="message"]');
+    if (contactSelect) {
+      let found = false;
+      for (let i = 0; i < contactSelect.options.length; i++) {
+        if (contactSelect.options[i].text.includes(formulaName)) {
+          contactSelect.selectedIndex = i;
+          found = true;
+          break;
+        }
+      }
+      if (!found) contactSelect.value = 'Yêu cầu tư vấn khác';
+    }
+    if (msgTextarea) {
+      msgTextarea.value = `Xin gửi tôi bộ tài liệu kỹ thuật & mẫu thử cho công thức: ${formulaName}.`;
+    }
+    document.querySelector('#lien-he')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   window.closeModals = function () {

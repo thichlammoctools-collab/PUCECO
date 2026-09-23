@@ -11,11 +11,18 @@
   const STORAGE_KEY_LEADS = 'puceco_leads';
   const STORAGE_KEY_SETTINGS = 'puceco_settings';
   const STORAGE_KEY_AUTH = 'puceco_auth_session';
+  const STORAGE_KEY_FORMULATIONS = 'puceco_formulations';
 
   // Seed Data mặc định
   const DEFAULT_SETTINGS = {
     brandName: 'PUCECO',
-    slogan: 'Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học.',
+    slogan: 'Chiết xuất từ thiên nhiên & hoạt chất thế hệ mới',
+    aboutIntro: 'Công ty chúng tôi chuyên cung cấp các chiết xuất từ thiên nhiên và hoạt chất thế hệ mới, phục vụ cho ngành công nghiệp sản xuất dược phẩm, thực phẩm chức năng, mỹ phẩm. Với cam kết mang đến thị trường những sản phẩm đạt tiêu chuẩn chất lượng quốc tế, giá cả cạnh tranh và phù hợp với xu hướng phát triển thị trường.',
+    values: {
+      quality: 'Chúng tôi luôn đặt chất lượng sản phẩm và dịch vụ lên hàng đầu, giá trị đi đôi với thương hiệu.',
+      reputation: 'Cam kết cung cấp sản phẩm chính hãng, rõ nguồn gốc xuất xứ từ các thương hiệu uy tín.',
+      professional: 'Đội ngũ nhân viên chuyên nghiệp, nhiệt tình, luôn sẵn sàng tư vấn và hỗ trợ khách hàng.'
+    },
     hotline: '(+84) 08 272 272 59',
     email: 'puceco2018@gmail.com',
     address: '679/38 Quang Trung , Phường 11, Quận Gò Vấp , Thành phố Hồ Chí Minh, Việt Nam',
@@ -28,6 +35,84 @@
       traceability: 100
     }
   };
+
+  const DEFAULT_FORMULATIONS = [
+    {
+      id: 'form-1',
+      name: 'Serum Dưỡng Trắng & Chống Oxy Hóa Chuyên Sâu',
+      badge: 'Mỹ phẩm Skin-care',
+      category: 'cosmetics',
+      desc: 'Công thức ứng dụng Chiết xuất Trà xanh EGCG 98% và Lô hội hữu cơ giúp ngăn ngừa lão hóa, trung hòa gốc tự do và phục hồi màng ẩm tự nhiên.',
+      mainIngredient: 'Chiết xuất Trà xanh EGCG 98% (PUCECO)',
+      dosageForm: 'Serum dưỡng da dạng tinh chất',
+      image: 'assets/images/form-serum.svg',
+      ingredients: [
+        { name: 'Chiết xuất Trà xanh EGCG 98% (PUCECO)', ratio: '2.0%', role: 'Chống oxy hóa vượt trội, sáng da' },
+        { name: 'Chiết xuất Lô hội 200:1 (PUCECO)', ratio: '5.0%', role: 'Cấp ẩm sâu, làm dịu da nhạy cảm' },
+        { name: 'Niacinamide (Vitamin B3)', ratio: '3.0%', role: 'Cải thiện sắc tố & hàng rào bảo vệ da' },
+        { name: 'Hyaluronic Acid đa tầng', ratio: '1.5%', role: 'Khóa ẩm & tăng độ đàn hồi biểu bì' },
+        { name: 'Dung môi & chất bảo quản tự nhiên', ratio: 'Vừa đủ 100%', role: 'Hệ nền nhũ tương an toàn' }
+      ],
+      spec: 'Serum trong suốt ánh lục thảo mộc tự nhiên, pH 5.5 - 6.0, độ nhớt 1.200 - 1.800 cP.',
+      directions: 'Hòa tan pha nước ở 45°C, bổ sung EGCG ở nhiệt độ dưới 40°C để bảo toàn tối đa hoạt tính sinh học.'
+    },
+    {
+      id: 'form-2',
+      name: 'Viên Nang Mềm Hỗ Trợ Dạ Dày & Kháng Viêm',
+      badge: 'Thực phẩm chức năng',
+      category: 'pharma',
+      desc: 'Ứng dụng Curcumin Nano 35nm kết hợp Chiết xuất Nghệ đen giúp tăng sinh khả dụng gấp 40 lần, hỗ trợ bảo vệ niêm mạc dạ dày và tiêu hóa khỏe mạnh.',
+      mainIngredient: 'Curcumin Nano 35nm & Nghệ đen (PUCECO)',
+      dosageForm: 'Viên nang mềm (Softgel)',
+      image: 'assets/images/form-capsule.svg',
+      ingredients: [
+        { name: 'Curcumin Nano 35nm (PUCECO)', ratio: '150 mg/viên', role: 'Hoạt chất kháng viêm, hấp thu nhanh' },
+        { name: 'Chiết xuất Nghệ đen chuẩn hóa (PUCECO)', ratio: '100 mg/viên', role: 'Hỗ trợ hành khí, kiện tỳ vị' },
+        { name: 'Piperine 95% từ hạt tiêu đen', ratio: '5 mg/viên', role: 'Tăng cường hấp thu qua ruột' },
+        { name: 'Dầu đậu nành & sáp ong tinh khiết', ratio: 'Vừa đủ 1 viên', role: 'Hệ tá dược chất mang' }
+      ],
+      spec: 'Nang mềm hình thon dài (Oblong), màu nâu cam đậm óng ánh, tan rã hoàn toàn trong vòng 20 phút.',
+      directions: 'Đồng hóa hỗn dịch bằng sóng siêu âm trước khi dập nang trên dây chuyền đạt chuẩn GMP.'
+    },
+    {
+      id: 'form-3',
+      name: 'Nước Uống Thảo Dược Đề Kháng Sugar-Free (0 Calo)',
+      badge: 'Đồ uống chức năng',
+      category: 'beverage',
+      desc: 'Công thức tạo ngọt thanh mát từ Glycoside Stevia Rebaudioside-A 98% và Tinh dầu Sả chanh, hoàn toàn không sinh calo, đáp ứng lối sống lành mạnh.',
+      mainIngredient: 'Glycoside Stevia Reb-A 98% & Sả chanh (PUCECO)',
+      dosageForm: 'Nước uống thảo dược đóng lon/chai',
+      image: 'assets/images/form-drink.svg',
+      ingredients: [
+        { name: 'Glycoside Stevia Reb-A 98% (PUCECO)', ratio: '0.04%', role: 'Chất tạo ngọt tự nhiên không calo' },
+        { name: 'Tinh dầu Sả chanh hòa tan (PUCECO)', ratio: '0.08%', role: 'Tạo hương tự nhiên, ấm họng' },
+        { name: 'Chiết xuất Trà xanh tan nước (PUCECO)', ratio: '0.50%', role: 'Bổ sung Polyphenol đề kháng' },
+        { name: 'Vitamin C & Kẽm Gluconate', ratio: '0.10%', role: 'Tăng cường miễn dịch' },
+        { name: 'Nước tinh khiết đã khử khoáng', ratio: 'Vừa đủ 100%', role: 'Hệ dung dịch nền' }
+      ],
+      spec: 'Nước trong suốt, hương sả chanh thanh nhẹ sảng khoái, vị ngọt thanh hậu sâu, chỉ số đường huyết 0.',
+      directions: 'Phối trộn đồng nhất ở nhiệt độ thường, tiệt trùng UHT 135°C trong 4 giây rồi chiết rót vô trùng.'
+    },
+    {
+      id: 'form-4',
+      name: 'Gel Làm Dịu & Phục Hồi Biểu Bì Sau Xâm Lấn',
+      badge: 'Dược mỹ phẩm',
+      category: 'cosmetics',
+      desc: 'Dạng gel mát dịu chiết xuất từ Lô hội nồng độ cao và Tinh dầu Sả chanh kháng khuẩn, chuyên dùng cho liệu trình phục hồi da tại viện da liễu & spa.',
+      mainIngredient: 'Chiết xuất Lô hội 200:1 & Sả chanh (PUCECO)',
+      dosageForm: 'Gel dưỡng ẩm sinh học',
+      image: 'assets/images/form-gel.svg',
+      ingredients: [
+        { name: 'Chiết xuất Lô hội hữu cơ 200:1 (PUCECO)', ratio: '1.0% (= 200% gel tươi)', role: 'Cấp ẩm tức thì, hạ nhiệt da' },
+        { name: 'Tinh dầu Sả chanh nano (PUCECO)', ratio: '0.2%', role: 'Kháng khuẩn tự nhiên an toàn' },
+        { name: 'Pro-Vitamin B5 (D-Panthenol)', ratio: '2.0%', role: 'Kích thích phục hồi tế bào da' },
+        { name: 'Chiết xuất Rau má (Centella)', ratio: '1.0%', role: 'Tái tạo liên kết mô' },
+        { name: 'Hệ gel Carbomer trung hòa & Nước cất', ratio: 'Vừa đủ 100%', role: 'Tạo cấu trúc gel mát mịn' }
+      ],
+      spec: 'Gel trong suốt đồng nhất, độ pH 5.8 tương thích sinh lý da, thấm nhanh không nhờn dính.',
+      directions: 'Ngậm nước Carbomer hoàn toàn, nâng pH bằng TEA rồi đưa hoạt chất PUCECO vào ở tốc độ khuấy chậm.'
+    }
+  ];
 
   const DEFAULT_PRODUCTS = [
     {
@@ -237,16 +322,17 @@
     } else {
       try {
         const s = JSON.parse(storedSettings);
-        if (s.email === 'info@puceco.vn' || s.hotline === '1900 123 456' || !s.mapsUrl) {
-          const updatedSettings = {
-            ...s,
-            email: s.email === 'info@puceco.vn' ? DEFAULT_SETTINGS.email : s.email,
-            hotline: s.hotline === '1900 123 456' ? DEFAULT_SETTINGS.hotline : s.hotline,
-            address: (s.address === 'Khu Công Nghệ Cao, Hà Nội, Việt Nam' || s.address === 'Khu Công Nghệ Cao, Hà Nội') ? DEFAULT_SETTINGS.address : s.address,
-            mapsUrl: s.mapsUrl || DEFAULT_SETTINGS.mapsUrl
-          };
-          localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updatedSettings));
-        }
+        const updatedSettings = {
+          ...s,
+          slogan: DEFAULT_SETTINGS.slogan,
+          aboutIntro: DEFAULT_SETTINGS.aboutIntro,
+          values: DEFAULT_SETTINGS.values,
+          email: s.email === 'info@puceco.vn' ? DEFAULT_SETTINGS.email : (s.email || DEFAULT_SETTINGS.email),
+          hotline: s.hotline === '1900 123 456' ? DEFAULT_SETTINGS.hotline : (s.hotline || DEFAULT_SETTINGS.hotline),
+          address: (s.address === 'Khu Công Nghệ Cao, Hà Nội, Việt Nam' || s.address === 'Khu Công Nghệ Cao, Hà Nội') ? DEFAULT_SETTINGS.address : (s.address || DEFAULT_SETTINGS.address),
+          mapsUrl: s.mapsUrl || DEFAULT_SETTINGS.mapsUrl
+        };
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updatedSettings));
       } catch (e) {
         localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
       }
@@ -290,6 +376,9 @@
     }
     if (!localStorage.getItem(STORAGE_KEY_LEADS)) {
       localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(DEFAULT_LEADS));
+    }
+    if (!localStorage.getItem(STORAGE_KEY_FORMULATIONS)) {
+      localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(DEFAULT_FORMULATIONS));
     }
   }
 
@@ -559,6 +648,46 @@
         method: 'DELETE'
       }).catch(err => console.warn('Cloudflare D1 lead delete warning:', err));
 
+      return true;
+    },
+
+    // Formulations (Công thức mẫu)
+    getFormulations: function () {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_FORMULATIONS)) || DEFAULT_FORMULATIONS;
+      } catch (e) {
+        return DEFAULT_FORMULATIONS;
+      }
+    },
+
+    getFormulationById: function (id) {
+      const list = this.getFormulations();
+      return list.find(f => f.id === id) || null;
+    },
+
+    saveFormulation: function (form) {
+      const list = this.getFormulations();
+      if (!form.id) {
+        form.id = 'form-' + Date.now();
+        list.unshift(form);
+      } else {
+        const index = list.findIndex(f => f.id === form.id);
+        if (index >= 0) {
+          list[index] = { ...list[index], ...form };
+        } else {
+          list.unshift(form);
+        }
+      }
+      localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(list));
+      emitSync('FORMULATION_UPDATED', form);
+      return form;
+    },
+
+    deleteFormulation: function (id) {
+      let list = this.getFormulations();
+      list = list.filter(f => f.id !== id);
+      localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(list));
+      emitSync('FORMULATION_DELETED', { id });
       return true;
     },
 

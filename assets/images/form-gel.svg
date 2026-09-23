@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
+  <defs>
+    <linearGradient id="bgGel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F0FDFA"/>
+      <stop offset="100%" stop-color="#CCFBF1"/>
+    </linearGradient>
+    <linearGradient id="tubeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0D9488"/>
+      <stop offset="50%" stop-color="#14B8A6"/>
+      <stop offset="100%" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="gelDrop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF"/>
+      <stop offset="100%" stop-color="#0D9488"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="180" rx="12" fill="url(#bgGel)"/>
+  <circle cx="120" cy="90" r="50" fill="#99F6E4" opacity="0.3"/>
+  
+  <g transform="translate(120, 85) rotate(-22)">
+    <!-- Cosmetic Tube Body -->
+    <path d="M-22 -45 L22 -45 L16 35 L-16 35 Z" fill="url(#tubeGrad)"/>
+    <!-- Tube crimped top tail -->
+    <rect x="-24" y="-55" width="48" height="10" rx="2" fill="#0F766E"/>
+    <line x1="-20" y1="-50" x2="20" y2="-50" stroke="#14B8A6" stroke-width="1.5"/>
+    
+    <!-- White label area -->
+    <rect x="-14" y="-30" width="28" height="40" rx="3" fill="#FFFFFF" opacity="0.95"/>
+    <line x1="-8" y1="-18" x2="8" y2="-18" stroke="#0D9488" stroke-width="2"/>
+    <line x1="-6" y1="-10" x2="6" y2="-10" stroke="#9CA3AF" stroke-width="1.5"/>
+    
+    <!-- Tube Cap at bottom -->
+    <rect x="-12" y="35" width="24" height="18" rx="4" fill="#374151"/>
+    
+    <!-- Gel droplet squeezing out -->
+    <g transform="translate(0, 60)">
+      <path d="M0 -6 C5 0 9 6 9 11 A9 9 0 1 1 -9 11 C-9 6 -5 0 0 -6 Z" fill="url(#gelDrop)"/>
+      <circle cx="-2" cy="8" r="2.5" fill="#FFFFFF" opacity="0.8"/>
+    </g>
+  </g>
+</svg>

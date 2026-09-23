@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180">
+  <defs>
+    <linearGradient id="bgSerum" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6F2"/>
+      <stop offset="100%" stop-color="#D7E8DC"/>
+    </linearGradient>
+    <linearGradient id="bottleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B72622" stop-opacity="0.15"/>
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#B72622" stop-opacity="0.25"/>
+    </linearGradient>
+    <linearGradient id="liquidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="180" rx="12" fill="url(#bgSerum)"/>
+  
+  <!-- Aura glow -->
+  <circle cx="120" cy="95" r="55" fill="#10B981" opacity="0.12"/>
+  
+  <g transform="translate(120, 95)">
+    <!-- Dropper top cap -->
+    <path d="M-8 -68 C-8 -75 8 -75 8 -68 L8 -55 L-8 -55 Z" fill="#374151"/>
+    <rect x="-14" y="-55" width="28" height="12" rx="3" fill="#D1D5DB" stroke="#9CA3AF" stroke-width="1"/>
+    
+    <!-- Dropper glass stem inside bottle -->
+    <line x1="0" y1="-43" x2="0" y2="25" stroke="#E5E7EB" stroke-width="3" stroke-linecap="round"/>
+    
+    <!-- Glass Bottle Body -->
+    <rect x="-28" y="-43" width="56" height="85" rx="14" fill="url(#bottleGrad)" stroke="#B72622" stroke-width="1.8"/>
+    
+    <!-- Serum Liquid inside -->
+    <path d="M-26 -5 Q0 -8 26 -5 L26 30 C26 36 21 40 15 40 L-15 40 C-21 40 -26 36 -26 30 Z" fill="url(#liquidGrad)" opacity="0.85"/>
+    
+    <!-- Label on Bottle -->
+    <rect x="-20" y="-2" width="40" height="28" rx="4" fill="#FFFFFF" opacity="0.95"/>
+    <line x1="-12" y1="8" x2="12" y2="8" stroke="#059669" stroke-width="2" stroke-linecap="round"/>
+    <line x1="-8" y1="15" x2="8" y2="15" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <!-- Droplet floating -->
+    <g transform="translate(42, -15)">
+      <path d="M0 -10 C5 -4 8 2 8 6 A8 8 0 1 1 -8 6 C-8 2 -5 -4 0 -10 Z" fill="#10B981"/>
+      <circle cx="-2" cy="4" r="2" fill="#FFFFFF" opacity="0.7"/>
+    </g>
+
+    <!-- Botanical leaf accent -->
+    <path d="M-38 20 C-50 10 -52 -10 -40 -15 C-42 -2 -35 10 -38 20 Z" fill="#059669" opacity="0.8"/>
+  </g>
+</svg>
