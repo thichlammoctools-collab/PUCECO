@@ -329,16 +329,100 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Modals & Viewers =====
   const modalProduct = document.querySelector('#modal-product');
   const modalNews = document.querySelector('#modal-news');
+  const modalLightbox = document.querySelector('#modal-lightbox');
+  const lightboxImg = document.querySelector('#lightbox-img');
+  const lightboxCaption = document.querySelector('#lightbox-caption');
+
+  window.openLightbox = function (src, caption) {
+    if (!modalLightbox || !lightboxImg) return;
+    lightboxImg.src = src;
+    lightboxImg.alt = caption || 'Ảnh sản phẩm phóng to';
+    if (lightboxCaption) lightboxCaption.textContent = caption || '';
+    modalLightbox.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeLightbox = function () {
+    if (modalLightbox) {
+      modalLightbox.classList.remove('is-open');
+      if (!modalProduct?.classList.contains('is-open') && !modalNews?.classList.contains('is-open')) {
+        document.body.style.overflow = '';
+      }
+    }
+  };
+
+  const pHero = document.querySelector('#modal-p-hero');
+  const pZoomBtn = document.querySelector('#modal-p-zoom-btn');
+  const pImg = document.querySelector('#modal-p-img');
+
+  if (pHero && pImg) {
+    pHero.addEventListener('click', (e) => {
+      if (e.target.closest('#modal-p-zoom-btn')) return; // handled by button
+      if (pImg.src) {
+        openLightbox(pImg.src, modalProduct?.querySelector('#modal-p-name')?.textContent);
+      }
+    });
+  }
+  if (pZoomBtn && pImg) {
+    pZoomBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (pImg.src) {
+        openLightbox(pImg.src, modalProduct?.querySelector('#modal-p-name')?.textContent);
+      }
+    });
+  }
+
+  const lightboxCloseBtn = document.querySelector('#lightbox-close-btn');
+  if (lightboxCloseBtn) {
+    lightboxCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeLightbox();
+    });
+  }
 
   window.openProductModal = function (id) {
     const p = store.getProductById(id);
     if (!p || !modalProduct) return;
 
+    const images = (Array.isArray(p.images) && p.images.length > 0) ? p.images : (p.image ? [p.image] : []);
+    const primaryImg = images[0] || p.image || '';
+
     modalProduct.querySelector('#modal-p-name').textContent = p.name;
     modalProduct.querySelector('#modal-p-tag').textContent = p.tag || 'Tiêu chuẩn';
     modalProduct.querySelector('#modal-p-desc').textContent = p.desc;
-    modalProduct.querySelector('#modal-p-img').src = p.image;
-    modalProduct.querySelector('#modal-p-img').alt = p.name;
+    
+    const mainImgEl = modalProduct.querySelector('#modal-p-img');
+    if (mainImgEl) {
+      mainImgEl.src = primaryImg;
+      mainImgEl.alt = p.name;
+    }
+
+    // Gallery thumbnails nếu có nhiều hơn 1 hình ảnh
+    const galleryEl = modalProduct.querySelector('#modal-p-gallery');
+    if (galleryEl) {
+      if (images.length > 1) {
+        galleryEl.removeAttribute('hidden');
+        galleryEl.innerHTML = images.map((imgSrc, idx) => `
+          <button type="button" class="modal-gallery-thumb ${idx === 0 ? 'is-active' : ''}" data-index="${idx}" aria-label="Xem ảnh ${idx + 1}">
+            <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name)} - ảnh ${idx + 1}">
+          </button>
+        `).join('');
+
+        galleryEl.querySelectorAll('.modal-gallery-thumb').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.index, 10);
+            galleryEl.querySelectorAll('.modal-gallery-thumb').forEach(b => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
+            if (mainImgEl && images[idx]) {
+              mainImgEl.src = images[idx];
+            }
+          });
+        });
+      } else {
+        galleryEl.setAttribute('hidden', '');
+        galleryEl.innerHTML = '';
+      }
+    }
 
     modalProduct.querySelector('#modal-p-active').textContent = p.details?.activeIngredient || 'Theo tiêu chuẩn dược điển';
     modalProduct.querySelector('#modal-p-coa').textContent = p.details?.coaStandard || 'ISO 9001 / GMP';
@@ -381,14 +465,37 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
   };
 
-  document.querySelectorAll('[data-close-modal]').forEach(b => b.addEventListener('click', closeModals));
-  document.querySelectorAll('.modal-overlay').forEach(m => {
-    m.addEventListener('click', (e) => {
-      if (e.target === m) closeModals();
+  document.querySelectorAll('[data-close-modal]').forEach(b => {
+    b.addEventListener('click', (e) => {
+      if (b.closest('#modal-lightbox')) {
+        e.stopPropagation();
+        closeLightbox();
+      } else {
+        closeModals();
+      }
     });
   });
+
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', (e) => {
+      if (e.target === m) {
+        if (m === modalLightbox) {
+          closeLightbox();
+        } else {
+          closeModals();
+        }
+      }
+    });
+  });
+
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModals();
+    if (e.key === 'Escape') {
+      if (modalLightbox?.classList.contains('is-open')) {
+        closeLightbox();
+      } else {
+        closeModals();
+      }
+    }
   });
 
   // ===== Contact Form Submission =====

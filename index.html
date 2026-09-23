@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
   
-  <link rel="stylesheet" href="assets/css/style.css?v=20260922b">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260923">
 </head>
 <body>
   <a class="skip-link" href="#main">Bỏ qua đến nội dung</a>
@@ -22,14 +23,7 @@
   <header class="site-head" data-header>
     <div class="head-inner">
       <a class="brand" href="#top" aria-label="PUCECO trang chủ">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="30" height="30" fill="none">
-            <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".18"/>
-            <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-        </span>
-        <span class="brand-text">PUCECO</span>
+        <img class="brand-logo" src="assets/images/logo-puceco.png" alt="PUCECO" width="124" height="38">
       </a>
 
       <nav class="site-nav" aria-label="Điều hướng chính">
@@ -37,7 +31,7 @@
         <a href="#loi-ich">Lợi ích</a>
         <a href="#chung-nhan">Chứng nhận</a>
         <a href="#noi-bat">Sản phẩm</a>
-        <!-- <a href="#tin-tuc">Tin tức</a> -->
+        <a href="#tin-tuc">Tin tức</a>
       </nav>
 
       <div class="head-actions">
@@ -71,7 +65,7 @@
       <div class="hero-track" data-hero-track>
         <!-- Slide 1 -->
         <article class="hero-slide is-active" data-slide aria-roledescription="slide" aria-label="1 trên 3">
-          <div class="hero-bg" style="--g1:#0E3E2A;--g2:#1E7A52"><img src="assets/images/hero-bg-1.jpg" alt="" loading="eager"></div>
+          <div class="hero-bg" style="--g1:#18181B;--g2:#B72622"><img src="assets/images/hero-bg-1.jpg" alt="" loading="eager"></div>
           <div class="hero-grid">
             <div class="hero-copy">
               <p class="eyebrow light">Nguyên liệu thiên nhiên · Chuẩn quốc tế</p>
@@ -91,7 +85,7 @@
 
         <!-- Slide 2 -->
         <article class="hero-slide" data-slide aria-roledescription="slide" aria-label="2 trên 3">
-          <div class="hero-bg" style="--g1:#114B33;--g2:#2E9E6B"><img src="assets/images/hero-bg-2.jpg" alt="" loading="lazy"></div>
+          <div class="hero-bg" style="--g1:#18181B;--g2:#991B1B"><img src="assets/images/hero-bg-2.jpg" alt="" loading="lazy"></div>
           <div class="hero-grid">
             <div class="hero-copy">
               <p class="eyebrow light">Hợp tác bền vững</p>
@@ -111,7 +105,7 @@
 
         <!-- Slide 3 -->
         <article class="hero-slide" data-slide aria-roledescription="slide" aria-label="3 trên 3">
-          <div class="hero-bg" style="--g1:#0B2E1F;--g2:#15724B"><img src="assets/images/hero-bg-3.jpg" alt="" loading="lazy"></div>
+          <div class="hero-bg" style="--g1:#18181B;--g2:#D4322D"><img src="assets/images/hero-bg-3.jpg" alt="" loading="lazy"></div>
           <div class="hero-grid">
             <div class="hero-copy">
               <p class="eyebrow light">Nghiên cứu &amp; phát triển</p>
@@ -241,17 +235,16 @@
       </div>
     </section>
 
-    <!-- ===== TIN TỨC & SỰ KIỆN (Tạm thời ẩn) ===== -->
-    <!--
+    <!-- ===== TIN TỨC & SỰ KIỆN (Render động từ DataStore) ===== -->
     <section id="tin-tuc" class="section news" data-reveal>
       <div class="section-head">
         <p class="eyebrow">Tin tức &amp; sự kiện</p>
         <h2 class="section-title">Tin mới nhất</h2>
       </div>
       <div id="news-grid" class="news-grid" data-stagger>
+        <!-- Render tự động bởi main.js -->
       </div>
     </section>
-    -->
 
     <!-- ===== CTA / LIÊN HỆ & ĐĂNG KÝ MẪU THỬ THỰC TẾ ===== -->
     <section id="lien-he" class="section cta" data-reveal>
@@ -288,15 +281,8 @@
   <footer class="site-foot" id="footer">
     <div class="foot-grid">
       <div class="foot-brand">
-        <a class="brand" href="#top">
-          <span class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="28" height="28" fill="none">
-              <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".22"/>
-              <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="1.6"/>
-              <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <span class="brand-text">PUCECO</span>
+        <a class="brand" href="#top" aria-label="PUCECO trang chủ">
+          <img class="brand-logo" src="assets/images/logo-puceco-white.png" alt="PUCECO" width="124" height="38">
         </a>
         <p class="foot-tag" data-bind="slogan">Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học.</p>
       </div>
@@ -312,7 +298,7 @@
         <a href="#gioi-thieu">Giới thiệu</a>
         <a href="#loi-ich">Lợi ích đối tác</a>
         <a href="#chung-nhan">Chứng nhận & Tiêu chuẩn</a>
-        <!-- <a href="#tin-tuc">Tin tức & Sự kiện</a> -->
+        <a href="#tin-tuc">Tin tức & Sự kiện</a>
       </nav>
       <div class="foot-col">
         <h4>Liên hệ</h4>
@@ -331,20 +317,34 @@
 
   <!-- ===== MODAL CHI TIẾT SẢN PHẨM ===== -->
   <div id="modal-product" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-p-name">
-    <div class="modal-box">
+    <div class="modal-box modal-box-product">
       <button class="modal-close" type="button" data-close-modal aria-label="Đóng">&times;</button>
-      <div class="modal-header">
-        <div class="modal-header-thumb">
-          <img id="modal-p-img" src="" alt="">
-        </div>
-        <div>
-          <span id="modal-p-tag" class="product-tag" style="position:static;display:inline-block;margin-bottom:6px;"></span>
-          <h3 id="modal-p-name" style="margin:0;font-size:1.5rem;"></h3>
-        </div>
+      
+      <!-- Banner hình ảnh sản phẩm nổi bật kích thước lớn -->
+      <div class="modal-product-hero" id="modal-p-hero">
+        <img id="modal-p-img" class="modal-product-img" src="" alt="" title="Nhấn để phóng to ảnh đầy đủ">
+        <span id="modal-p-tag" class="product-tag modal-product-tag"></span>
+        <button id="modal-p-zoom-btn" class="modal-img-zoom-btn" type="button" aria-label="Xem ảnh phóng to" title="Nhấn để xem kích thước lớn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <span>Xem ảnh lớn</span>
+        </button>
       </div>
+
+      <!-- Gallery thumbnails khi sản phẩm có nhiều hình ảnh (tối đa 3 hình) -->
+      <div id="modal-p-gallery" class="modal-product-gallery" hidden></div>
+
+      <div class="modal-product-header">
+        <h3 id="modal-p-name" style="margin:0;font-size:1.6rem;font-weight:700;color:var(--color-depth);line-height:1.25;"></h3>
+      </div>
+
       <div class="modal-body">
-        <p id="modal-p-desc" style="color:var(--color-muted);line-height:1.6;margin-top:0;"></p>
-        <h4 style="margin:16px 0 8px;font-size:1.1rem;color:var(--color-accent-text);">Thông số kỹ thuật & Tiêu chuẩn:</h4>
+        <p id="modal-p-desc" style="color:var(--color-muted);line-height:1.65;font-size:1rem;margin-top:0;margin-bottom:18px;"></p>
+        <h4 style="margin:16px 0 10px;font-size:1.1rem;color:var(--color-accent-text);font-weight:600;">Thông số kỹ thuật & Tiêu chuẩn:</h4>
         <table class="spec-table">
           <tbody>
             <tr>
@@ -370,6 +370,15 @@
         <button class="btn ghost sm" type="button" data-close-modal>Đóng</button>
         <button id="modal-p-request-btn" class="btn primary sm" type="button">Yêu cầu mẫu thử ngay</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== LIGHTBOX PHÓNG TO HÌNH ẢNH SẢN PHẨM ===== -->
+  <div id="modal-lightbox" class="modal-overlay modal-lightbox-overlay" role="dialog" aria-modal="true" aria-label="Xem ảnh sản phẩm phóng to">
+    <div class="lightbox-box">
+      <button class="modal-close lightbox-close" type="button" id="lightbox-close-btn" aria-label="Đóng">&times;</button>
+      <img id="lightbox-img" src="" alt="Ảnh sản phẩm phóng to">
+      <div id="lightbox-caption" class="lightbox-caption"></div>
     </div>
   </div>
 
@@ -412,6 +421,12 @@
         <path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 7v9M12 12l3-2M12 14l-3-2"/>
       </svg>
       <span>Sản phẩm</span>
+    </a>
+    <a href="#tin-tuc" class="bottom-nav-item" data-nav-section="tin-tuc">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/>
+      </svg>
+      <span>Tin tức</span>
     </a>
 
     <button type="button" class="bottom-nav-item" data-bottom-search>

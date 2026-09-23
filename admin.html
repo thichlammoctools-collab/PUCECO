@@ -9,8 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
   
-  <link rel="stylesheet" href="assets/css/style.css?v=20260922b">
-  <link rel="stylesheet" href="assets/css/admin.css?v=20260922b">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260923">
+  <link rel="stylesheet" href="assets/css/admin.css?v=20260923">
 </head>
 <body>
 
@@ -18,12 +19,7 @@
   <div id="auth-wrapper" class="auth-wrapper">
     <div class="auth-card">
       <div class="auth-logo">
-        <svg viewBox="0 0 32 32" width="34" height="34" fill="none">
-          <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".2"/>
-          <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="2"/>
-          <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <h2>PUCECO</h2>
+        <img src="assets/images/logo-puceco.png" alt="PUCECO" width="160" height="48">
       </div>
       <h3>Đăng Nhập Quản Trị</h3>
       <p>Vui lòng nhập mật khẩu quản trị viên để tiếp tục</p>
@@ -52,12 +48,7 @@
     <!-- SIDEBAR -->
     <aside class="admin-sidebar">
       <div class="sidebar-header">
-        <svg viewBox="0 0 32 32" width="28" height="28" fill="none" style="color:var(--admin-accent)">
-          <path d="M16 3C9 9 5 14 5 20a11 11 0 0 0 22 0c0-6-4-11-11-17Z" fill="currentColor" opacity=".2"/>
-          <path d="M16 6C10.5 11 7 15 7 20.5A9 9 0 0 0 25 20.5C25 15 21.5 11 16 6Z" stroke="currentColor" stroke-width="2"/>
-          <path d="M16 9v15M16 15l4-3M16 18l-4-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <span class="brand-title">PUCECO</span>
+        <img class="sidebar-logo" src="assets/images/logo-puceco-white.png" alt="PUCECO" width="110" height="34">
         <span class="sidebar-badge">ADMIN</span>
       </div>
 
@@ -189,32 +180,41 @@
         <section id="tab-products" class="tab-content">
           <div class="panel">
             <div class="panel-header">
-              <div style="display:flex;align-items:center;gap:16px;flex:1;max-width:600px;">
-                <input id="search-product-input" type="text" class="form-control" placeholder="Tìm tên nguyên liệu, hoạt chất..." style="max-width:280px;">
-                <select id="filter-product-cat" class="form-control" style="max-width:200px;">
-                  <option value="">-- Tất cả danh mục --</option>
-                  <option value="extract">Chiết xuất thực vật</option>
-                  <option value="essential_oil">Tinh dầu thiên nhiên</option>
-                  <option value="nano">Hoạt chất Nano</option>
-                  <option value="sweetener">Chất tạo ngọt tự nhiên</option>
-                </select>
+              <div class="product-toolbar">
+                <div class="search-input-wrapper">
+                  <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  <input id="search-product-input" type="text" class="form-control" placeholder="Tìm tên nguyên liệu, hoạt chất..." autocomplete="off">
+                  <button id="search-product-clear" class="search-clear-btn" type="button" style="display:none;" title="Xóa tìm kiếm">✕</button>
+                </div>
+                <div class="filter-select-wrapper">
+                  <select id="filter-product-cat" class="form-control">
+                    <option value="">-- Tất cả danh mục --</option>
+                    <option value="extract">Chiết xuất thực vật</option>
+                    <option value="essential_oil">Tinh dầu thiên nhiên</option>
+                    <option value="nano">Hoạt chất Nano</option>
+                    <option value="sweetener">Chất tạo ngọt tự nhiên</option>
+                    <option value="herb">Dược liệu thô</option>
+                  </select>
+                </div>
+                <span id="product-count-chip" class="product-count-chip">Đang tải...</span>
               </div>
               <button class="btn btn-primary" onclick="openAddProductModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 + Thêm Sản Phẩm Mới
               </button>
             </div>
             <div class="panel-body" style="padding:0;">
               <div class="table-responsive">
-                <table class="admin-table">
+                <table class="admin-table product-admin-table">
                   <thead>
                     <tr>
-                      <th style="width:40px;">STT</th>
-                      <th style="width:60px;">Ảnh</th>
+                      <th style="width:48px;text-align:center;">STT</th>
+                      <th style="width:96px;text-align:center;">Ảnh Đại Diện</th>
                       <th>Tên Sản Phẩm / Hoạt Chất</th>
-                      <th>Danh Mục</th>
-                      <th>Nhãn Tag</th>
-                      <th>Vị Trí Hiển Thị</th>
-                      <th style="width:140px;">Hành Động</th>
+                      <th style="width:170px;">Danh Mục</th>
+                      <th style="width:130px;">Nhãn Tag</th>
+                      <th style="width:130px;">Vị Trí Hiển Thị</th>
+                      <th style="width:150px;text-align:center;">Hành Động</th>
                     </tr>
                   </thead>
                   <tbody id="products-tbody">
@@ -438,32 +438,67 @@
             </div>
           </div>
 
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label>Nhãn tag nổi bật</label>
-              <select id="product-tag" class="form-control">
-                <option value="Bán chạy">Bán chạy</option>
-                <option value="Organic">Organic (Hữu cơ)</option>
-                <option value="Mới">Mới ra mắt</option>
-                <option value="Dược dụng">Chuẩn Dược dụng</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Chọn hình ảnh thảo mộc có sẵn</label>
-              <select id="product-image-select" class="form-control">
-                <option value="assets/images/prod-green-tea.jpg">Chiết xuất Trà xanh (Green Tea)</option>
-                <option value="assets/images/prod-lemongrass.jpg">Tinh dầu Sả chanh (Lemongrass)</option>
-                <option value="assets/images/prod-curcumin.jpg">Curcumin Nano (Nghệ vàng)</option>
-                <option value="assets/images/prod-aloe.jpg">Chiết xuất Lô hội (Aloe Vera)</option>
-                <option value="assets/images/prod-turmeric-black.jpg">Chiết xuất Nghệ đen (Black Turmeric)</option>
-                <option value="assets/images/prod-stevia.jpg">Cỏ ngọt Stevia (Sweetener)</option>
-              </select>
-            </div>
+          <div class="form-group">
+            <label>Nhãn tag nổi bật</label>
+            <select id="product-tag" class="form-control">
+              <option value="Bán chạy">Bán chạy</option>
+              <option value="Organic">Organic (Hữu cơ)</option>
+              <option value="Mới">Mới ra mắt</option>
+              <option value="Dược dụng">Chuẩn Dược dụng</option>
+            </select>
           </div>
 
-          <div class="form-group">
-            <label>Hoặc dán URL hình ảnh tùy chỉnh (tùy chọn)</label>
-            <input id="product-image-custom" type="text" class="form-control" placeholder="https://example.com/image.png">
+          <!-- Khu vực Tải lên & Quản lý Hình ảnh Sản phẩm (Tối đa 3 hình) -->
+          <div class="product-images-manager" id="product-images-manager">
+            <div class="product-images-header">
+              <span class="product-images-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--admin-primary);">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                Hình ảnh sản phẩm (Tối đa 3 hình)
+              </span>
+              <span id="product-images-counter" class="badge badge-secondary" style="font-size:0.75rem;">0/3 hình</span>
+            </div>
+
+            <!-- Grid hiển thị 3 khung hình ảnh -->
+            <div class="product-images-grid" id="product-images-grid">
+              <!-- Render tự động bằng JavaScript -->
+            </div>
+
+            <div class="product-images-controls">
+              <div class="product-images-buttons">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-browse-product-images" style="display:inline-flex;align-items:center;gap:6px;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  Tải ảnh từ máy tính
+                </button>
+                <input type="file" id="product-images-file" accept="image/*" multiple style="display:none;">
+
+                <select id="product-image-preset-select" class="form-control" style="width:auto;flex:1;min-width:200px;font-size:0.85rem;padding:6px 10px;">
+                  <option value="">+ Thêm từ thảo mộc mẫu có sẵn...</option>
+                  <option value="assets/images/prod-green-tea.jpg">Trà xanh (Green Tea)</option>
+                  <option value="assets/images/prod-lemongrass.jpg">Sả chanh (Lemongrass)</option>
+                  <option value="assets/images/prod-curcumin.jpg">Curcumin Nano (Nghệ)</option>
+                  <option value="assets/images/prod-aloe.jpg">Lô hội (Aloe Vera)</option>
+                  <option value="assets/images/prod-turmeric-black.jpg">Nghệ đen (Black Turmeric)</option>
+                  <option value="assets/images/prod-stevia.jpg">Cỏ ngọt (Stevia)</option>
+                </select>
+              </div>
+
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input id="product-image-url-input" type="text" class="form-control" placeholder="Hoặc dán liên kết URL ảnh rồi bấm Thêm..." style="font-size:0.85rem;padding:6px 10px;">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-add-product-url" style="white-space:nowrap;">Thêm URL</button>
+              </div>
+
+              <p class="product-images-helper">
+                Mỗi sản phẩm được tải tối đa 3 hình. Ảnh đầu tiên (#1) sẽ là ảnh đại diện chính. Có thể kéo thả ảnh trực tiếp vào đây.
+              </p>
+            </div>
           </div>
 
           <div class="form-group">
@@ -526,23 +561,73 @@
             <input id="news-title-input" type="text" class="form-control" required placeholder="VD: PUCECO đón nhận chứng nhận tiêu chuẩn mới">
           </div>
 
-          <div class="form-grid-3" style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;">
+          <div class="form-grid-2">
             <div class="form-group">
-              <label>Ngày đăng</label>
+              <label>Ngày đăng *</label>
               <input id="news-date" type="text" class="form-control" placeholder="VD: 22 Thg 9, 2026" required>
             </div>
             <div class="form-group">
               <label>Tác giả / Phòng ban</label>
               <input id="news-author" type="text" class="form-control" placeholder="VD: Viện R&D PUCECO">
             </div>
-            <div class="form-group">
-              <label>Hình minh họa</label>
-              <select id="news-image-select" class="form-control">
-                <option value="assets/images/news-gmp.svg">Nhà máy / Chứng nhận GMP</option>
-                <option value="assets/images/news-farm.svg">Vùng trồng nông trại hữu cơ</option>
-                <option value="assets/images/news-lab.svg">Phòng thí nghiệm R&D</option>
-              </select>
+          </div>
+
+          <!-- Khu vực Tải lên hình đại diện / Thumbnail cho Blog -->
+          <div class="form-group">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+              <label style="margin-bottom:0;display:flex;align-items:center;gap:6px;">
+                <span>Hình đại diện bài viết (Ảnh bìa / Thumbnail)</span>
+              </label>
+              <span id="news-image-badge" class="badge badge-secondary" style="font-weight:normal;font-size:0.75rem;">Mặc định</span>
             </div>
+            
+            <div class="news-image-uploader-card" id="news-image-uploader">
+              <!-- Khung xem trước ảnh & Dropzone -->
+              <div class="news-image-preview-wrapper" id="news-image-dropzone" title="Bấm hoặc kéo thả ảnh vào đây để thay đổi">
+                <img id="news-image-preview" src="assets/images/news-gmp.svg" alt="Xem trước hình đại diện">
+                <div class="news-image-drop-overlay">
+                  <span>Thay đổi ảnh</span>
+                </div>
+              </div>
+              
+              <div class="news-image-uploader-body">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-browse-news-image" style="display:inline-flex;align-items:center;gap:6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Tải ảnh từ máy tính
+                  </button>
+                  <input type="file" id="news-image-file" accept="image/*" style="display:none;">
+                  <button type="button" class="btn btn-outline btn-sm" id="btn-remove-news-image" style="display:none;color:var(--admin-danger);">
+                    ✕ Xóa ảnh đã tải
+                  </button>
+                </div>
+                
+                <p id="news-image-filename" style="margin:6px 0 10px;font-size:0.8rem;color:var(--admin-muted);">
+                  Hỗ trợ PNG, JPG, WebP, SVG (tối ưu hóa nén nhẹ & tự động)
+                </p>
+
+                <div class="form-grid-2" style="gap:10px;">
+                  <div>
+                    <label style="font-size:0.78rem;color:var(--admin-muted);margin-bottom:3px;display:block;">Hoặc chọn ảnh mẫu có sẵn:</label>
+                    <select id="news-image-select" class="form-control" style="padding:6px 10px;font-size:0.85rem;">
+                      <option value="assets/images/news-gmp.svg">Nhà máy / Chứng nhận GMP</option>
+                      <option value="assets/images/news-farm.svg">Vùng trồng nông trại hữu cơ</option>
+                      <option value="assets/images/news-lab.svg">Phòng thí nghiệm R&D</option>
+                      <option value="custom">-- Ảnh tự tải / URL tùy chỉnh --</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:0.78rem;color:var(--admin-muted);margin-bottom:3px;display:block;">Hoặc dán liên kết URL ảnh:</label>
+                    <input id="news-image-url" type="url" class="form-control" placeholder="https://example.com/hinh-anh.jpg" style="padding:6px 10px;font-size:0.85rem;">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="news-image-value" value="assets/images/news-gmp.svg">
           </div>
 
           <div class="form-group">
@@ -563,8 +648,25 @@
     </div>
   </div>
 
+  <!-- ===== MODAL XEM PHÓNG TO HÌNH ẢNH (IMAGE LIGHTBOX) ===== -->
+  <div id="admin-lightbox-modal" class="admin-lightbox" role="dialog" aria-modal="true" onclick="closeAdminLightbox(event)">
+    <div class="admin-lightbox-content" onclick="event.stopPropagation()">
+      <button class="admin-lightbox-close" onclick="closeAdminLightbox()" title="Đóng (Esc)">✕</button>
+      <div class="admin-lightbox-img-wrap">
+        <img id="admin-lightbox-img" src="" alt="Ảnh sản phẩm phóng to">
+      </div>
+      <div class="admin-lightbox-footer">
+        <div class="admin-lightbox-info">
+          <span id="admin-lightbox-title" class="admin-lightbox-title"></span>
+          <span id="admin-lightbox-count" class="admin-lightbox-count"></span>
+        </div>
+        <div id="admin-lightbox-thumbs" class="admin-lightbox-thumbs"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPTS -->
-  <script src="assets/js/data-store.js?v=20260922b"></script>
-  <script src="assets/js/admin.js?v=20260922b"></script>
+  <script src="assets/js/data-store.js?v=20260923"></script>
+  <script src="assets/js/admin.js?v=20260923"></script>
 </body>
 </html>

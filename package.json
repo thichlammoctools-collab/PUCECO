@@ -5,8 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "dev:cf": "npm run build && wrangler pages dev dist --d1=DB=puceco-db",
+    "db:init:local": "wrangler d1 execute puceco-db --local --file=./schema.sql",
+    "db:init:remote": "wrangler d1 execute puceco-db --remote --file=./schema.sql",
     "build": "node -e \"const fs = require('fs'); fs.cpSync('index.html', 'dist/index.html'); fs.cpSync('admin.html', 'dist/admin.html'); if (fs.existsSync('_headers')) fs.copyFileSync('_headers', 'dist/_headers'); fs.cpSync('assets', 'dist/assets', { recursive: true }); console.log('Build completed to dist/');\"",
-    "deploy": "wrangler pages deploy dist --project-name=puceco --branch=main --commit-dirty=true"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=puceco --branch=main --commit-dirty=true"
   },
   "keywords": [
     "puceco",

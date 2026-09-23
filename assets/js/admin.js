@@ -130,66 +130,401 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== TAB 2: PRODUCTS =====
   const searchProductInput = document.getElementById('search-product-input');
   const filterProductCat = document.getElementById('filter-product-cat');
+  const searchProductClear = document.getElementById('search-product-clear');
 
-  if (searchProductInput) searchProductInput.addEventListener('input', () => renderProductsTable());
-  if (filterProductCat) filterProductCat.addEventListener('change', () => renderProductsTable());
+  if (searchProductInput) {
+    searchProductInput.addEventListener('input', () => {
+      if (searchProductClear) {
+        searchProductClear.style.display = searchProductInput.value ? 'block' : 'none';
+      }
+      renderProductsTable();
+    });
+  }
+  if (searchProductClear) {
+    searchProductClear.addEventListener('click', () => {
+      if (searchProductInput) {
+        searchProductInput.value = '';
+        searchProductInput.focus();
+      }
+      searchProductClear.style.display = 'none';
+      renderProductsTable();
+    });
+  }
+  if (filterProductCat) {
+    filterProductCat.addEventListener('change', () => renderProductsTable());
+  }
+
+  window.resetProductFilters = function () {
+    if (searchProductInput) searchProductInput.value = '';
+    if (filterProductCat) filterProductCat.value = '';
+    if (searchProductClear) searchProductClear.style.display = 'none';
+    renderProductsTable();
+  };
+
+  function getCategoryBadge(cat) {
+    const map = {
+      extract: { name: 'Chiết xuất thực vật', cls: 'badge-cat-extract' },
+      essential_oil: { name: 'Tinh dầu thiên nhiên', cls: 'badge-cat-oil' },
+      nano: { name: 'Hoạt chất Nano', cls: 'badge-cat-nano' },
+      sweetener: { name: 'Chất tạo ngọt tự nhiên', cls: 'badge-cat-sweetener' },
+      herb: { name: 'Dược liệu thô', cls: 'badge-cat-herb' }
+    };
+    const c = map[cat] || { name: 'Khác', cls: 'badge-cat-other' };
+    return `<span class="badge ${c.cls}">${escapeHtml(c.name)}</span>`;
+  }
+
+  function getTagBadge(tag) {
+    const t = tag || 'Bán chạy';
+    let cls = 'badge-tag-default';
+    if (t === 'Bán chạy') cls = 'badge-tag-hot';
+    else if (t === 'Organic' || t === 'Hữu cơ') cls = 'badge-tag-organic';
+    else if (t === 'Công nghệ cao') cls = 'badge-tag-tech';
+    else if (t === 'Mới' || t === 'Mới ra mắt') cls = 'badge-tag-new';
+    else if (t === 'Dược dụng' || t === 'Chuẩn Dược dụng') cls = 'badge-tag-medical';
+    return `<span class="badge ${cls}">${escapeHtml(t)}</span>`;
+  }
 
   function renderProductsTable() {
     const tbody = document.getElementById('products-tbody');
     if (!tbody) return;
 
-    let products = store.getProducts();
+    const allProducts = store.getProducts();
+    let products = allProducts;
     const q = searchProductInput?.value.trim().toLowerCase() || '';
     const cat = filterProductCat?.value || '';
 
     if (q) {
-      products = products.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+      products = products.filter(p => p.name.toLowerCase().includes(q) || (p.desc && p.desc.toLowerCase().includes(q)) || (p.details?.activeIngredient && p.details.activeIngredient.toLowerCase().includes(q)));
     }
     if (cat) {
       products = products.filter(p => p.category === cat);
     }
 
+    // Update count chip
+    const countChip = document.getElementById('product-count-chip');
+    if (countChip) {
+      if (q || cat) {
+        countChip.textContent = `Hiển thị ${products.length} / ${allProducts.length} sản phẩm`;
+      } else {
+        countChip.textContent = `${allProducts.length} sản phẩm`;
+      }
+    }
+
     if (products.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--admin-muted);">Không tìm thấy sản phẩm nào phù hợp.</td></tr>';
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="product-empty-state">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <div class="product-empty-title">Không tìm thấy sản phẩm nào phù hợp</div>
+              <div class="product-empty-sub">Hãy thử tìm với từ khóa khác hoặc điều chỉnh bộ lọc danh mục.</div>
+              ${(q || cat) ? `<button type="button" class="btn btn-outline btn-sm" onclick="resetProductFilters()" style="margin-top:10px;">Xóa bộ lọc</button>` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
       return;
     }
 
-    tbody.innerHTML = products.map((p, index) => `
-      <tr>
-        <td>${index + 1}</td>
-        <td><img src="${p.image}" class="admin-table-thumb" alt=""></td>
-        <td>
-          <b>${escapeHtml(p.name)}</b>
-          <div style="font-size:0.8rem;color:var(--admin-muted);margin-top:2px;">
-            ${escapeHtml(p.details?.activeIngredient || '')}
+    tbody.innerHTML = products.map((p, index) => {
+      const displayImg = p.image || (p.images && p.images[0]) || 'assets/images/prod-green-tea.jpg';
+      const allImgs = (Array.isArray(p.images) && p.images.length > 0) ? p.images : (p.image ? [p.image] : ['assets/images/prod-green-tea.jpg']);
+      const imgCount = allImgs.length;
+
+      return `
+      <tr data-product-id="${p.id}">
+        <td style="text-align:center;font-weight:600;color:var(--admin-muted);font-size:0.88rem;">${index + 1}</td>
+        <td style="text-align:center;">
+          <div class="product-thumb-container" onclick="openAdminLightbox('${p.id}', 0)" title="Nhấn để phóng to ảnh (${imgCount} hình)">
+            <img src="${escapeHtml(displayImg)}" class="product-table-thumb" alt="${escapeHtml(p.name)}" loading="lazy">
+            ${imgCount > 1 ? `
+              <span class="product-thumb-badge" title="${imgCount} hình ảnh">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                ${imgCount}
+              </span>` : ''}
+            <div class="product-thumb-overlay" title="Xem ảnh phóng to">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </div>
           </div>
         </td>
-        <td><span class="badge badge-secondary">${getCategoryName(p.category)}</span></td>
-        <td><span class="badge ${p.tag === 'Organic' ? 'badge-warning' : p.tag === 'Mới' ? 'badge-info' : 'badge-success'}">${escapeHtml(p.tag || 'Bán chạy')}</span></td>
         <td>
-          ${p.isFeatured ? '<span class="badge badge-success" style="margin-right:4px;">Nổi bật</span>' : ''}
-          ${p.isNew ? '<span class="badge badge-info">Mới</span>' : ''}
+          <div class="product-table-name-wrap">
+            <a href="javascript:void(0)" class="product-table-title" onclick="openEditProductModal('${p.id}')" title="Nhấn để chỉnh sửa sản phẩm">
+              ${escapeHtml(p.name)}
+            </a>
+            ${p.details?.activeIngredient ? `
+              <div class="product-spec-tag" title="Hoạt chất định lượng">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>${escapeHtml(p.details.activeIngredient)}</span>
+              </div>` : ''}
+            ${p.details?.coaStandard ? `<div class="product-coa-note">${escapeHtml(p.details.coaStandard)}</div>` : ''}
+          </div>
         </td>
+        <td>${getCategoryBadge(p.category)}</td>
+        <td>${getTagBadge(p.tag)}</td>
         <td>
-          <div style="display:flex;gap:6px;">
-            <button class="btn btn-outline btn-sm" onclick="openEditProductModal('${p.id}')">Sửa</button>
-            <button class="btn btn-danger btn-sm" onclick="confirmDeleteProduct('${p.id}')">Xóa</button>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">
+            ${p.isFeatured ? `
+              <span class="badge badge-featured" title="Hiển thị nổi bật trang chủ">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Nổi bật
+              </span>` : ''}
+            ${p.isNew ? '<span class="badge badge-tag-new">Mới</span>' : ''}
+            ${(!p.isFeatured && !p.isNew) ? '<span class="badge badge-subtle">Mặc định</span>' : ''}
+          </div>
+        </td>
+        <td style="text-align:center;">
+          <div class="table-actions-group">
+            <button class="btn btn-outline btn-sm btn-action-edit" onclick="openEditProductModal('${p.id}')" title="Chỉnh sửa sản phẩm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              <span>Sửa</span>
+            </button>
+            <button class="btn btn-danger-soft btn-sm btn-action-delete" onclick="confirmDeleteProduct('${p.id}')" title="Xóa sản phẩm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              <span>Xóa</span>
+            </button>
           </div>
         </td>
       </tr>
-    `).join('');
+    `;
+    }).join('');
   }
 
-  // Modal Sản phẩm
+  // Modal Sản phẩm & Quản lý tối đa 3 hình ảnh
   const modalProduct = document.getElementById('admin-modal-product');
   const productForm = document.getElementById('product-form');
+  let currentProductImages = [];
+
+  function updateProductImagesUI() {
+    const grid = document.getElementById('product-images-grid');
+    const counter = document.getElementById('product-images-counter');
+    const browseBtn = document.getElementById('btn-browse-product-images');
+    const presetSelect = document.getElementById('product-image-preset-select');
+    const urlInput = document.getElementById('product-image-url-input');
+    const urlBtn = document.getElementById('btn-add-product-url');
+
+    if (!grid) return;
+
+    const count = currentProductImages.length;
+    if (counter) {
+      if (count === 3) {
+        counter.className = 'badge badge-warning';
+        counter.textContent = '3/3 hình (Đã tối đa)';
+      } else if (count > 0) {
+        counter.className = 'badge badge-success';
+        counter.textContent = `${count}/3 hình`;
+      } else {
+        counter.className = 'badge badge-secondary';
+        counter.textContent = '0/3 hình';
+      }
+    }
+
+    const isFull = count >= 3;
+    if (browseBtn) {
+      browseBtn.disabled = isFull;
+      browseBtn.style.opacity = isFull ? '0.5' : '1';
+      browseBtn.style.cursor = isFull ? 'not-allowed' : 'pointer';
+    }
+    if (presetSelect) presetSelect.disabled = isFull;
+    if (urlBtn) urlBtn.disabled = isFull;
+    if (urlInput) urlInput.disabled = isFull;
+
+    let html = '';
+    currentProductImages.forEach((src, idx) => {
+      const isPrimary = idx === 0;
+      html += `
+        <div class="product-image-card ${isPrimary ? 'is-primary' : ''}">
+          <img src="${escapeHtml(src)}" alt="Hình sản phẩm ${idx + 1}">
+          ${isPrimary ? '<span class="product-image-badge-primary">★ Ảnh chính</span>' : ''}
+          <button type="button" class="product-image-delete-btn" onclick="removeProductImage(${idx})" title="Xóa hình này" aria-label="Xóa hình">✕</button>
+          ${!isPrimary ? `
+            <div class="product-image-actions-bar">
+              <button type="button" class="product-image-set-primary-btn" onclick="setProductPrimaryImage(${idx})">Đặt làm ảnh chính</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    });
+
+    for (let i = count; i < 3; i++) {
+      html += `
+        <div class="product-image-empty-card" onclick="triggerBrowseProductImage()" title="Bấm để tải thêm ảnh (${i + 1}/3)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span class="product-image-empty-text">+ Thêm hình (${i + 1}/3)</span>
+        </div>
+      `;
+    }
+
+    grid.innerHTML = html;
+  }
+
+  window.triggerBrowseProductImage = function () {
+    if (currentProductImages.length >= 3) {
+      showAdminToast('Mỗi sản phẩm chỉ được tải tối đa 3 hình ảnh.', 'warning');
+      return;
+    }
+    document.getElementById('product-images-file')?.click();
+  };
+
+  window.removeProductImage = function (idx) {
+    if (idx >= 0 && idx < currentProductImages.length) {
+      currentProductImages.splice(idx, 1);
+      updateProductImagesUI();
+    }
+  };
+
+  window.setProductPrimaryImage = function (idx) {
+    if (idx > 0 && idx < currentProductImages.length) {
+      const selected = currentProductImages.splice(idx, 1)[0];
+      currentProductImages.unshift(selected);
+      updateProductImagesUI();
+      showAdminToast('Đã đặt làm ảnh đại diện chính của sản phẩm.', 'success');
+    }
+  };
+
+  async function handleProductFiles(files) {
+    if (!files || files.length === 0) return;
+    const remainingSlots = 3 - currentProductImages.length;
+    if (remainingSlots <= 0) {
+      showAdminToast('Mỗi sản phẩm chỉ được tải tối đa 3 hình ảnh.', 'warning');
+      return;
+    }
+
+    const filesArray = Array.from(files);
+    const filesToProcess = filesArray.slice(0, remainingSlots);
+    if (filesArray.length > remainingSlots) {
+      showAdminToast(`Chỉ tiếp nhận thêm ${remainingSlots} hình vì đã đạt giới hạn tối đa 3 hình.`, 'info');
+    }
+
+    for (const file of filesToProcess) {
+      try {
+        const result = await processImageFile(file, 1000, 1000, 0.82);
+        if (currentProductImages.length < 3) {
+          currentProductImages.push(result.dataUrl);
+        }
+      } catch (err) {
+        showAdminToast(err.message || 'Lỗi khi xử lý hình ảnh.', 'danger');
+      }
+    }
+    updateProductImagesUI();
+    showAdminToast('Đã tải lên và tối ưu hóa hình ảnh sản phẩm thành công!', 'success');
+  }
+
+  function initProductImagesManager() {
+    const fileInput = document.getElementById('product-images-file');
+    const browseBtn = document.getElementById('btn-browse-product-images');
+    const managerCard = document.getElementById('product-images-manager');
+    const presetSelect = document.getElementById('product-image-preset-select');
+    const urlInput = document.getElementById('product-image-url-input');
+    const addUrlBtn = document.getElementById('btn-add-product-url');
+
+    if (browseBtn && fileInput) {
+      browseBtn.addEventListener('click', () => {
+        if (currentProductImages.length >= 3) {
+          showAdminToast('Mỗi sản phẩm chỉ được tải tối đa 3 hình ảnh.', 'warning');
+          return;
+        }
+        fileInput.value = '';
+        fileInput.click();
+      });
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handleProductFiles(e.target.files);
+        }
+      });
+    }
+
+    if (managerCard) {
+      ['dragenter', 'dragover'].forEach(eventName => {
+        managerCard.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          managerCard.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        managerCard.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          managerCard.classList.remove('dragover');
+        });
+      });
+
+      managerCard.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          handleProductFiles(dt.files);
+        }
+      });
+    }
+
+    if (presetSelect) {
+      presetSelect.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val) {
+          if (currentProductImages.length >= 3) {
+            showAdminToast('Mỗi sản phẩm chỉ được tải tối đa 3 hình ảnh.', 'warning');
+            presetSelect.value = '';
+            return;
+          }
+          if (!currentProductImages.includes(val)) {
+            currentProductImages.push(val);
+            updateProductImagesUI();
+            showAdminToast('Đã thêm hình thảo mộc mẫu.', 'success');
+          } else {
+            showAdminToast('Hình ảnh này đã có trong danh sách.', 'info');
+          }
+          presetSelect.value = '';
+        }
+      });
+    }
+
+    function addUrlImage() {
+      if (!urlInput) return;
+      const url = urlInput.value.trim();
+      if (!url) return;
+      if (currentProductImages.length >= 3) {
+        showAdminToast('Mỗi sản phẩm chỉ được tải tối đa 3 hình ảnh.', 'warning');
+        return;
+      }
+      if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('assets/')) {
+        showAdminToast('Vui lòng nhập đường dẫn URL hợp lệ.', 'danger');
+        return;
+      }
+      currentProductImages.push(url);
+      urlInput.value = '';
+      updateProductImagesUI();
+      showAdminToast('Đã thêm hình ảnh từ URL.', 'success');
+    }
+
+    if (addUrlBtn) {
+      addUrlBtn.addEventListener('click', addUrlImage);
+    }
+    if (urlInput) {
+      urlInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addUrlImage();
+        }
+      });
+    }
+  }
+
+  initProductImagesManager();
 
   window.openAddProductModal = function () {
     productForm.reset();
     document.getElementById('product-id').value = '';
     document.getElementById('modal-product-title').textContent = 'Thêm sản phẩm mới';
-    document.getElementById('product-image-select').value = 'assets/images/prod-green-tea.jpg';
-    document.getElementById('product-image-custom').value = '';
+    currentProductImages = ['assets/images/prod-green-tea.jpg'];
+    updateProductImagesUI();
     modalProduct.classList.add('is-open');
   };
 
@@ -210,17 +545,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('product-is-featured').checked = p.isFeatured !== false;
     document.getElementById('product-is-new').checked = !!p.isNew;
 
-    let currentImg = p.image || '';
-    if (currentImg.startsWith('assets/images/') && currentImg.endsWith('.svg')) {
-      currentImg = currentImg.replace(/\.svg$/, '.jpg');
-    }
-
-    if (currentImg && currentImg.startsWith('assets/images/')) {
-      document.getElementById('product-image-select').value = currentImg;
-      document.getElementById('product-image-custom').value = '';
+    if (Array.isArray(p.images) && p.images.length > 0) {
+      currentProductImages = [...p.images].slice(0, 3);
+    } else if (p.image) {
+      currentProductImages = [p.image];
     } else {
-      document.getElementById('product-image-custom').value = currentImg;
+      currentProductImages = ['assets/images/prod-green-tea.jpg'];
     }
+    updateProductImagesUI();
 
     modalProduct.classList.add('is-open');
   };
@@ -229,9 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
     productForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const id = document.getElementById('product-id').value;
-      const customImg = document.getElementById('product-image-custom').value.trim();
-      const selectImg = document.getElementById('product-image-select').value;
-      const img = customImg || selectImg || 'assets/images/prod-green-tea.jpg';
+      const imgs = currentProductImages.length > 0 ? currentProductImages.slice(0, 3) : ['assets/images/prod-green-tea.jpg'];
+      const primaryImg = imgs[0];
 
       const productData = {
         id: id || undefined,
@@ -239,7 +570,8 @@ document.addEventListener('DOMContentLoaded', () => {
         category: document.getElementById('product-category').value,
         tag: document.getElementById('product-tag').value,
         desc: document.getElementById('product-desc').value.trim(),
-        image: img,
+        image: primaryImg,
+        images: imgs,
         isFeatured: document.getElementById('product-is-featured').checked,
         isNew: document.getElementById('product-is-new').checked,
         details: {
@@ -281,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tbody.innerHTML = news.map((n, index) => `
       <tr>
         <td>${index + 1}</td>
-        <td><img src="${n.image}" class="admin-table-thumb" alt=""></td>
+        <td><img src="${n.image}" class="news-table-thumb" alt=""></td>
         <td>
           <b>${escapeHtml(n.title)}</b>
           <div style="font-size:0.8rem;color:var(--admin-muted);margin-top:2px;">
@@ -301,12 +633,225 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const modalNews = document.getElementById('admin-modal-news');
   const newsForm = document.getElementById('news-form');
+  const DEFAULT_NEWS_IMAGE = 'assets/images/news-gmp.svg';
+
+  // Helper: Xử lý và nén ảnh đại diện phía client (giảm dung lượng, không lo vượt quota localStorage)
+  function processImageFile(file, maxWidth = 1200, maxHeight = 800, quality = 0.85) {
+    return new Promise((resolve, reject) => {
+      if (!file || !file.type.startsWith('image/')) {
+        return reject(new Error('Vui lòng chọn một tệp hình ảnh hợp lệ (PNG, JPG, WebP, SVG).'));
+      }
+
+      // Nếu là SVG, giữ nguyên dạng data URL vector
+      if (file.type === 'image/svg+xml') {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve({ dataUrl: e.target.result, size: file.size });
+        reader.onerror = () => reject(new Error('Không thể đọc tệp SVG.'));
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      // Xử lý ảnh raster (JPG, PNG, WebP) qua Canvas
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Nén sang JPEG nhẹ & nét để lưu trữ bền vững
+          const outputType = (file.type === 'image/png' && file.size < 400 * 1024) ? 'image/png' : 'image/jpeg';
+          const dataUrl = canvas.toDataURL(outputType, quality);
+          const estSize = Math.round((dataUrl.length * 3) / 4);
+          resolve({ dataUrl, size: estSize });
+        };
+        img.onerror = () => reject(new Error('Không thể phân tích tệp ảnh này.'));
+        img.src = event.target.result;
+      };
+      reader.onerror = () => reject(new Error('Không thể đọc tệp từ máy tính.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function formatFileSize(bytes) {
+    if (!bytes || bytes <= 0) return '';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function setNewsImage(imageSrc, type = 'auto', customLabel = '') {
+    const valueInput = document.getElementById('news-image-value');
+    const previewImg = document.getElementById('news-image-preview');
+    const selectEl = document.getElementById('news-image-select');
+    const urlInput = document.getElementById('news-image-url');
+    const badgeEl = document.getElementById('news-image-badge');
+    const filenameEl = document.getElementById('news-image-filename');
+    const removeBtn = document.getElementById('btn-remove-news-image');
+
+    const src = imageSrc || DEFAULT_NEWS_IMAGE;
+    if (valueInput) valueInput.value = src;
+    if (previewImg) previewImg.src = src;
+
+    const isPreset = ['assets/images/news-gmp.svg', 'assets/images/news-farm.svg', 'assets/images/news-lab.svg'].includes(src);
+    const isDataUrl = src.startsWith('data:image/');
+
+    if (type === 'upload' || isDataUrl) {
+      if (badgeEl) {
+        badgeEl.textContent = 'Ảnh tải từ máy';
+        badgeEl.className = 'badge badge-success';
+      }
+      if (filenameEl) {
+        filenameEl.textContent = customLabel ? `Đã chọn: ${customLabel}` : 'Ảnh đại diện đã được tải lên từ máy tính (đã tối ưu)';
+        filenameEl.style.color = 'var(--admin-primary)';
+      }
+      if (selectEl) selectEl.value = 'custom';
+      if (urlInput) urlInput.value = '';
+      if (removeBtn) removeBtn.style.display = 'inline-block';
+    } else if (type === 'url' || (!isPreset && (src.startsWith('http://') || src.startsWith('https://')))) {
+      if (badgeEl) {
+        badgeEl.textContent = 'Liên kết URL';
+        badgeEl.className = 'badge badge-info';
+      }
+      if (filenameEl) {
+        filenameEl.textContent = 'Sử dụng hình ảnh từ liên kết web bên ngoài';
+        filenameEl.style.color = 'var(--admin-muted)';
+      }
+      if (selectEl) selectEl.value = 'custom';
+      if (urlInput && urlInput.value !== src) urlInput.value = src;
+      if (removeBtn) removeBtn.style.display = 'inline-block';
+    } else {
+      // Preset
+      if (badgeEl) {
+        badgeEl.textContent = 'Hình mẫu có sẵn';
+        badgeEl.className = 'badge badge-secondary';
+      }
+      if (filenameEl) {
+        filenameEl.textContent = 'Hỗ trợ PNG, JPG, WebP, SVG (tối ưu hóa nén nhẹ & tự động)';
+        filenameEl.style.color = 'var(--admin-muted)';
+      }
+      if (selectEl && isPreset) selectEl.value = src;
+      if (urlInput) urlInput.value = '';
+      if (removeBtn) removeBtn.style.display = 'none';
+    }
+  }
+
+  // Khởi tạo các sự kiện Upload hình đại diện Blog
+  function initNewsImageUploader() {
+    const fileInput = document.getElementById('news-image-file');
+    const browseBtn = document.getElementById('btn-browse-news-image');
+    const removeBtn = document.getElementById('btn-remove-news-image');
+    const dropzone = document.getElementById('news-image-dropzone');
+    const uploaderCard = document.getElementById('news-image-uploader');
+    const selectEl = document.getElementById('news-image-select');
+    const urlInput = document.getElementById('news-image-url');
+
+    if (browseBtn && fileInput) {
+      browseBtn.addEventListener('click', () => fileInput.click());
+    }
+
+    if (dropzone && fileInput) {
+      dropzone.addEventListener('click', () => fileInput.click());
+    }
+
+    async function handleFile(file) {
+      if (!file) return;
+      try {
+        const result = await processImageFile(file);
+        const label = `${file.name} (${formatFileSize(result.size)})`;
+        setNewsImage(result.dataUrl, 'upload', label);
+        showAdminToast('Đã tải lên & tối ưu hóa ảnh đại diện thành công!', 'success');
+      } catch (err) {
+        showAdminToast(err.message || 'Lỗi khi xử lý hình ảnh.', 'danger');
+      }
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) handleFile(file);
+      });
+    }
+
+    if (uploaderCard) {
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploaderCard.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          uploaderCard.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploaderCard.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          uploaderCard.classList.remove('dragover');
+        });
+      });
+
+      uploaderCard.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const file = dt && dt.files && dt.files[0];
+        if (file) handleFile(file);
+      });
+    }
+
+    if (selectEl) {
+      selectEl.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val && val !== 'custom') {
+          if (fileInput) fileInput.value = '';
+          setNewsImage(val, 'preset');
+        }
+      });
+    }
+
+    if (urlInput) {
+      let debounceTimer = null;
+      urlInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          const val = e.target.value.trim();
+          if (val) {
+            if (fileInput) fileInput.value = '';
+            setNewsImage(val, 'url');
+          }
+        }, 300);
+      });
+    }
+
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        if (fileInput) fileInput.value = '';
+        if (urlInput) urlInput.value = '';
+        setNewsImage(DEFAULT_NEWS_IMAGE, 'preset');
+        showAdminToast('Đã đặt lại hình ảnh mặc định.', 'info');
+      });
+    }
+  }
+
+  initNewsImageUploader();
 
   window.openAddNewsModal = function () {
     newsForm.reset();
     document.getElementById('news-id').value = '';
     document.getElementById('modal-news-title').textContent = 'Viết bài tin tức mới';
     document.getElementById('news-date').value = new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const fileInput = document.getElementById('news-image-file');
+    if (fileInput) fileInput.value = '';
+    const urlInput = document.getElementById('news-image-url');
+    if (urlInput) urlInput.value = '';
+    setNewsImage(DEFAULT_NEWS_IMAGE, 'preset');
     modalNews.classList.add('is-open');
   };
 
@@ -321,7 +866,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('news-author').value = n.author || 'PUCECO';
     document.getElementById('news-excerpt').value = n.excerpt;
     document.getElementById('news-content').value = n.content || n.excerpt;
-    document.getElementById('news-image-select').value = n.image || 'assets/images/news-gmp.svg';
+    
+    const fileInput = document.getElementById('news-image-file');
+    if (fileInput) fileInput.value = '';
+    const urlInput = document.getElementById('news-image-url');
+    if (urlInput) urlInput.value = '';
+    
+    setNewsImage(n.image || DEFAULT_NEWS_IMAGE);
 
     modalNews.classList.add('is-open');
   };
@@ -330,6 +881,10 @@ document.addEventListener('DOMContentLoaded', () => {
     newsForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const id = document.getElementById('news-id').value;
+      const imgVal = document.getElementById('news-image-value')?.value ||
+                     document.getElementById('news-image-select')?.value ||
+                     DEFAULT_NEWS_IMAGE;
+
       const newsData = {
         id: id || undefined,
         title: document.getElementById('news-title-input').value.trim(),
@@ -337,7 +892,7 @@ document.addEventListener('DOMContentLoaded', () => {
         author: document.getElementById('news-author').value.trim(),
         excerpt: document.getElementById('news-excerpt').value.trim(),
         content: document.getElementById('news-content').value.trim(),
-        image: document.getElementById('news-image-select').value
+        image: imgVal
       };
 
       store.saveNews(newsData);
@@ -633,6 +1188,80 @@ document.addEventListener('DOMContentLoaded', () => {
       loadCurrentTab();
     });
   }
+
+  // ===== ADMIN IMAGE LIGHTBOX (PHÓNG TO HÌNH ẢNH SẢN PHẨM) =====
+  let currentLightboxImages = [];
+  let currentLightboxIndex = 0;
+
+  window.openAdminLightbox = function (productId, imgIdx = 0) {
+    const p = store.getProductById(productId);
+    if (!p) return;
+
+    const modal = document.getElementById('admin-lightbox-modal');
+    const imgEl = document.getElementById('admin-lightbox-img');
+    const titleEl = document.getElementById('admin-lightbox-title');
+    if (!modal || !imgEl) return;
+
+    currentLightboxImages = (Array.isArray(p.images) && p.images.length > 0)
+      ? p.images
+      : (p.image ? [p.image] : ['assets/images/prod-green-tea.jpg']);
+    currentLightboxIndex = Math.max(0, Math.min(imgIdx, currentLightboxImages.length - 1));
+
+    if (titleEl) titleEl.textContent = p.name;
+    updateLightboxUI();
+    modal.classList.add('is-open');
+  };
+
+  function updateLightboxUI() {
+    const imgEl = document.getElementById('admin-lightbox-img');
+    const countEl = document.getElementById('admin-lightbox-count');
+    const thumbsContainer = document.getElementById('admin-lightbox-thumbs');
+    if (!imgEl) return;
+
+    imgEl.src = currentLightboxImages[currentLightboxIndex] || '';
+
+    if (countEl) {
+      if (currentLightboxImages.length > 1) {
+        countEl.textContent = `Hình ${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
+      } else {
+        countEl.textContent = '';
+      }
+    }
+
+    if (thumbsContainer) {
+      if (currentLightboxImages.length > 1) {
+        thumbsContainer.innerHTML = currentLightboxImages.map((src, idx) => `
+          <button type="button" class="admin-lightbox-thumb-btn ${idx === currentLightboxIndex ? 'active' : ''}" onclick="switchLightboxImage(${idx})" title="Xem hình ${idx + 1}">
+            <img src="${escapeHtml(src)}" alt="">
+          </button>
+        `).join('');
+      } else {
+        thumbsContainer.innerHTML = '';
+      }
+    }
+  }
+
+  window.switchLightboxImage = function (idx) {
+    currentLightboxIndex = idx;
+    updateLightboxUI();
+  };
+
+  window.closeAdminLightbox = function (e) {
+    if (e && e.target && e.target.closest && e.target.closest('.admin-lightbox-content') && !e.target.closest('.admin-lightbox-close')) {
+      return;
+    }
+    const modal = document.getElementById('admin-lightbox-modal');
+    if (modal) modal.classList.remove('is-open');
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const lb = document.getElementById('admin-lightbox-modal');
+      if (lb && lb.classList.contains('is-open')) {
+        closeAdminLightbox();
+      }
+    }
+  });
 
   // Khởi động
   checkAuth();

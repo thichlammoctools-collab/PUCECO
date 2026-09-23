@@ -43,6 +43,7 @@
         origin: 'Vùng chè hữu cơ Mộc Châu - Sơn La'
       },
       image: 'assets/images/prod-green-tea.jpg',
+      images: ['assets/images/prod-green-tea.jpg'],
       bg1: '#E6F1EA',
       bg2: '#C9E3D3',
       isFeatured: true,
@@ -62,6 +63,7 @@
         origin: 'Tây Nguyên, Việt Nam'
       },
       image: 'assets/images/prod-lemongrass.jpg',
+      images: ['assets/images/prod-lemongrass.jpg'],
       bg1: '#F3EFE2',
       bg2: '#E4D6B0',
       isFeatured: true,
@@ -81,6 +83,7 @@
         origin: 'Nghệ vàng Nghệ An, Việt Nam'
       },
       image: 'assets/images/prod-curcumin.jpg',
+      images: ['assets/images/prod-curcumin.jpg'],
       bg1: '#E8F0EC',
       bg2: '#BBD9CA',
       isFeatured: true,
@@ -100,6 +103,7 @@
         origin: 'Vùng trồng Phan Rang, Ninh Thuận'
       },
       image: 'assets/images/prod-aloe.jpg',
+      images: ['assets/images/prod-aloe.jpg'],
       bg1: '#EFEFE6',
       bg2: '#D2D6B8',
       isFeatured: true,
@@ -119,6 +123,7 @@
         origin: 'Lâm Đồng, Việt Nam'
       },
       image: 'assets/images/prod-turmeric-black.jpg',
+      images: ['assets/images/prod-turmeric-black.jpg'],
       bg1: '#E6F1EA',
       bg2: '#A6D0BC',
       isFeatured: false,
@@ -138,6 +143,7 @@
         origin: 'Việt Nam & Hợp tác quốc tế'
       },
       image: 'assets/images/prod-stevia.jpg',
+      images: ['assets/images/prod-stevia.jpg'],
       bg1: '#F3EFE2',
       bg2: '#E0CFA6',
       isFeatured: false,
@@ -287,14 +293,83 @@
     }
   }
 
+  // Tự động đồng bộ 2 chiều với Cloudflare D1 & R2 Backend
+  async function syncWithApi() {
+    try {
+      // 1. Kích hoạt tự động kiểm tra/tạo bảng D1 nếu cần
+      fetch('/api/init', { method: 'POST' }).catch(() => {});
+
+      // 2. Đồng bộ Sản phẩm từ D1
+      const prodRes = await fetch('/api/products').catch(() => null);
+      if (prodRes && prodRes.ok) {
+        const cloudProds = await prodRes.json();
+        if (Array.isArray(cloudProds) && cloudProds.length > 0) {
+          localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(cloudProds));
+          emitSync('PRODUCTS_SYNCED', cloudProds);
+        }
+      }
+
+      // 3. Đồng bộ Tin tức / Blog từ D1
+      const newsRes = await fetch('/api/news').catch(() => null);
+      if (newsRes && newsRes.ok) {
+        const cloudNews = await newsRes.json();
+        if (Array.isArray(cloudNews) && cloudNews.length > 0) {
+          localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(cloudNews));
+          emitSync('NEWS_SYNCED', cloudNews);
+        }
+      }
+
+      // 4. Đồng bộ Cấu hình từ D1
+      const setRes = await fetch('/api/settings').catch(() => null);
+      if (setRes && setRes.ok) {
+        const cloudSettings = await setRes.json();
+        if (cloudSettings && typeof cloudSettings === 'object' && cloudSettings.hotline) {
+          const current = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{}');
+          localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify({ ...current, ...cloudSettings }));
+          emitSync('SETTINGS_SYNCED', cloudSettings);
+        }
+      }
+
+      // 5. Đồng bộ Leads nếu đang ở trang Admin
+      if (sessionStorage.getItem(STORAGE_KEY_AUTH) === 'true') {
+        const leadRes = await fetch('/api/leads').catch(() => null);
+        if (leadRes && leadRes.ok) {
+          const cloudLeads = await leadRes.json();
+          if (Array.isArray(cloudLeads)) {
+            localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(cloudLeads));
+            emitSync('LEADS_SYNCED', cloudLeads);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('API sync warning (running in offline/local fallback mode):', e);
+    }
+  }
+
   initData();
+  // Kích hoạt đồng bộ ngầm khi tải trang
+  if (typeof window !== 'undefined' && window.fetch) {
+    setTimeout(syncWithApi, 100);
+  }
 
   // API Đọc / Ghi
   const DataStore = {
     // Products
     getProducts: function () {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY_PRODUCTS)) || [];
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY_PRODUCTS)) || [];
+        return raw.map(p => {
+          if (!p.images || !Array.isArray(p.images) || p.images.length === 0) {
+            p.images = p.image ? [p.image] : [];
+          }
+          if (p.images.length > 3) {
+            p.images = p.images.slice(0, 3);
+          }
+          if (!p.image && p.images.length > 0) {
+            p.image = p.images[0];
+          }
+          return p;
+        });
       } catch (e) {
         return DEFAULT_PRODUCTS;
       }
@@ -307,6 +382,24 @@
 
     saveProduct: function (product) {
       const list = this.getProducts();
+
+      // Đảm bảo mảng hình ảnh tối đa 3 hình
+      if (Array.isArray(product.images)) {
+        product.images = product.images.filter(img => typeof img === 'string' && img.trim() !== '').slice(0, 3);
+      } else if (product.image) {
+        product.images = [product.image];
+      } else {
+        product.images = [];
+      }
+
+      // Ảnh đại diện chính luôn đồng bộ với ảnh đầu tiên trong mảng
+      if (product.images.length > 0) {
+        product.image = product.images[0];
+      } else if (!product.image) {
+        product.image = 'assets/images/prod-green-tea.jpg';
+        product.images = [product.image];
+      }
+
       if (!product.id) {
         product.id = 'prod-' + Date.now();
         product.createdAt = new Date().toISOString().split('T')[0];
@@ -321,6 +414,14 @@
       }
       localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(list));
       emitSync('PRODUCT_UPDATED', product);
+
+      // Đồng bộ ngầm lên Cloudflare D1
+      fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+      }).catch(err => console.warn('Cloudflare D1 sync warning:', err));
+
       return product;
     },
 
@@ -329,10 +430,16 @@
       list = list.filter(p => p.id !== id);
       localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(list));
       emitSync('PRODUCT_DELETED', { id });
+
+      // Đồng bộ xóa trên Cloudflare D1
+      fetch('/api/products/' + encodeURIComponent(id), {
+        method: 'DELETE'
+      }).catch(err => console.warn('Cloudflare D1 delete warning:', err));
+
       return true;
     },
 
-    // News
+    // News / Blog
     getNews: function () {
       try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY_NEWS)) || [];
@@ -362,6 +469,14 @@
       }
       localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(list));
       emitSync('NEWS_UPDATED', item);
+
+      // Đồng bộ ngầm lên Cloudflare D1
+      fetch('/api/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item)
+      }).catch(err => console.warn('Cloudflare D1 sync warning:', err));
+
       return item;
     },
 
@@ -370,6 +485,12 @@
       list = list.filter(n => n.id !== id);
       localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(list));
       emitSync('NEWS_DELETED', { id });
+
+      // Đồng bộ xóa trên Cloudflare D1
+      fetch('/api/news/' + encodeURIComponent(id), {
+        method: 'DELETE'
+      }).catch(err => console.warn('Cloudflare D1 delete warning:', err));
+
       return true;
     },
 
@@ -398,6 +519,14 @@
       list.unshift(newLead);
       localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(list));
       emitSync('NEW_LEAD', newLead);
+
+      // Gửi yêu cầu lưu vào Cloudflare D1
+      fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLead)
+      }).catch(err => console.warn('Cloudflare D1 lead sync warning:', err));
+
       return newLead;
     },
 
@@ -408,6 +537,13 @@
         item.status = status;
         localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(list));
         emitSync('LEAD_STATUS_UPDATED', { id, status });
+
+        fetch('/api/leads/' + encodeURIComponent(id), {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        }).catch(err => console.warn('Cloudflare D1 status sync warning:', err));
+
         return true;
       }
       return false;
@@ -418,6 +554,11 @@
       list = list.filter(l => l.id !== id);
       localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(list));
       emitSync('LEAD_DELETED', { id });
+
+      fetch('/api/leads/' + encodeURIComponent(id), {
+        method: 'DELETE'
+      }).catch(err => console.warn('Cloudflare D1 lead delete warning:', err));
+
       return true;
     },
 
@@ -435,13 +576,45 @@
       const updated = { ...current, ...newSettings };
       localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updated));
       emitSync('SETTINGS_UPDATED', updated);
+
+      fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updated)
+      }).catch(err => console.warn('Cloudflare D1 settings sync warning:', err));
+
       return updated;
+    },
+
+    // Upload Media lên Cloudflare R2 Storage (với fallback)
+    uploadMedia: async function (fileOrDataUrl, filename = 'image.jpg') {
+      try {
+        let res;
+        if (fileOrDataUrl instanceof File || fileOrDataUrl instanceof Blob) {
+          const formData = new FormData();
+          formData.append('file', fileOrDataUrl, filename);
+          res = await fetch('/api/upload', { method: 'POST', body: formData });
+        } else if (typeof fileOrDataUrl === 'string' && fileOrDataUrl.startsWith('data:image/')) {
+          res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dataUrl: fileOrDataUrl, name: filename })
+          });
+        }
+        if (res && res.ok) {
+          const data = await res.json();
+          if (data && data.url) return data.url;
+        }
+      } catch (e) {
+        console.warn('Media upload to R2 API warning:', e);
+      }
+      return typeof fileOrDataUrl === 'string' ? fileOrDataUrl : null;
     },
 
     // Auth
     verifyAdminPassword: function (password) {
       const settings = this.getSettings();
-      return password === settings.adminPassword;
+      return password === settings.adminPassword || password === settings.adminPasswordHash;
     },
 
     setAdminSession: function (isLoggedIn) {
