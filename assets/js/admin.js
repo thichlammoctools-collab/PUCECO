@@ -1626,11 +1626,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (removeBtn) removeBtn.style.display = 'inline-block';
     } else if (type === 'url' || (!isPreset && (src.startsWith('http://') || src.startsWith('https://')))) {
       if (badgeEl) {
-        badgeEl.textContent = 'Liên kết URL';
+        badgeEl.textContent = 'Ảnh tùy chỉnh';
         badgeEl.className = 'badge badge-info';
       }
       if (filenameEl) {
-        filenameEl.textContent = 'Sử dụng hình ảnh từ liên kết web bên ngoài';
+        filenameEl.textContent = 'Ảnh nền tùy chỉnh đang sử dụng';
         filenameEl.style.color = 'var(--admin-muted)';
       }
       if (selectEl) selectEl.value = 'custom';

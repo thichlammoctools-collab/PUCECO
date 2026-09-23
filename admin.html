@@ -1089,12 +1089,12 @@
                       <option value="assets/images/hero-bg-1.jpg">Ảnh nền mẫu 1: Cối xay thảo mộc & Tinh dầu (hero-bg-1.jpg)</option>
                       <option value="assets/images/hero-bg-2.jpg">Ảnh nền mẫu 2: Lá chè & Nông sản sạch (hero-bg-2.jpg)</option>
                       <option value="assets/images/hero-bg-3.jpg">Ảnh nền mẫu 3: Phòng Lab & Công nghệ chiết xuất (hero-bg-3.jpg)</option>
-                      <option value="custom">-- Sử dụng ảnh tải lên từ máy hoặc URL khác --</option>
+                      <option value="custom">-- Sử dụng ảnh tải lên từ máy tính --</option>
                     </select>
                   </div>
 
                   <div style="margin-bottom:10px;">
-                    <label style="font-size:0.82rem;font-weight:600;color:var(--admin-muted);">Hoặc tải ảnh từ máy tính (Tự động nén tối ưu):</label>
+                    <label style="font-size:0.82rem;font-weight:600;color:var(--admin-muted);">Tải ảnh từ máy tính (Tự động nén tối ưu):</label>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
                       <button type="button" class="btn btn-secondary btn-sm" id="btn-browse-hero-image">
                         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -1110,7 +1110,8 @@
                     </p>
                   </div>
 
-                  <div>
+                  <!-- Ẩn đường dẫn URL, chỉ áp dụng tải ảnh lên từ máy tính -->
+                  <div style="display:none;">
                     <label style="font-size:0.82rem;font-weight:600;color:var(--admin-muted);">Hoặc nhập đường dẫn URL ảnh web:</label>
                     <input id="hero-image-url" type="url" class="form-control form-control-sm" placeholder="https://domain.com/banner-hero.jpg">
                   </div>
