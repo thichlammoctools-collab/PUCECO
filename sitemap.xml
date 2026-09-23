@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://puceco.com/</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://puceco.com/assets/images/og-image.jpg</image:loc>
+      <image:title>PUCECO — Nguyên liệu chiết xuất từ thiên nhiên &amp; Dược phẩm chuẩn hóa</image:title>
+      <image:caption>PUCECO cung cấp nguyên liệu chiết xuất thảo mộc, dược phẩm và mỹ phẩm đạt chuẩn GMP, ISO 9001 và USDA Organic.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://puceco.com/#noi-bat</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://puceco.com/#cong-thuc-mau</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://puceco.com/#gioi-thieu</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://puceco.com/#tin-tuc</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://puceco.com/#lien-he</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

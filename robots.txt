@@ -1,0 +1,15 @@
+# PUCECO robots.txt
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /assets/images/
+Allow: /assets/css/
+Allow: /assets/js/
+
+# Disallow admin dashboard and private APIs
+Disallow: /admin.html
+Disallow: /api/
+Disallow: /functions/
+
+# Sitemap location
+Sitemap: https://puceco.com/sitemap.xml

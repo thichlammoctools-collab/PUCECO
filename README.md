@@ -54,10 +54,13 @@ node server.js
 
 ```text
 PUCECO/
-├── index.html                 # Trang chủ khách hàng
-├── admin.html                 # Trang quản trị Admin Dashboard
+├── index.html                 # Trang chủ khách hàng (Tối ưu SEO On-page, Open Graph, JSON-LD)
+├── admin.html                 # Trang quản trị Admin Dashboard (Bảo vệ noindex, nofollow)
+├── robots.txt                 # Cấu hình bot tìm kiếm và chỉ mục sitemap
+├── sitemap.xml                # Sơ đồ trang web chuẩn Google XML sitemap
+├── generate_og_image.py       # Script tạo ảnh Open Graph chia sẻ mạng xã hội (1200x630px)
 ├── server.js                  # Máy chủ Node.js phục vụ tĩnh & API
-├── package.json               # Cấu hình dự án
+├── package.json               # Cấu hình dự án & kịch bản build
 ├── README.md                  # Hướng dẫn chi tiết
 └── assets/
     ├── css/
@@ -67,17 +70,10 @@ PUCECO/
     │   ├── data-store.js      # Lớp quản lý dữ liệu trung tâm & đồng bộ tab
     │   ├── main.js            # Điều khiển tương tác trang chủ
     │   └── admin.js           # Điều khiển nghiệp vụ trang quản trị
-    └── images/                # Bộ hình ảnh vector SVG chất lượng cao
-        ├── hero-botanical-1.svg
-        ├── hero-botanical-2.svg
-        ├── hero-botanical-3.svg
-        ├── prod-green-tea.svg
-        ├── prod-lemongrass.svg
-        ├── prod-curcumin.svg
-        ├── prod-aloe.svg
-        ├── prod-turmeric-black.svg
-        ├── prod-stevia.svg
-        ├── news-gmp.svg
-        ├── news-farm.svg
-        └── news-lab.svg
+    └── images/                # Bộ hình ảnh thương hiệu & ảnh chia sẻ mạng xã hội
+        ├── og-image.jpg       # Ảnh Open Graph chuẩn tỷ lệ 1.91:1 (1200x630) cho Zalo, Facebook
+        ├── og-image.png       # Phiên bản lossless PNG độ nét cao
+        ├── apple-touch-icon.png
+        ├── favicon.png
+        └── ...
 ```
