@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBadges();
     switch (currentTab) {
       case 'dashboard': renderDashboard(); break;
+      case 'hero': renderHeroSlides(); break;
       case 'products': renderProductsTable(); break;
       case 'formulations': renderFormulationsTable(); break;
       case 'news': renderNewsTable(); break;
@@ -1446,6 +1447,359 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCerts();
     }
   };
+
+  // ===== TAB: HERO SLIDER (TRANG CHỦ) =====
+  let adminHeroPreviewIndex = 0;
+
+  function renderHeroSlides() {
+    const slides = store.getSlides();
+    const container = document.getElementById('hero-slides-cards-grid');
+    if (!container) return;
+
+    if (!slides || slides.length === 0) {
+      container.innerHTML = '<p style="color:var(--admin-muted);padding:20px;">Chưa có slide nào. Bấm nút "Đặt lại 3 Slide gốc" để tạo lại.</p>';
+      return;
+    }
+
+    container.innerHTML = slides.map((s, idx) => {
+      const g1 = s.g1 || '#18181B';
+      const g2 = s.g2 || (idx === 0 ? '#B72622' : idx === 1 ? '#991B1B' : '#D4322D');
+      const badgeTop = s.badgeTop || (idx === 0 ? 'GMP' : idx === 1 ? '100%' : 'R&D');
+      const badgeBottom = s.badgeBottom || (idx === 0 ? 'đạt chuẩn' : idx === 1 ? 'thiên nhiên' : 'nội bộ');
+      const bgImg = s.bgImage || (idx === 0 ? 'assets/images/hero-bg-1.jpg' : idx === 1 ? 'assets/images/hero-bg-2.jpg' : 'assets/images/hero-bg-3.jpg');
+      const titleDisplay = escapeHtml(s.title || '').replace(/\r?\n/g, '<br>').replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
+      return `
+        <div class="admin-slide-card" data-slide-id="${s.id}">
+          <div class="admin-slide-thumb" style="--g1:${g1};--g2:${g2}">
+            <img src="${escapeHtml(bgImg)}" alt="Slide ${idx + 1}" loading="lazy">
+            <div class="admin-slide-thumb-overlay">
+              <span class="admin-slide-order-badge">Slide #${idx + 1}</span>
+              <div class="admin-slide-thumb-badge">
+                <b>${escapeHtml(badgeTop)}</b>
+                <span>${escapeHtml(badgeBottom)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="admin-slide-content">
+            <div class="admin-slide-eyebrow">${escapeHtml(s.eyebrow || '')}</div>
+            <h4 class="admin-slide-title">${titleDisplay}</h4>
+            <p class="admin-slide-lede">${escapeHtml(s.lede || '—')}</p>
+            <div class="admin-slide-buttons-preview">
+              ${s.btn1Text ? `<span class="admin-slide-btn-tag primary">Nút 1: ${escapeHtml(s.btn1Text)}</span>` : ''}
+              ${s.btn2Text ? `<span class="admin-slide-btn-tag">Nút 2: ${escapeHtml(s.btn2Text)}</span>` : ''}
+            </div>
+          </div>
+          <div class="admin-slide-footer">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="setAdminHeroPreviewSlide(${idx})">
+              Xem thử
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="openEditHeroModal('${s.id}')">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              Chỉnh sửa Slide
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    renderAdminHeroSimulator();
+  }
+
+  window.setAdminHeroPreviewSlide = function (index) {
+    adminHeroPreviewIndex = index;
+    const tabBtns = document.querySelectorAll('#hero-preview-slide-tabs button');
+    tabBtns.forEach((btn, idx) => {
+      btn.className = `btn btn-sm ${idx === index ? 'btn-primary' : 'btn-secondary'}`;
+    });
+    renderAdminHeroSimulator();
+  };
+
+  function renderAdminHeroSimulator() {
+    const simulator = document.getElementById('admin-hero-simulator');
+    if (!simulator) return;
+
+    const slides = store.getSlides();
+    if (!slides || slides.length === 0) {
+      simulator.innerHTML = '<p style="color:#A1A1AA;padding:30px;text-align:center;">Không có slide nào.</p>';
+      return;
+    }
+
+    if (adminHeroPreviewIndex >= slides.length) adminHeroPreviewIndex = 0;
+    const s = slides[adminHeroPreviewIndex];
+    const g1 = s.g1 || '#18181B';
+    const g2 = s.g2 || (adminHeroPreviewIndex === 0 ? '#B72622' : adminHeroPreviewIndex === 1 ? '#991B1B' : '#D4322D');
+    const bgImg = s.bgImage || (adminHeroPreviewIndex === 0 ? 'assets/images/hero-bg-1.jpg' : adminHeroPreviewIndex === 1 ? 'assets/images/hero-bg-2.jpg' : 'assets/images/hero-bg-3.jpg');
+    const artImg = s.artImage || (adminHeroPreviewIndex === 0 ? 'assets/images/hero-botanical-1.svg' : adminHeroPreviewIndex === 1 ? 'assets/images/hero-botanical-2.svg' : 'assets/images/hero-botanical-3.svg');
+    const badgeTop = s.badgeTop || (adminHeroPreviewIndex === 0 ? 'GMP' : adminHeroPreviewIndex === 1 ? '100%' : 'R&D');
+    const badgeBottom = s.badgeBottom || (adminHeroPreviewIndex === 0 ? 'đạt chuẩn' : adminHeroPreviewIndex === 1 ? 'thiên nhiên' : 'nội bộ');
+    const titleFormatted = escapeHtml(s.title || '').replace(/\r?\n/g, '<br>').replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
+    simulator.innerHTML = `
+      <div class="sim-bg">
+        <img src="${escapeHtml(bgImg)}" alt="">
+        <div class="sim-overlay" style="background:linear-gradient(90deg, ${g1} 0%, rgba(24, 24, 27, 0.82) 45%, ${g2}66 100%)"></div>
+      </div>
+      <div class="sim-inner">
+        <div class="sim-copy">
+          ${s.eyebrow ? `<div class="sim-eyebrow">${escapeHtml(s.eyebrow)}</div>` : ''}
+          <h2 class="sim-title">${titleFormatted}</h2>
+          ${s.lede ? `<p class="sim-lede">${escapeHtml(s.lede)}</p>` : ''}
+          <div class="sim-actions">
+            ${s.btn1Text ? `<span class="sim-btn-primary">${escapeHtml(s.btn1Text)}</span>` : ''}
+            ${s.btn2Text ? `<span class="sim-btn-ghost">${escapeHtml(s.btn2Text)}</span>` : ''}
+          </div>
+        </div>
+        <div class="sim-visual">
+          ${artImg ? `<img class="sim-art" src="${escapeHtml(artImg)}" alt="">` : ''}
+          <div class="sim-badge">
+            <b>${escapeHtml(badgeTop)}</b>
+            <span>${escapeHtml(badgeBottom)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Modal Sửa Slide Hero
+  const modalHero = document.getElementById('admin-modal-hero');
+  const heroSlideForm = document.getElementById('hero-slide-form');
+
+  window.openEditHeroModal = function (id) {
+    const s = store.getSlideById(id);
+    if (!s) return;
+
+    document.getElementById('hero-slide-id').value = s.id;
+    document.getElementById('modal-hero-title').textContent = `Chỉnh sửa Slide ${s.order || ''}: ${s.eyebrow || ''}`;
+    document.getElementById('hero-slide-eyebrow').value = s.eyebrow || '';
+    document.getElementById('hero-slide-title').value = s.title || '';
+    document.getElementById('hero-slide-lede').value = s.lede || '';
+    document.getElementById('hero-slide-badge-top').value = s.badgeTop || '';
+    document.getElementById('hero-slide-badge-bottom').value = s.badgeBottom || '';
+    document.getElementById('hero-slide-btn1-text').value = s.btn1Text || '';
+    document.getElementById('hero-slide-btn1-link').value = s.btn1Link || '';
+    document.getElementById('hero-slide-btn2-text').value = s.btn2Text || '';
+    document.getElementById('hero-slide-btn2-link').value = s.btn2Link || '';
+    document.getElementById('hero-slide-art').value = s.artImage || '';
+    document.getElementById('hero-slide-g1').value = s.g1 || '#18181B';
+    document.getElementById('hero-slide-g2').value = s.g2 || '#B72622';
+
+    const fileInput = document.getElementById('hero-image-file');
+    if (fileInput) fileInput.value = '';
+    const urlInput = document.getElementById('hero-image-url');
+    if (urlInput) urlInput.value = '';
+
+    setHeroImage(s.bgImage || 'assets/images/hero-bg-1.jpg');
+
+    if (modalHero) modalHero.classList.add('is-open');
+  };
+
+  function setHeroImage(imageSrc, type = 'auto', customLabel = '') {
+    const valueInput = document.getElementById('hero-image-value');
+    const previewImg = document.getElementById('hero-image-preview');
+    const selectEl = document.getElementById('hero-image-select');
+    const urlInput = document.getElementById('hero-image-url');
+    const badgeEl = document.getElementById('hero-image-badge');
+    const filenameEl = document.getElementById('hero-image-filename');
+    const removeBtn = document.getElementById('btn-remove-hero-image');
+
+    const src = imageSrc || 'assets/images/hero-bg-1.jpg';
+    if (valueInput) valueInput.value = src;
+    if (previewImg) previewImg.src = src;
+
+    const isPreset = [
+      'assets/images/hero-bg-1.jpg', 'assets/images/hero-bg-2.jpg', 'assets/images/hero-bg-3.jpg'
+    ].includes(src);
+    const isDataUrl = src.startsWith('data:image/');
+
+    if (type === 'upload' || isDataUrl) {
+      if (badgeEl) {
+        badgeEl.textContent = 'Ảnh từ máy';
+        badgeEl.className = 'badge badge-success';
+      }
+      if (filenameEl) {
+        filenameEl.textContent = customLabel ? `Đã chọn: ${customLabel}` : 'Ảnh nền đã được tải lên & tối ưu nét từ máy tính';
+        filenameEl.style.color = 'var(--admin-primary)';
+      }
+      if (selectEl) selectEl.value = 'custom';
+      if (urlInput) urlInput.value = '';
+      if (removeBtn) removeBtn.style.display = 'inline-block';
+    } else if (type === 'url' || (!isPreset && (src.startsWith('http://') || src.startsWith('https://')))) {
+      if (badgeEl) {
+        badgeEl.textContent = 'Liên kết URL';
+        badgeEl.className = 'badge badge-info';
+      }
+      if (filenameEl) {
+        filenameEl.textContent = 'Sử dụng hình ảnh từ liên kết web bên ngoài';
+        filenameEl.style.color = 'var(--admin-muted)';
+      }
+      if (selectEl) selectEl.value = 'custom';
+      if (urlInput && urlInput.value !== src) urlInput.value = src;
+      if (removeBtn) removeBtn.style.display = 'inline-block';
+    } else {
+      if (badgeEl) {
+        badgeEl.textContent = 'Hình nền mẫu';
+        badgeEl.className = 'badge badge-secondary';
+      }
+      if (filenameEl) {
+        filenameEl.textContent = 'Hỗ trợ JPG, PNG, WebP (Khuyến nghị tỷ lệ 16:9 độ nét cao)';
+        filenameEl.style.color = 'var(--admin-muted)';
+      }
+      if (selectEl && isPreset) selectEl.value = src;
+      if (urlInput) urlInput.value = '';
+      if (removeBtn) removeBtn.style.display = 'none';
+    }
+  }
+
+  function initHeroImageUploader() {
+    const fileInput = document.getElementById('hero-image-file');
+    const browseBtn = document.getElementById('btn-browse-hero-image');
+    const removeBtn = document.getElementById('btn-remove-hero-image');
+    const dropzone = document.getElementById('hero-image-dropzone');
+    const uploaderCard = document.getElementById('hero-image-uploader');
+    const selectEl = document.getElementById('hero-image-select');
+    const urlInput = document.getElementById('hero-image-url');
+
+    if (browseBtn && fileInput) {
+      browseBtn.addEventListener('click', () => fileInput.click());
+    }
+
+    if (dropzone && fileInput) {
+      dropzone.addEventListener('click', () => fileInput.click());
+    }
+
+    async function handleFile(file) {
+      if (!file) return;
+      try {
+        const result = await processImageFile(file, 1920, 1080, 0.85);
+        const label = `${file.name} (${formatFileSize(result.size)})`;
+        setHeroImage(result.dataUrl, 'upload', label);
+        showAdminToast('Đã tải lên và nén tối ưu ảnh nền Slider thành công!', 'success');
+      } catch (err) {
+        showAdminToast(err.message || 'Lỗi khi xử lý hình ảnh.', 'danger');
+      }
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) handleFile(file);
+      });
+    }
+
+    if (uploaderCard) {
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploaderCard.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          uploaderCard.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploaderCard.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          uploaderCard.classList.remove('dragover');
+        });
+      });
+
+      uploaderCard.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const file = dt && dt.files && dt.files[0];
+        if (file) handleFile(file);
+      });
+    }
+
+    if (selectEl) {
+      selectEl.addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val && val !== 'custom') {
+          if (fileInput) fileInput.value = '';
+          setHeroImage(val, 'preset');
+        }
+      });
+    }
+
+    if (urlInput) {
+      let debounceTimer = null;
+      urlInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          const val = e.target.value.trim();
+          if (val) {
+            if (fileInput) fileInput.value = '';
+            setHeroImage(val, 'url');
+          }
+        }, 300);
+      });
+    }
+
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        if (fileInput) fileInput.value = '';
+        if (urlInput) urlInput.value = '';
+        const id = document.getElementById('hero-slide-id').value;
+        const defaultMap = {
+          'slide-1': 'assets/images/hero-bg-1.jpg',
+          'slide-2': 'assets/images/hero-bg-2.jpg',
+          'slide-3': 'assets/images/hero-bg-3.jpg'
+        };
+        const resetSrc = defaultMap[id] || 'assets/images/hero-bg-1.jpg';
+        setHeroImage(resetSrc, 'preset');
+        showAdminToast('Đã đặt lại hình nền mặc định.', 'info');
+      });
+    }
+  }
+
+  initHeroImageUploader();
+
+  if (heroSlideForm) {
+    heroSlideForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('hero-slide-id').value;
+      const currentSlide = store.getSlideById(id) || {};
+
+      const imgVal = document.getElementById('hero-image-value')?.value ||
+                     document.getElementById('hero-image-select')?.value ||
+                     currentSlide.bgImage || 'assets/images/hero-bg-1.jpg';
+
+      const updatedSlide = {
+        ...currentSlide,
+        id: id,
+        eyebrow: document.getElementById('hero-slide-eyebrow').value.trim(),
+        title: document.getElementById('hero-slide-title').value.trim(),
+        lede: document.getElementById('hero-slide-lede').value.trim(),
+        badgeTop: document.getElementById('hero-slide-badge-top').value.trim(),
+        badgeBottom: document.getElementById('hero-slide-badge-bottom').value.trim(),
+        btn1Text: document.getElementById('hero-slide-btn1-text').value.trim(),
+        btn1Link: document.getElementById('hero-slide-btn1-link').value.trim(),
+        btn2Text: document.getElementById('hero-slide-btn2-text').value.trim(),
+        btn2Link: document.getElementById('hero-slide-btn2-link').value.trim(),
+        bgImage: imgVal,
+        artImage: document.getElementById('hero-slide-art').value,
+        g1: document.getElementById('hero-slide-g1').value.trim() || '#18181B',
+        g2: document.getElementById('hero-slide-g2').value.trim() || '#B72622'
+      };
+
+      store.saveSlide(updatedSlide);
+      closeAdminModals();
+      renderHeroSlides();
+      showAdminToast(`Đã lưu cập nhật cho Slide thành công!`, 'success');
+    });
+  }
+
+  // Nút đặt lại 3 slide gốc
+  const resetHeroBtn = document.getElementById('btn-reset-hero-slides');
+  if (resetHeroBtn) {
+    resetHeroBtn.addEventListener('click', () => {
+      if (confirm('Bạn có chắc chắn muốn khôi phục 3 slide về nội dung và hình ảnh gốc ban đầu?')) {
+        store.resetSlidesToDefault();
+        renderHeroSlides();
+        showAdminToast('Đã khôi phục 3 slide về mặc định ban đầu!', 'info');
+      }
+    });
+  }
 
   // ===== TAB 4: LEADS & INQUIRIES =====
   function renderLeadsTable() {

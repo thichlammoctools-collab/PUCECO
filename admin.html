@@ -57,6 +57,10 @@
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
           Tổng quan
         </button>
+        <button class="nav-item" data-tab="hero">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="12" cy="10" r="3"/></svg>
+          Hero Slider (Trang Chủ)
+        </button>
         <button class="nav-item" data-tab="products">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 7v9"/></svg>
           Quản lý Sản phẩm
@@ -189,6 +193,64 @@
                     <!-- Dynamic -->
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB: HERO SLIDER (TRANG CHỦ) ===== -->
+        <section id="tab-hero" class="tab-content">
+          <!-- Header Banner -->
+          <div class="panel">
+            <div class="panel-header" style="flex-wrap:wrap;gap:12px;">
+              <div>
+                <h3>Quản Lý 3 Hero Slider Banner (Đầu Trang Chủ)</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Tùy chỉnh nội dung tiêu đề, nhãn phụ, mô tả, nút kêu gọi hành động và thay đổi ảnh nền sắc nét cho 3 slide</p>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-reset-hero-slides">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  Đặt lại 3 Slide gốc
+                </button>
+                <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Xem trang chủ
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danh sách 3 Slide dạng Card trực quan -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Danh Sách 3 Slide Banner Chính</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Bấm "Chỉnh sửa" để cập nhật nội dung hoặc thay đổi hình ảnh nền cho từng slide</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="hero-slides-admin-grid" id="hero-slides-cards-grid">
+                <!-- Dynamic cards rendered by admin.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Preview Banner Simulator -->
+          <div class="panel">
+            <div class="panel-header" style="flex-wrap:wrap;gap:10px;">
+              <div>
+                <h3>Mô Phỏng Trực Quan Hero Slider (Live Preview)</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Xem trước giao diện thực tế sẽ hiển thị tới khách hàng trên website</p>
+              </div>
+              <div class="hero-preview-tabs" id="hero-preview-slide-tabs">
+                <button type="button" class="btn btn-sm btn-primary" onclick="setAdminHeroPreviewSlide(0)">Slide 1</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="setAdminHeroPreviewSlide(1)">Slide 2</button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="setAdminHeroPreviewSlide(2)">Slide 3</button>
+              </div>
+            </div>
+            <div class="panel-body" style="padding:0;overflow:hidden;border-radius:0 0 var(--radius) var(--radius);">
+              <div class="admin-hero-simulator" id="admin-hero-simulator">
+                <!-- Dynamic simulated hero slide -->
               </div>
             </div>
           </div>
@@ -954,6 +1016,131 @@
         <div class="admin-modal-footer">
           <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
           <button type="submit" class="btn btn-primary">Lưu công thức</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL CHỈNH SỬA HERO SLIDER ===== -->
+  <div id="admin-modal-hero" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal-card" style="max-width:760px;">
+      <div class="admin-modal-header">
+        <h3 id="modal-hero-title">Chỉnh sửa Slide Banner</h3>
+        <button type="button" class="btn btn-outline btn-sm" data-close-admin-modal style="padding:4px 8px;">✕</button>
+      </div>
+      <form id="hero-slide-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="hero-slide-id">
+          
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Dòng nhãn phụ phía trên (Eyebrow)</label>
+              <input id="hero-slide-eyebrow" type="text" class="form-control" placeholder="VD: Nguyên liệu thiên nhiên · Chuẩn quốc tế" required>
+            </div>
+            <div class="form-group">
+              <label>Huy hiệu tròn nổi bật (Badge)</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <input id="hero-slide-badge-top" type="text" class="form-control" placeholder="Dòng trên (VD: GMP, 100%)">
+                <input id="hero-slide-badge-bottom" type="text" class="form-control" placeholder="Dòng dưới (VD: đạt chuẩn)">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Tiêu đề chính của Slide (Title) * <small style="color:var(--admin-muted);font-weight:normal;">(Nhấn Enter hoặc gõ &lt;br&gt; để ngắt dòng đẹp mắt)</small></label>
+            <textarea id="hero-slide-title" class="form-control" rows="2" placeholder="VD: Chiết xuất từ thiên nhiên,&#10;tin cậy từ khoa học" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Đoạn giới thiệu / Mô tả tóm tắt (Lede)</label>
+            <textarea id="hero-slide-lede" class="form-control" rows="3" placeholder="Mô tả nội dung cho slide..."></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Nút kêu gọi 1 (Nút chính - Đỏ)</label>
+              <input id="hero-slide-btn1-text" type="text" class="form-control" placeholder="Tên nút (VD: Khám phá sản phẩm)" style="margin-bottom:6px;">
+              <input id="hero-slide-btn1-link" type="text" class="form-control" placeholder="Liên kết (VD: #noi-bat hoặc https://...)">
+            </div>
+            <div class="form-group">
+              <label>Nút kêu gọi 2 (Nút phụ - Viền mờ)</label>
+              <input id="hero-slide-btn2-text" type="text" class="form-control" placeholder="Tên nút (VD: Về chúng tôi)" style="margin-bottom:6px;">
+              <input id="hero-slide-btn2-link" type="text" class="form-control" placeholder="Liên kết (VD: #gioi-thieu hoặc https://...)">
+            </div>
+          </div>
+
+          <!-- Bộ chọn & tải ảnh nền Hero Slider -->
+          <div class="form-group">
+            <label>Hình ảnh nền Slider (Background Image) *</label>
+            <div class="hero-image-uploader-card" id="hero-image-uploader">
+              <input type="hidden" id="hero-image-value">
+              <div class="hero-uploader-layout">
+                <!-- Thumbnail Preview -->
+                <div class="hero-preview-thumb-box" id="hero-image-dropzone" title="Kéo thả hoặc bấm để chọn ảnh">
+                  <img id="hero-image-preview" src="assets/images/hero-bg-1.jpg" alt="Preview">
+                  <span id="hero-image-badge" class="badge badge-secondary">Hình ảnh</span>
+                </div>
+                <!-- Controls -->
+                <div class="hero-uploader-controls">
+                  <div style="margin-bottom:10px;">
+                    <label style="font-size:0.82rem;font-weight:600;color:var(--admin-muted);">Chọn ảnh mẫu có sẵn:</label>
+                    <select id="hero-image-select" class="form-control form-control-sm">
+                      <option value="assets/images/hero-bg-1.jpg">Ảnh nền mẫu 1: Cối xay thảo mộc & Tinh dầu (hero-bg-1.jpg)</option>
+                      <option value="assets/images/hero-bg-2.jpg">Ảnh nền mẫu 2: Lá chè & Nông sản sạch (hero-bg-2.jpg)</option>
+                      <option value="assets/images/hero-bg-3.jpg">Ảnh nền mẫu 3: Phòng Lab & Công nghệ chiết xuất (hero-bg-3.jpg)</option>
+                      <option value="custom">-- Sử dụng ảnh tải lên từ máy hoặc URL khác --</option>
+                    </select>
+                  </div>
+
+                  <div style="margin-bottom:10px;">
+                    <label style="font-size:0.82rem;font-weight:600;color:var(--admin-muted);">Hoặc tải ảnh từ máy tính (Tự động nén tối ưu):</label>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                      <button type="button" class="btn btn-secondary btn-sm" id="btn-browse-hero-image">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        Chọn tệp ảnh từ máy tính...
+                      </button>
+                      <button type="button" class="btn btn-outline btn-sm" id="btn-remove-hero-image" style="display:none;color:var(--admin-danger);border-color:var(--admin-danger);">
+                        Đặt lại ảnh mặc định
+                      </button>
+                      <input id="hero-image-file" type="file" accept="image/*" style="display:none;">
+                    </div>
+                    <p id="hero-image-filename" style="font-size:0.78rem;color:var(--admin-muted);margin-top:4px;">
+                      Hỗ trợ JPG, PNG, WebP (Khuyến nghị ảnh tỷ lệ 16:9 hoặc ảnh ngang từ 1600x800px)
+                    </p>
+                  </div>
+
+                  <div>
+                    <label style="font-size:0.82rem;font-weight:600;color:var(--admin-muted);">Hoặc nhập đường dẫn URL ảnh web:</label>
+                    <input id="hero-image-url" type="url" class="form-control form-control-sm" placeholder="https://domain.com/banner-hero.jpg">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Họa tiết thực vật (Botanical Art)</label>
+              <select id="hero-slide-art" class="form-control">
+                <option value="assets/images/hero-botanical-1.svg">Họa tiết Lá Thảo Mộc 1 (Xanh lục tự nhiên)</option>
+                <option value="assets/images/hero-botanical-2.svg">Họa tiết Mầm Cây 2 (Nông sản sinh thái)</option>
+                <option value="assets/images/hero-botanical-3.svg">Họa tiết Phân Tử 3 (R&D Công nghệ)</option>
+                <option value="">Không hiển thị họa tiết</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Màu sắc Gradient tối chủ đạo</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <input id="hero-slide-g1" type="text" class="form-control" placeholder="Màu 1 (VD: #18181B)">
+                <input id="hero-slide-g2" type="text" class="form-control" placeholder="Màu 2 (VD: #B72622)">
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Lưu Thay Đổi Slide</button>
         </div>
       </form>
     </div>
