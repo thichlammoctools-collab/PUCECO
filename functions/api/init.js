@@ -64,6 +64,22 @@ export async function onRequestPost(context) {
           key TEXT PRIMARY KEY,
           value TEXT NOT NULL
         );
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS formulations (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          category TEXT DEFAULT 'cosmetics',
+          badge TEXT,
+          dosage_form TEXT,
+          main_ingredient TEXT,
+          image TEXT,
+          desc TEXT,
+          spec TEXT,
+          directions TEXT,
+          ingredients TEXT,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        );
       `)
     ]);
 
@@ -104,15 +120,15 @@ export async function onRequestPost(context) {
       await db.batch([
         db.prepare(`
           INSERT INTO news (id, title, date, excerpt, content, image, bg1, bg2, author, created_at)
-          VALUES ('news-1', 'PUCECO đạt chứng nhận GMP nâng hạng', '18 Thg 9, 2026', 'Nhà máy chiết xuất hoàn thiện nâng cấp dây chuyền chiết xuất áp suất thấp theo tiêu chuẩn GMP mới nhất.', 'Tháng 9/2026, PUCECO chính thức đón nhận giấy chứng nhận Thực hành Sản xuất Tốt (GMP) phiên bản nâng hạng cho toàn bộ tổ hợp nhà máy chiết xuất dược liệu công nghệ cao. Với dây chuyền tự động hóa khép kín và hệ thống lọc nano tiên tiến, công suất chế biến đạt hơn 1.200 tấn dược liệu tươi mỗi năm, sẵn sàng cung ứng cho các tập đoàn dược phẩm lớn trong và ngoài nước.', 'assets/images/news-gmp.svg', '#E6F1EA', '#C9E3D3', 'Ban Kiểm Soát Chất Lượng', '2026-09-18');
+          VALUES ('news-1', 'PUCECO đạt chứng nhận GMP nâng hạng', '18 Thg 9, 2026', 'Nhà máy chiết xuất hoàn thiện nâng cấp dây chuyền chiết xuất áp suất thấp theo tiêu chuẩn GMP mới nhất.', 'Tháng 9/2026, PUCECO chính thức đón nhận giấy chứng nhận Thực hành Sản xuất Tốt (GMP) phiên bản nâng hạng cho toàn bộ tổ hợp nhà máy chiết xuất dược liệu công nghệ cao. Với dây chuyền tự động hóa khép kín và hệ thống lọc nano tiên tiến, công suất chế biến đạt hơn 1.200 tấn dược liệu tươi mỗi năm, sẵn sàng cung ứng cho các tập đoàn dược phẩm lớn trong và ngoài nước.', 'assets/images/news-gmp.jpg', '#E6F1EA', '#C9E3D3', 'Ban Kiểm Soát Chất Lượng', '2026-09-18');
         `),
         db.prepare(`
           INSERT INTO news (id, title, date, excerpt, content, image, bg1, bg2, author, created_at)
-          VALUES ('news-2', 'Mở rộng vùng trồng nguyên liệu sạch tại Tây Nguyên', '02 Thg 9, 2026', 'Liên kết 5 hợp tác xã tại Đắk Lắk và Gia Lai, đảm bảo nguồn cung sả chanh, nghệ vàng và gừng bền vững.', 'Nhằm chủ động kiểm soát chất lượng từ mầm cây đến giọt chiết xuất cuối cùng, PUCECO đã ký kết liên kết bao tiêu cùng 5 hợp tác xã dược liệu với tổng quy mô hơn 150 ha. Mô hình canh tác đạt chứng nhận Hữu cơ (Organic) nói không với thuốc trừ sâu hóa học, tạo sinh kế bền vững cho hơn 200 hộ đồng bào địa phương.', 'assets/images/news-farm.svg', '#F3EFE2', '#E4D6B0', 'Phòng Phát Triển Vùng Trồng', '2026-09-02');
+          VALUES ('news-2', 'Mở rộng vùng trồng nguyên liệu sạch tại Tây Nguyên', '02 Thg 9, 2026', 'Liên kết 5 hợp tác xã tại Đắk Lắk và Gia Lai, đảm bảo nguồn cung sả chanh, nghệ vàng và gừng bền vững.', 'Nhằm chủ động kiểm soát chất lượng từ mầm cây đến giọt chiết xuất cuối cùng, PUCECO đã ký kết liên kết bao tiêu cùng 5 hợp tác xã dược liệu với tổng quy mô hơn 150 ha. Mô hình canh tác đạt chứng nhận Hữu cơ (Organic) nói không với thuốc trừ sâu hóa học, tạo sinh kế bền vững cho hơn 200 hộ đồng bào địa phương.', 'assets/images/news-farm.jpg', '#F3EFE2', '#E4D6B0', 'Phòng Phát Triển Vùng Trồng', '2026-09-02');
         `),
         db.prepare(`
           INSERT INTO news (id, title, date, excerpt, content, image, bg1, bg2, author, created_at)
-          VALUES ('news-3', 'Ra mắt Curcumin nano thế hệ mới cho dược phẩm', '21 Thg 8, 2026', 'Công trình R&D nội bộ 3 năm nghiên cứu với kích thước tiểu phân dưới 50nm mang lại hiệu quả hấp thu kỷ lục.', 'Trung tâm Nghiên cứu & Phát triển PUCECO Labs công bố thương mại hóa thành công dòng nguyên liệu Nano Curcumin tan hoàn toàn trong nước với kích thước hạt trung bình chỉ 35nm. Sản phẩm đạt độ ổn định cao trong dải pH 2.0 - 8.0, tương thích lý tưởng cho các dạng bào chế siro, viên nang mềm, thạch collagen và nước uống chức năng.', 'assets/images/news-lab.svg', '#E8F0EC', '#BBD9CA', 'Viện R&D PUCECO', '2026-08-21');
+          VALUES ('news-3', 'Ra mắt Curcumin nano thế hệ mới cho dược phẩm', '21 Thg 8, 2026', 'Công trình R&D nội bộ 3 năm nghiên cứu với kích thước tiểu phân dưới 50nm mang lại hiệu quả hấp thu kỷ lục.', 'Trung tâm Nghiên cứu & Phát triển PUCECO Labs công bố thương mại hóa thành công dòng nguyên liệu Nano Curcumin tan hoàn toàn trong nước với kích thước hạt trung bình chỉ 35nm. Sản phẩm đạt độ ổn định cao trong dải pH 2.0 - 8.0, tương thích lý tưởng cho các dạng bào chế siro, viên nang mềm, thạch collagen và nước uống chức năng.', 'assets/images/news-lab.jpg', '#E8F0EC', '#BBD9CA', 'Viện R&D PUCECO', '2026-08-21');
         `)
       ]);
     }

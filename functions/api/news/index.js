@@ -47,7 +47,7 @@ export async function onRequestPost(context) {
     const date = body.date || new Date().toLocaleDateString('vi-VN');
     const excerpt = body.excerpt || '';
     const content = body.content || body.excerpt || '';
-    const image = body.image || 'assets/images/news-gmp.svg';
+    const image = body.image || 'assets/images/news-gmp.jpg';
     const bg1 = body.bg1 || '#E6F1EA';
     const bg2 = body.bg2 || '#C9E3D3';
     const author = body.author || 'PUCECO';

@@ -61,9 +61,17 @@
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 7v9"/></svg>
           Quản lý Sản phẩm
         </button>
+        <button class="nav-item" data-tab="formulations">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.1 19.3A2 2 0 0 0 5.8 22h12.4a2 2 0 0 0 1.7-2.7L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
+          Công Thức Mẫu
+        </button>
         <button class="nav-item" data-tab="news">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m4 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/></svg>
           Tin tức & Bài viết
+        </button>
+        <button class="nav-item" data-tab="certs">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+          Chứng nhận & Tiêu chuẩn
         </button>
         <button class="nav-item" data-tab="leads">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -115,6 +123,16 @@
               <div class="kpi-info">
                 <h4>Tổng sản phẩm</h4>
                 <div id="kpi-products" class="kpi-num">0</div>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon" style="background:rgba(217,119,6,0.12);color:var(--admin-warning);">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.1 19.3A2 2 0 0 0 5.8 22h12.4a2 2 0 0 0 1.7-2.7L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
+              </div>
+              <div class="kpi-info">
+                <h4>Công thức mẫu</h4>
+                <div id="kpi-formulations" class="kpi-num">0</div>
               </div>
             </div>
 
@@ -226,6 +244,54 @@
           </div>
         </section>
 
+        <!-- ===== TAB: FORMULATIONS (CÔNG THỨC MẪU) ===== -->
+        <section id="tab-formulations" class="tab-content">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="product-toolbar">
+                <div class="search-input-wrapper">
+                  <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                  <input id="search-formulation-input" type="text" class="form-control" placeholder="Tìm tên công thức, mô tả, hoạt chất..." autocomplete="off">
+                  <button id="search-formulation-clear" class="search-clear-btn" type="button" style="display:none;" title="Xóa tìm kiếm">✕</button>
+                </div>
+                <div class="filter-select-wrapper">
+                  <select id="filter-formulation-cat" class="form-control">
+                    <option value="">-- Tất cả nhóm ngành --</option>
+                    <option value="cosmetics">Mỹ phẩm &amp; Dược mỹ phẩm</option>
+                    <option value="pharma">Dược phẩm &amp; TPCN</option>
+                    <option value="beverage">Đồ uống chức năng</option>
+                  </select>
+                </div>
+                <span id="formulation-count-chip" class="product-count-chip">Đang tải...</span>
+              </div>
+              <button class="btn btn-primary" onclick="openAddFormulationModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Thêm Công Thức Mới
+              </button>
+            </div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:48px;text-align:center;">STT</th>
+                      <th style="width:72px;text-align:center;">Biểu Tượng</th>
+                      <th>Tên Công Thức Mẫu</th>
+                      <th style="width:160px;">Nhóm Ngành / Nhãn</th>
+                      <th style="width:200px;">Dạng Bào Chế &amp; Hoạt Chất</th>
+                      <th style="width:110px;text-align:center;">Thành Phần</th>
+                      <th style="width:150px;text-align:center;">Hành Động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="formulations-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- ===== TAB 3: NEWS ===== -->
         <section id="tab-news" class="tab-content">
           <div class="panel">
@@ -251,6 +317,87 @@
                     <!-- Dynamic -->
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB: CERTS (CHỨNG NHẬN & TIÊU CHUẨN) ===== -->
+        <section id="tab-certs" class="tab-content">
+          <!-- Cấu hình tiêu đề khối -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Cấu Hình Tiêu Đề Khối "Chứng Nhận &amp; Tiêu Chuẩn"</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Tùy chỉnh dòng nhãn nhỏ phía trên và tiêu đề chính hiển thị trên website</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <form id="cert-heading-form">
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label>Dòng nhãn phụ phía trên (Eyebrow)</label>
+                    <input id="cert-eyebrow-input" type="text" class="form-control" placeholder="VD: Cam kết chất lượng" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Tiêu đề chính khu vực (Section Title)</label>
+                    <input id="cert-title-input" type="text" class="form-control" placeholder="VD: Chứng nhận &amp; tiêu chuẩn" required>
+                  </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" type="submit">Lưu Thay Đổi Tiêu Đề</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Danh sách chứng nhận -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Danh Sách Chứng Nhận &amp; Tiêu Chuẩn Chất Lượng</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Quản lý các huy hiệu chứng chỉ: GMP, ISO 9001, USDA Organic, HACCP, HALAL...</p>
+              </div>
+              <button class="btn btn-primary" onclick="openAddCertModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Thêm Chứng Nhận Mới
+              </button>
+            </div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:48px;text-align:center;">STT</th>
+                      <th style="width:140px;">Mã Tiêu Chuẩn</th>
+                      <th style="width:220px;">Tên / Diễn Giải</th>
+                      <th>Mô Tả Quy Chuẩn</th>
+                      <th style="width:120px;text-align:center;">Hiển Thị</th>
+                      <th style="width:110px;text-align:center;">Thứ Tự</th>
+                      <th style="width:150px;text-align:center;">Thao Tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="certs-tbody">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Xem trước trực quan (Live Preview) -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Xem Trước Trực Quan Trên Website (Live Preview)</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Giao diện thực tế hiển thị cho người xem khi truy cập trang chủ</p>
+              </div>
+            </div>
+            <div class="panel-body" style="background:#F4F7F3;border-radius:0 0 var(--radius) var(--radius);padding:40px 20px;">
+              <div class="admin-cert-preview-box" style="text-align:center;">
+                <p class="admin-cert-preview-eyebrow" id="preview-cert-eyebrow" style="text-transform:uppercase;letter-spacing:0.12em;font-size:0.82rem;font-weight:700;color:#B45309;margin-bottom:8px;">Cam kết chất lượng</p>
+                <h3 class="admin-cert-preview-title" id="preview-cert-title" style="font-family:'Fraunces',Georgia,serif;font-size:1.85rem;color:#143226;margin-bottom:20px;">Chứng nhận &amp; tiêu chuẩn</h3>
+                <div class="cert-row" id="preview-cert-row">
+                  <!-- Rendered dynamically -->
+                </div>
               </div>
             </div>
           </div>
@@ -584,7 +731,7 @@
             <div class="news-image-uploader-card" id="news-image-uploader">
               <!-- Khung xem trước ảnh & Dropzone -->
               <div class="news-image-preview-wrapper" id="news-image-dropzone" title="Bấm hoặc kéo thả ảnh vào đây để thay đổi">
-                <img id="news-image-preview" src="assets/images/news-gmp.svg" alt="Xem trước hình đại diện">
+                <img id="news-image-preview" src="assets/images/news-gmp.jpg" alt="Xem trước hình đại diện">
                 <div class="news-image-drop-overlay">
                   <span>Thay đổi ảnh</span>
                 </div>
@@ -614,9 +761,9 @@
                   <div>
                     <label style="font-size:0.78rem;color:var(--admin-muted);margin-bottom:3px;display:block;">Hoặc chọn ảnh mẫu có sẵn:</label>
                     <select id="news-image-select" class="form-control" style="padding:6px 10px;font-size:0.85rem;">
-                      <option value="assets/images/news-gmp.svg">Nhà máy / Chứng nhận GMP</option>
-                      <option value="assets/images/news-farm.svg">Vùng trồng nông trại hữu cơ</option>
-                      <option value="assets/images/news-lab.svg">Phòng thí nghiệm R&D</option>
+                      <option value="assets/images/news-gmp.jpg">Nhà máy / Chứng nhận GMP (Ảnh thực tế)</option>
+                      <option value="assets/images/news-farm.jpg">Vùng trồng nông trại hữu cơ (Ảnh thực tế)</option>
+                      <option value="assets/images/news-lab.jpg">Phòng thí nghiệm R&D (Ảnh thực tế)</option>
                       <option value="custom">-- Ảnh tự tải / URL tùy chỉnh --</option>
                     </select>
                   </div>
@@ -627,7 +774,7 @@
                 </div>
               </div>
             </div>
-            <input type="hidden" id="news-image-value" value="assets/images/news-gmp.svg">
+            <input type="hidden" id="news-image-value" value="assets/images/news-gmp.jpg">
           </div>
 
           <div class="form-group">
@@ -643,6 +790,170 @@
         <div class="admin-modal-footer">
           <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
           <button type="submit" class="btn btn-primary">Lưu bài viết</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL THÊM / SỬA CHỨNG NHẬN ===== -->
+  <div id="admin-modal-cert" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal-card" style="max-width:540px;">
+      <div class="admin-modal-header">
+        <h3 id="modal-cert-title">Thêm chứng nhận mới</h3>
+        <button type="button" class="btn btn-outline btn-sm" data-close-admin-modal style="padding:4px 8px;">✕</button>
+      </div>
+      <form id="cert-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="cert-id">
+          
+          <div class="form-group">
+            <label>Mã / Tên viết tắt tiêu chuẩn *</label>
+            <input id="cert-code-input" type="text" class="form-control" placeholder="VD: GMP, ISO 9001, USDA, HACCP, HALAL..." required>
+            <small style="color:var(--admin-muted);font-size:0.8rem;margin-top:4px;display:block;">Tên viết tắt nổi bật (in đậm màu đỏ cam trên thẻ chứng nhận)</small>
+          </div>
+
+          <div class="form-group">
+            <label>Tên / Diễn giải đầy đủ *</label>
+            <input id="cert-name-input" type="text" class="form-control" placeholder="VD: Thực hành sản xuất tốt, Quản lý chất lượng..." required>
+            <small style="color:var(--admin-muted);font-size:0.8rem;margin-top:4px;display:block;">Dòng chữ phụ nằm dưới mã tiêu chuẩn</small>
+          </div>
+
+          <div class="form-group">
+            <label>Mô tả chi tiết / Ghi chú quy chuẩn (tùy chọn)</label>
+            <textarea id="cert-desc-input" class="form-control" rows="2" placeholder="VD: Đạt chuẩn quy định của Bộ Y Tế và Tổ chức Y tế Thế giới (WHO)..."></textarea>
+          </div>
+
+          <div class="form-group" style="margin-top:14px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:0.95rem;font-weight:500;">
+              <input id="cert-enabled-input" type="checkbox" checked style="width:18px;height:18px;accent-color:var(--admin-primary);cursor:pointer;">
+              Hiển thị chứng nhận này trên website
+            </label>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Lưu chứng nhận</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL THÊM / SỬA CÔNG THỨC MẪU ===== -->
+  <div id="admin-modal-formulation" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal-card modal-lg">
+      <div class="admin-modal-header">
+        <h3 id="modal-formulation-title">Thêm công thức mẫu mới</h3>
+        <button type="button" class="btn btn-outline btn-sm" data-close-admin-modal style="padding:4px 8px;">✕</button>
+      </div>
+      <form id="formulation-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="formulation-id">
+          
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Tên công thức mẫu *</label>
+              <input id="formulation-name" type="text" class="form-control" placeholder="VD: Serum Dưỡng Trắng & Chống Oxy Hóa" required>
+            </div>
+            <div class="form-group">
+              <label>Nhóm ngành / Danh mục</label>
+              <select id="formulation-category" class="form-control">
+                <option value="cosmetics">Mỹ phẩm & Dược mỹ phẩm (cosmetics)</option>
+                <option value="pharma">Dược phẩm & TPCN (pharma)</option>
+                <option value="beverage">Đồ uống chức năng (beverage)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Nhãn hiển thị (Badge)</label>
+              <input id="formulation-badge" type="text" class="form-control" placeholder="VD: Mỹ phẩm Skin-care, Thực phẩm chức năng...">
+            </div>
+            <div class="form-group">
+              <label>Dạng bào chế</label>
+              <input id="formulation-dosage" type="text" class="form-control" placeholder="VD: Serum dưỡng da dạng tinh chất, Viên nang mềm...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Hoạt chất PUCECO chính ứng dụng</label>
+            <input id="formulation-main-ingredient" type="text" class="form-control" placeholder="VD: Chiết xuất Trà xanh EGCG 98% (PUCECO)">
+          </div>
+
+          <!-- Khu vực chọn & xem trước Biểu tượng / Hình ảnh công thức -->
+          <div class="form-group">
+            <label>Biểu tượng / Hình ảnh công thức</label>
+            <div class="formulation-image-picker">
+              <div class="formulation-image-preview-wrap">
+                <img id="formulation-img-preview" src="assets/images/form-serum.jpg" alt="Xem trước">
+              </div>
+              <div class="formulation-image-picker-controls">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <select id="formulation-image-select" class="form-control" style="flex:1;min-width:200px;font-size:0.88rem;">
+                    <option value="assets/images/form-serum.jpg">Hình ảnh Serum dưỡng da R&D (Ảnh chụp)</option>
+                    <option value="assets/images/form-capsule.jpg">Hình ảnh Viên nang mềm Softgel (Ảnh chụp)</option>
+                    <option value="assets/images/form-drink.jpg">Hình ảnh Đồ uống thảo dược Sugar-Free (Ảnh chụp)</option>
+                    <option value="assets/images/form-gel.jpg">Hình ảnh Gel phục hồi sinh học (Ảnh chụp)</option>
+                    <option value="custom">-- Tải ảnh riêng hoặc nhập URL --</option>
+                  </select>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-browse-formulation-image">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Tải ảnh từ máy
+                  </button>
+                  <input type="file" id="formulation-image-file" accept="image/*" style="display:none;">
+                </div>
+                <div id="formulation-image-custom-wrap" style="display:none;">
+                  <input id="formulation-image-url" type="text" class="form-control" placeholder="Dán đường dẫn URL ảnh hoặc chọn file ở trên..." style="font-size:0.85rem;">
+                </div>
+                <input type="hidden" id="formulation-image-value" value="assets/images/form-serum.jpg">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Mô tả tóm tắt công thức *</label>
+            <textarea id="formulation-desc" class="form-control" rows="2" placeholder="Tóm tắt công dụng, cơ chế và đối tượng người dùng..." required></textarea>
+          </div>
+
+          <!-- BẢNG THÀNH PHẦN & TỶ LỆ PHỐI CHẾ ĐỘNG (REPEATER) -->
+          <div class="ingredients-section">
+            <div class="ingredients-header">
+              <label>Công thức thành phần & Tỷ lệ phối chế</label>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-add-ingredient-row" onclick="addIngredientRow()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Thêm thành phần
+              </button>
+            </div>
+            <table class="ingredients-table">
+              <thead>
+                <tr>
+                  <th style="width:38%;">Tên thành phần / Hoạt chất</th>
+                  <th style="width:24%;">Tỷ lệ / Hàm lượng</th>
+                  <th style="width:32%;">Vai trò / Công dụng</th>
+                  <th style="width:6%;text-align:center;">Xóa</th>
+                </tr>
+              </thead>
+              <tbody id="formulation-ingredients-tbody">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Tiêu chuẩn cảm quan & Thông số kỹ thuật</label>
+              <textarea id="formulation-spec" class="form-control" rows="2" placeholder="VD: Dạng lỏng trong suốt, pH 5.5 - 6.0, độ nhớt 1.200 cP..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Hướng dẫn phối chế & Chuyển giao R&D</label>
+              <textarea id="formulation-directions" class="form-control" rows="2" placeholder="VD: Hòa tan pha nước ở 45°C, bổ sung hoạt chất dưới 40°C..."></textarea>
+            </div>
+          </div>
+
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Lưu công thức</button>
         </div>
       </form>
     </div>

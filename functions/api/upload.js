@@ -79,7 +79,7 @@ export async function onRequestPost(context) {
     // Nếu chưa cấu hình R2: Trả về dataUrl (đã nén) để lưu trực tiếp trong D1/Client
     return new Response(JSON.stringify({
       success: true,
-      url: dataUrlFallback || 'assets/images/news-gmp.svg',
+      url: dataUrlFallback || 'assets/images/news-gmp.jpg',
       storage: 'inline_data_url',
       message: 'Image processed successfully (R2 bucket not active, using optimized data URL)'
     }), {

@@ -538,6 +538,9 @@ body {
 .badge-cat-nano { background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE; }
 .badge-cat-sweetener { background: #F0FDFA; color: #115E59; border: 1px solid #99F6E4; }
 .badge-cat-herb { background: #F7FEE7; color: #3F6212; border: 1px solid #D9F99D; }
+.badge-cat-cosmetics { background: #FDF2F8; color: #9D174D; border: 1px solid #FBCFE8; }
+.badge-cat-pharma { background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE; }
+.badge-cat-beverage { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
 .badge-cat-other { background: #F3F4F6; color: #374151; border: 1px solid #E5E7EB; }
 
 /* Tag Badges */
@@ -1060,5 +1063,257 @@ body {
   object-fit: cover;
   display: block;
 }
+
+/* ===== Formulation (Công thức mẫu) Styles ===== */
+.admin-modal-card.modal-lg {
+  max-width: 860px;
+}
+
+.formulation-thumb-box {
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.formulation-thumb-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.formulation-image-picker {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: #F9FAFB;
+  border: 1.5px dashed var(--admin-border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+.formulation-image-preview-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.formulation-image-preview-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.formulation-image-picker-controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Ingredients Repeater Table */
+.ingredients-section {
+  margin-top: 14px;
+  margin-bottom: 18px;
+}
+.ingredients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.ingredients-header label {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--admin-primary);
+}
+.ingredients-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: #FFFFFF;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.ingredients-table th {
+  background: #F8FAF8;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--admin-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--admin-border);
+}
+.ingredients-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--admin-border);
+  vertical-align: middle;
+}
+.ingredients-table tr:last-child td {
+  border-bottom: none;
+}
+.ingredients-table input.form-control {
+  padding: 7px 10px;
+  font-size: 0.88rem;
+}
+.btn-remove-row {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #9CA3AF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 1rem;
+}
+.btn-remove-row:hover {
+  background: #FEE2E2;
+  color: #DC2626;
+  border-color: #FECACA;
+}
+
+/* ===== Certifications (Chứng nhận & Tiêu chuẩn) Styles ===== */
+.cert-code-tag {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--admin-primary);
+  background: rgba(212, 50, 45, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(212, 50, 45, 0.2);
+}
+
+.btn-toggle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--admin-border);
+  background: #F3F4F6;
+  color: var(--admin-muted);
+  transition: all 0.2s ease;
+}
+.btn-toggle-badge.active {
+  background: #DCFCE7;
+  color: #15803D;
+  border-color: #86EFAC;
+}
+.btn-toggle-badge:hover {
+  opacity: 0.88;
+  transform: scale(1.02);
+}
+
+.order-btn-group {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.btn-order-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-order-arrow:hover:not(:disabled) {
+  background: #F3F4F6;
+  border-color: #9CA3AF;
+  color: var(--admin-primary);
+}
+.btn-order-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Cert Preview within Admin */
+.admin-cert-preview-box {
+  background: #FFFFFF;
+  border: 1px solid var(--admin-border);
+  border-radius: 14px;
+  padding: 36px 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  max-width: 960px;
+  margin: 0 auto;
+}
+.admin-cert-preview-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #B45309;
+  margin-bottom: 8px;
+}
+.admin-cert-preview-title {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #143226;
+  margin-bottom: 24px;
+}
+.admin-cert-preview-box .cert-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+.admin-cert-preview-box .cert-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 18px 24px;
+  min-width: 150px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.admin-cert-preview-box .cert-badge:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+.admin-cert-preview-box .cert-badge b {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: #C2410C;
+}
+.admin-cert-preview-box .cert-badge span {
+  color: #6B7280;
+  font-size: 0.85rem;
+}
+
 
 

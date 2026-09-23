@@ -77,7 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
     switch (currentTab) {
       case 'dashboard': renderDashboard(); break;
       case 'products': renderProductsTable(); break;
+      case 'formulations': renderFormulationsTable(); break;
       case 'news': renderNewsTable(); break;
+      case 'certs': renderCerts(); break;
       case 'leads': renderLeadsTable(); break;
       case 'settings': renderSettings(); break;
     }
@@ -96,11 +98,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== TAB 1: DASHBOARD =====
   function renderDashboard() {
     const products = store.getProducts();
+    const formulations = store.getFormulations ? store.getFormulations() : [];
     const news = store.getNews();
     const leads = store.getLeads();
     const settings = store.getSettings();
 
     document.getElementById('kpi-products').textContent = products.length;
+    const kpiFormEl = document.getElementById('kpi-formulations');
+    if (kpiFormEl) kpiFormEl.textContent = formulations.length;
     document.getElementById('kpi-news').textContent = news.length;
     document.getElementById('kpi-leads').textContent = leads.filter(l => l.status === 'new').length;
     document.getElementById('kpi-partners').textContent = settings.stats?.partners || 320;
@@ -599,6 +604,360 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // ===== TAB: FORMULATIONS (CÔNG THỨC MẪU) =====
+  const searchFormulationInput = document.getElementById('search-formulation-input');
+  const filterFormulationCat = document.getElementById('filter-formulation-cat');
+  const searchFormulationClear = document.getElementById('search-formulation-clear');
+
+  if (searchFormulationInput) {
+    searchFormulationInput.addEventListener('input', () => {
+      if (searchFormulationClear) {
+        searchFormulationClear.style.display = searchFormulationInput.value ? 'block' : 'none';
+      }
+      renderFormulationsTable();
+    });
+  }
+  if (searchFormulationClear) {
+    searchFormulationClear.addEventListener('click', () => {
+      if (searchFormulationInput) {
+        searchFormulationInput.value = '';
+        searchFormulationInput.focus();
+      }
+      searchFormulationClear.style.display = 'none';
+      renderFormulationsTable();
+    });
+  }
+  if (filterFormulationCat) {
+    filterFormulationCat.addEventListener('change', () => renderFormulationsTable());
+  }
+
+  window.resetFormulationFilters = function () {
+    if (searchFormulationInput) searchFormulationInput.value = '';
+    if (filterFormulationCat) filterFormulationCat.value = '';
+    if (searchFormulationClear) searchFormulationClear.style.display = 'none';
+    renderFormulationsTable();
+  };
+
+  function getFormulationCatBadge(cat) {
+    const map = {
+      cosmetics: { name: 'Mỹ phẩm & Skin-care', cls: 'badge-cat-cosmetics' },
+      pharma: { name: 'Dược phẩm & TPCN', cls: 'badge-cat-pharma' },
+      beverage: { name: 'Đồ uống chức năng', cls: 'badge-cat-beverage' }
+    };
+    const c = map[cat] || { name: 'Khác', cls: 'badge-cat-other' };
+    return `<span class="badge ${c.cls}">${escapeHtml(c.name)}</span>`;
+  }
+
+  function renderFormulationsTable() {
+    const tbody = document.getElementById('formulations-tbody');
+    if (!tbody) return;
+
+    const allForms = store.getFormulations ? store.getFormulations() : [];
+    let forms = allForms;
+    const q = searchFormulationInput?.value.trim().toLowerCase() || '';
+    const cat = filterFormulationCat?.value || '';
+
+    if (q) {
+      forms = forms.filter(f =>
+        (f.name && f.name.toLowerCase().includes(q)) ||
+        (f.desc && f.desc.toLowerCase().includes(q)) ||
+        (f.mainIngredient && f.mainIngredient.toLowerCase().includes(q)) ||
+        (f.badge && f.badge.toLowerCase().includes(q))
+      );
+    }
+    if (cat) {
+      forms = forms.filter(f => f.category === cat);
+    }
+
+    const countChip = document.getElementById('formulation-count-chip');
+    if (countChip) {
+      if (q || cat) {
+        countChip.textContent = `Hiển thị ${forms.length} / ${allForms.length} công thức`;
+      } else {
+        countChip.textContent = `${allForms.length} công thức`;
+      }
+    }
+
+    if (forms.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7">
+            <div class="product-empty-state">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5"><path d="M10 2v7.31L4.1 19.3A2 2 0 0 0 5.8 22h12.4a2 2 0 0 0 1.7-2.7L14 9.31V2"/><path d="M8.5 2h7"/></svg>
+              <div class="product-empty-title">Không tìm thấy công thức mẫu nào phù hợp</div>
+              <div class="product-empty-sub">Hãy thử tìm kiếm với từ khóa khác hoặc điều chỉnh bộ lọc nhóm ngành.</div>
+              ${(q || cat) ? `<button type="button" class="btn btn-outline btn-sm" onclick="resetFormulationFilters()" style="margin-top:10px;">Xóa bộ lọc</button>` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = forms.map((f, index) => {
+      const img = f.image || 'assets/images/form-serum.jpg';
+      const ingredientCount = Array.isArray(f.ingredients) ? f.ingredients.length : 0;
+
+      return `
+        <tr data-formulation-id="${f.id}">
+          <td style="text-align:center;font-weight:600;color:var(--admin-muted);font-size:0.88rem;">${index + 1}</td>
+          <td style="text-align:center;">
+            <div class="formulation-thumb-box" title="${escapeHtml(f.name)}">
+              <img src="${escapeHtml(img)}" alt="${escapeHtml(f.name)}" loading="lazy">
+            </div>
+          </td>
+          <td>
+            <b style="font-size:0.95rem;color:var(--admin-text);">${escapeHtml(f.name)}</b>
+            <div style="font-size:0.82rem;color:var(--admin-muted);margin-top:3px;max-width:320px;line-height:1.4;">
+              ${escapeHtml(f.desc ? (f.desc.length > 90 ? f.desc.substring(0, 90) + '...' : f.desc) : '—')}
+            </div>
+          </td>
+          <td>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start;">
+              ${getFormulationCatBadge(f.category)}
+              ${f.badge ? `<span style="font-size:0.75rem;color:var(--admin-muted);font-weight:500;">🏷️ ${escapeHtml(f.badge)}</span>` : ''}
+            </div>
+          </td>
+          <td>
+            <div style="font-size:0.88rem;font-weight:600;color:var(--admin-text);">${escapeHtml(f.dosageForm || '—')}</div>
+            <div style="font-size:0.8rem;color:var(--admin-primary);margin-top:2px;">
+              ${escapeHtml(f.mainIngredient || '—')}
+            </div>
+          </td>
+          <td style="text-align:center;">
+            <span class="badge badge-info" style="font-size:0.8rem;">${ingredientCount} nguyên liệu</span>
+          </td>
+          <td style="text-align:center;">
+            <div style="display:inline-flex;gap:6px;">
+              <button class="btn btn-outline btn-sm" onclick="openEditFormulationModal('${f.id}')" title="Chỉnh sửa công thức">Sửa</button>
+              <button class="btn btn-danger btn-sm" onclick="confirmDeleteFormulation('${f.id}')" title="Xóa công thức">Xóa</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  // Modal & Form handling for Formulation
+  const modalFormulation = document.getElementById('admin-modal-formulation');
+  const formulationForm = document.getElementById('formulation-form');
+  const formulationImgPreview = document.getElementById('formulation-img-preview');
+  const formulationImageSelect = document.getElementById('formulation-image-select');
+  const formulationImageFile = document.getElementById('formulation-image-file');
+  const formulationImageCustomWrap = document.getElementById('formulation-image-custom-wrap');
+  const formulationImageUrl = document.getElementById('formulation-image-url');
+  const formulationImageValue = document.getElementById('formulation-image-value');
+  const btnBrowseFormulationImage = document.getElementById('btn-browse-formulation-image');
+  const formulationIngredientsTbody = document.getElementById('formulation-ingredients-tbody');
+
+  function setFormulationImage(src) {
+    if (!src) src = 'assets/images/form-serum.jpg';
+    if (formulationImageValue) formulationImageValue.value = src;
+    if (formulationImgPreview) formulationImgPreview.src = src;
+
+    const presets = [
+      'assets/images/form-serum.jpg',
+      'assets/images/form-capsule.jpg',
+      'assets/images/form-drink.jpg',
+      'assets/images/form-gel.jpg',
+      'assets/images/form-serum.svg',
+      'assets/images/form-capsule.svg',
+      'assets/images/form-drink.svg',
+      'assets/images/form-gel.svg'
+    ];
+    if (presets.includes(src)) {
+      if (formulationImageSelect) formulationImageSelect.value = src;
+      if (formulationImageCustomWrap) formulationImageCustomWrap.style.display = 'none';
+    } else {
+      if (formulationImageSelect) formulationImageSelect.value = 'custom';
+      if (formulationImageCustomWrap) formulationImageCustomWrap.style.display = 'block';
+      if (formulationImageUrl) formulationImageUrl.value = src.startsWith('data:') ? '' : src;
+    }
+  }
+
+  if (formulationImageSelect) {
+    formulationImageSelect.addEventListener('change', () => {
+      const val = formulationImageSelect.value;
+      if (val === 'custom') {
+        if (formulationImageCustomWrap) formulationImageCustomWrap.style.display = 'block';
+      } else {
+        if (formulationImageCustomWrap) formulationImageCustomWrap.style.display = 'none';
+        setFormulationImage(val);
+      }
+    });
+  }
+
+  if (btnBrowseFormulationImage && formulationImageFile) {
+    btnBrowseFormulationImage.addEventListener('click', () => {
+      formulationImageFile.click();
+    });
+  }
+
+  if (formulationImageFile) {
+    formulationImageFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const dataUrl = evt.target.result;
+        setFormulationImage(dataUrl);
+        showAdminToast('Đã chọn hình ảnh công thức!', 'success');
+      };
+      reader.readAsDataURL(file);
+      formulationImageFile.value = '';
+    });
+  }
+
+  if (formulationImageUrl) {
+    formulationImageUrl.addEventListener('input', () => {
+      const url = formulationImageUrl.value.trim();
+      if (url) {
+        setFormulationImage(url);
+      }
+    });
+  }
+
+  // Dynamic Ingredient Rows
+  window.addIngredientRow = function (data = { name: '', ratio: '', role: '' }) {
+    if (!formulationIngredientsTbody) return;
+    const tr = document.createElement('tr');
+    tr.className = 'ingredient-row';
+    tr.innerHTML = `
+      <td>
+        <input type="text" class="form-control form-control-sm ing-name" placeholder="VD: Chiết xuất Trà xanh EGCG 98%" value="${escapeHtml(data.name || '')}" required>
+      </td>
+      <td>
+        <input type="text" class="form-control form-control-sm ing-ratio" placeholder="VD: 2.0% hoặc 150 mg" value="${escapeHtml(data.ratio || '')}" required>
+      </td>
+      <td>
+        <input type="text" class="form-control form-control-sm ing-role" placeholder="VD: Chống oxy hóa, sáng da" value="${escapeHtml(data.role || '')}">
+      </td>
+      <td style="text-align:center;">
+        <button type="button" class="btn-remove-row" onclick="removeIngredientRow(this)" title="Xóa thành phần này">✕</button>
+      </td>
+    `;
+    formulationIngredientsTbody.appendChild(tr);
+  };
+
+  window.removeIngredientRow = function (btn) {
+    const row = btn.closest('tr');
+    if (!row) return;
+    const totalRows = formulationIngredientsTbody.querySelectorAll('tr').length;
+    if (totalRows <= 1) {
+      showAdminToast('Công thức phải có ít nhất 1 thành phần!', 'warning');
+      return;
+    }
+    row.remove();
+  };
+
+  function collectIngredients() {
+    if (!formulationIngredientsTbody) return [];
+    const rows = formulationIngredientsTbody.querySelectorAll('.ingredient-row');
+    const result = [];
+    rows.forEach(r => {
+      const name = r.querySelector('.ing-name')?.value.trim() || '';
+      const ratio = r.querySelector('.ing-ratio')?.value.trim() || '';
+      const role = r.querySelector('.ing-role')?.value.trim() || '';
+      if (name || ratio) {
+        result.push({ name, ratio, role });
+      }
+    });
+    return result;
+  }
+
+  window.openAddFormulationModal = function () {
+    if (!formulationForm) return;
+    formulationForm.reset();
+    document.getElementById('formulation-id').value = '';
+    document.getElementById('modal-formulation-title').textContent = 'Thêm công thức mẫu mới';
+    setFormulationImage('assets/images/form-serum.jpg');
+
+    // Reset ingredients to 3 sample rows
+    if (formulationIngredientsTbody) {
+      formulationIngredientsTbody.innerHTML = '';
+      addIngredientRow({ name: '', ratio: '', role: '' });
+      addIngredientRow({ name: '', ratio: '', role: '' });
+      addIngredientRow({ name: '', ratio: '', role: '' });
+    }
+
+    if (modalFormulation) modalFormulation.classList.add('is-open');
+  };
+
+  window.openEditFormulationModal = function (id) {
+    if (!store.getFormulationById || !formulationForm) return;
+    const f = store.getFormulationById(id);
+    if (!f) return;
+
+    document.getElementById('formulation-id').value = f.id;
+    document.getElementById('modal-formulation-title').textContent = 'Chỉnh sửa công thức mẫu';
+    document.getElementById('formulation-name').value = f.name || '';
+    document.getElementById('formulation-category').value = f.category || 'cosmetics';
+    document.getElementById('formulation-badge').value = f.badge || '';
+    document.getElementById('formulation-dosage').value = f.dosageForm || '';
+    document.getElementById('formulation-main-ingredient').value = f.mainIngredient || '';
+    document.getElementById('formulation-desc').value = f.desc || '';
+    document.getElementById('formulation-spec').value = f.spec || '';
+    document.getElementById('formulation-directions').value = f.directions || '';
+
+    setFormulationImage(f.image || 'assets/images/form-serum.jpg');
+
+    if (formulationIngredientsTbody) {
+      formulationIngredientsTbody.innerHTML = '';
+      if (Array.isArray(f.ingredients) && f.ingredients.length > 0) {
+        f.ingredients.forEach(ing => addIngredientRow(ing));
+      } else {
+        addIngredientRow({ name: '', ratio: '', role: '' });
+      }
+    }
+
+    if (modalFormulation) modalFormulation.classList.add('is-open');
+  };
+
+  if (formulationForm) {
+    formulationForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('formulation-id').value;
+      const ingredients = collectIngredients();
+
+      if (ingredients.length === 0) {
+        showAdminToast('Vui lòng thêm ít nhất 1 thành phần cho công thức!', 'warning');
+        return;
+      }
+
+      const formObj = {
+        id: id || undefined,
+        name: document.getElementById('formulation-name').value.trim(),
+        category: document.getElementById('formulation-category').value,
+        badge: document.getElementById('formulation-badge').value.trim() || 'Công thức R&D',
+        dosageForm: document.getElementById('formulation-dosage').value.trim(),
+        mainIngredient: document.getElementById('formulation-main-ingredient').value.trim(),
+        image: formulationImageValue ? formulationImageValue.value : 'assets/images/form-serum.jpg',
+        desc: document.getElementById('formulation-desc').value.trim(),
+        spec: document.getElementById('formulation-spec').value.trim(),
+        directions: document.getElementById('formulation-directions').value.trim(),
+        ingredients: ingredients
+      };
+
+      store.saveFormulation(formObj);
+      closeAdminModals();
+      renderFormulationsTable();
+      renderDashboard();
+      showAdminToast(id ? 'Đã cập nhật công thức thành công!' : 'Đã thêm công thức mẫu mới thành công!', 'success');
+    });
+  }
+
+  window.confirmDeleteFormulation = function (id) {
+    if (!store.getFormulationById) return;
+    const f = store.getFormulationById(id);
+    if (!f) return;
+    if (confirm(`Bạn có chắc chắn muốn xóa công thức "${f.name}" không?`)) {
+      store.deleteFormulation(id);
+      renderFormulationsTable();
+      renderDashboard();
+      showAdminToast(`Đã xóa công thức "${f.name}"!`, 'warning');
+    }
+  };
+
   // ===== TAB 3: NEWS =====
   function renderNewsTable() {
     const tbody = document.getElementById('news-tbody');
@@ -633,7 +992,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const modalNews = document.getElementById('admin-modal-news');
   const newsForm = document.getElementById('news-form');
-  const DEFAULT_NEWS_IMAGE = 'assets/images/news-gmp.svg';
+  const DEFAULT_NEWS_IMAGE = 'assets/images/news-gmp.jpg';
 
   // Helper: Xử lý và nén ảnh đại diện phía client (giảm dung lượng, không lo vượt quota localStorage)
   function processImageFile(file, maxWidth = 1200, maxHeight = 800, quality = 0.85) {
@@ -702,7 +1061,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (valueInput) valueInput.value = src;
     if (previewImg) previewImg.src = src;
 
-    const isPreset = ['assets/images/news-gmp.svg', 'assets/images/news-farm.svg', 'assets/images/news-lab.svg'].includes(src);
+    const isPreset = [
+      'assets/images/news-gmp.jpg', 'assets/images/news-farm.jpg', 'assets/images/news-lab.jpg',
+      'assets/images/news-gmp.svg', 'assets/images/news-farm.svg', 'assets/images/news-lab.svg'
+    ].includes(src);
     const isDataUrl = src.startsWith('data:image/');
 
     if (type === 'upload' || isDataUrl) {
@@ -909,6 +1271,179 @@ document.addEventListener('DOMContentLoaded', () => {
       store.deleteNews(id);
       renderNewsTable();
       showAdminToast('Đã xóa bài viết!', 'warning');
+    }
+  };
+
+  // ===== TAB: CERTS (CHỨNG NHẬN & TIÊU CHUẨN) =====
+  function renderCerts() {
+    const settings = store.getSettings();
+    const certEyebrowInput = document.getElementById('cert-eyebrow-input');
+    const certTitleInput = document.getElementById('cert-title-input');
+    const previewEyebrow = document.getElementById('preview-cert-eyebrow');
+    const previewTitle = document.getElementById('preview-cert-title');
+
+    const eyebrow = settings.certEyebrow || 'Cam kết chất lượng';
+    const title = settings.certTitle || 'Chứng nhận & tiêu chuẩn';
+
+    if (certEyebrowInput) certEyebrowInput.value = eyebrow;
+    if (certTitleInput) certTitleInput.value = title;
+    if (previewEyebrow) previewEyebrow.textContent = eyebrow;
+    if (previewTitle) previewTitle.textContent = title;
+
+    const certs = store.getCertifications();
+    const tbody = document.getElementById('certs-tbody');
+    const previewRow = document.getElementById('preview-cert-row');
+
+    if (tbody) {
+      if (certs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--admin-muted);">Chưa có chứng nhận nào trong danh sách. Bấm nút <b>"+ Thêm Chứng Nhận Mới"</b> để tạo.</td></tr>';
+      } else {
+        tbody.innerHTML = certs.map((c, index) => `
+          <tr>
+            <td style="text-align:center;font-weight:600;">${index + 1}</td>
+            <td>
+              <span class="cert-code-tag">${escapeHtml(c.code)}</span>
+            </td>
+            <td>
+              <b>${escapeHtml(c.title)}</b>
+            </td>
+            <td>
+              <span style="font-size:0.88rem;color:var(--admin-muted);">${escapeHtml(c.desc || '—')}</span>
+            </td>
+            <td style="text-align:center;">
+              <button type="button" class="btn-toggle-badge ${c.enabled !== false ? 'active' : ''}" onclick="toggleCertStatus('${c.id}')" title="Bấm để bật/tắt hiển thị">
+                ${c.enabled !== false ? '● Hiển thị' : '○ Đang ẩn'}
+              </button>
+            </td>
+            <td style="text-align:center;">
+              <div class="order-btn-group">
+                <button type="button" class="btn-order-arrow" onclick="moveCertOrder('${c.id}', 'up')" ${index === 0 ? 'disabled' : ''} title="Đưa lên trên">▲</button>
+                <button type="button" class="btn-order-arrow" onclick="moveCertOrder('${c.id}', 'down')" ${index === certs.length - 1 ? 'disabled' : ''} title="Đưa xuống dưới">▼</button>
+              </div>
+            </td>
+            <td style="text-align:center;">
+              <div style="display:flex;gap:6px;justify-content:center;">
+                <button class="btn btn-outline btn-sm" onclick="openEditCertModal('${c.id}')" title="Chỉnh sửa thông tin">Sửa</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteCertItem('${c.id}')" title="Xóa chứng nhận">Xóa</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    if (previewRow) {
+      const activeCerts = certs.filter(c => c.enabled !== false);
+      if (activeCerts.length === 0) {
+        previewRow.innerHTML = '<p style="color:var(--admin-muted);font-style:italic;padding:16px;">Tất cả chứng nhận đang bị ẩn trên website.</p>';
+      } else {
+        previewRow.innerHTML = activeCerts.map(c => `
+          <div class="cert-badge" ${c.desc ? `title="${escapeHtml(c.desc)}"` : ''}>
+            <b>${escapeHtml(c.code)}</b>
+            <span>${escapeHtml(c.title)}</span>
+          </div>
+        `).join('');
+      }
+    }
+  }
+
+  // Sự kiện lưu tiêu đề khối chứng nhận
+  const certHeadingForm = document.getElementById('cert-heading-form');
+  if (certHeadingForm) {
+    certHeadingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const certEyebrow = document.getElementById('cert-eyebrow-input').value.trim();
+      const certTitle = document.getElementById('cert-title-input').value.trim();
+
+      store.saveSettings({ certEyebrow, certTitle });
+      renderCerts();
+      showAdminToast('Đã cập nhật tiêu đề khối chứng nhận thành công!', 'success');
+    });
+  }
+
+  // Mở modal thêm chứng nhận mới
+  window.openAddCertModal = function () {
+    const form = document.getElementById('cert-form');
+    if (form) form.reset();
+    document.getElementById('cert-id').value = '';
+    document.getElementById('modal-cert-title').textContent = 'Thêm chứng nhận mới';
+    document.getElementById('cert-enabled-input').checked = true;
+
+    const modal = document.getElementById('admin-modal-cert');
+    if (modal) modal.classList.add('is-open');
+    setTimeout(() => document.getElementById('cert-code-input')?.focus(), 100);
+  };
+
+  // Mở modal sửa chứng nhận
+  window.openEditCertModal = function (id) {
+    const cert = store.getCertificationById(id);
+    if (!cert) return;
+
+    document.getElementById('cert-id').value = cert.id;
+    document.getElementById('modal-cert-title').textContent = `Chỉnh sửa chứng nhận: ${cert.code}`;
+    document.getElementById('cert-code-input').value = cert.code || '';
+    document.getElementById('cert-name-input').value = cert.title || '';
+    document.getElementById('cert-desc-input').value = cert.desc || '';
+    document.getElementById('cert-enabled-input').checked = (cert.enabled !== false);
+
+    const modal = document.getElementById('admin-modal-cert');
+    if (modal) modal.classList.add('is-open');
+    setTimeout(() => document.getElementById('cert-code-input')?.focus(), 100);
+  };
+
+  // Submit form thêm/sửa chứng nhận
+  const certForm = document.getElementById('cert-form');
+  if (certForm) {
+    certForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('cert-id').value;
+      const code = document.getElementById('cert-code-input').value.trim();
+      const title = document.getElementById('cert-name-input').value.trim();
+      const desc = document.getElementById('cert-desc-input').value.trim();
+      const enabled = document.getElementById('cert-enabled-input').checked;
+
+      if (!code || !title) {
+        showAdminToast('Vui lòng nhập đầy đủ mã và tên chứng nhận!', 'warning');
+        return;
+      }
+
+      store.saveCertification({
+        id: id || undefined,
+        code,
+        title,
+        desc,
+        enabled
+      });
+
+      closeAdminModals();
+      renderCerts();
+      showAdminToast(id ? 'Đã cập nhật chứng nhận thành công!' : 'Đã thêm chứng nhận mới thành công!', 'success');
+    });
+  }
+
+  // Xóa chứng nhận
+  window.deleteCertItem = function (id) {
+    const cert = store.getCertificationById(id);
+    if (!cert) return;
+    if (confirm(`Bạn có chắc chắn muốn xóa chứng nhận "${cert.code} — ${cert.title}"?`)) {
+      store.deleteCertification(id);
+      renderCerts();
+      showAdminToast(`Đã xóa chứng nhận "${cert.code}".`, 'warning');
+    }
+  };
+
+  // Bật/tắt hiển thị chứng nhận
+  window.toggleCertStatus = function (id) {
+    const newStatus = store.toggleCertification(id);
+    renderCerts();
+    showAdminToast(newStatus ? 'Đã kích hoạt hiển thị chứng nhận.' : 'Đã ẩn chứng nhận khỏi website.', 'info');
+  };
+
+  // Di chuyển thứ tự chứng nhận
+  window.moveCertOrder = function (id, direction) {
+    const success = store.reorderCertifications(id, direction);
+    if (success) {
+      renderCerts();
     }
   };
 

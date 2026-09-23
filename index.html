@@ -198,10 +198,11 @@
     <!-- ===== CHỨNG NHẬN ===== -->
     <section id="chung-nhan" class="section certs" data-reveal>
       <div class="section-head">
-        <p class="eyebrow center">Cam kết chất lượng</p>
-        <h2 class="section-title center">Chứng nhận &amp; tiêu chuẩn</h2>
+        <p class="eyebrow center" data-bind="cert-eyebrow">Cam kết chất lượng</p>
+        <h2 class="section-title center" data-bind="cert-title">Chứng nhận &amp; tiêu chuẩn</h2>
       </div>
-      <div class="cert-row">
+      <div class="cert-row" id="certs-row">
+        <!-- Render động từ DataStore -->
         <div class="cert-badge"><b>GMP</b><span>Thực hành sản xuất tốt</span></div>
         <div class="cert-badge"><b>ISO 9001</b><span>Quản lý chất lượng</span></div>
         <div class="cert-badge"><b>USDA</b><span>Hữu cơ Organic</span></div>

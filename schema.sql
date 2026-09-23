@@ -54,6 +54,22 @@ CREATE TABLE IF NOT EXISTS settings (
   value TEXT NOT NULL
 );
 
+-- 5. Bảng Công thức Mẫu R&D (Formulations)
+CREATE TABLE IF NOT EXISTS formulations (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT DEFAULT 'cosmetics',
+  badge TEXT,
+  dosage_form TEXT,
+  main_ingredient TEXT,
+  image TEXT,
+  desc TEXT,
+  spec TEXT,
+  directions TEXT,
+  ingredients TEXT, -- JSON array string
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
 -- ===================================================
 -- SEED DATA BAN ĐẦU (Nếu bảng còn trống)
 -- ===================================================

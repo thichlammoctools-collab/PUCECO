@@ -36,7 +36,7 @@ function getLocalData() {
       return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     } catch (e) {}
   }
-  return { products: [], news: [], leads: [], settings: {} };
+  return { products: [], news: [], leads: [], settings: {}, certifications: [], formulations: [] };
 }
 
 function saveLocalData(data) {
@@ -202,7 +202,7 @@ const server = http.createServer(async (req, res) => {
       const body = await parseBody(req);
       return sendJson(res, {
         success: true,
-        url: body.dataUrl || 'assets/images/news-gmp.svg',
+        url: body.dataUrl || 'assets/images/news-gmp.jpg',
         storage: 'local'
       });
     }
@@ -212,6 +212,50 @@ const server = http.createServer(async (req, res) => {
       const body = await parseBody(req);
       const isOk = body.password === 'admin123' || body.password === data.settings?.adminPassword;
       return sendJson(res, { success: isOk }, isOk ? 200 : 401);
+    }
+
+    // 8. /api/certifications
+    if (pathname === '/api/certifications') {
+      if (req.method === 'GET') {
+        return sendJson(res, data.certifications || []);
+      }
+      if (req.method === 'POST') {
+        const body = await parseBody(req);
+        data.certifications = Array.isArray(body) ? body : (body.certifications || []);
+        saveLocalData(data);
+        return sendJson(res, { success: true, certifications: data.certifications });
+      }
+    }
+
+    // 9. /api/formulations
+    if (pathname === '/api/formulations') {
+      if (!data.formulations) data.formulations = [];
+      if (req.method === 'GET') {
+        return sendJson(res, data.formulations);
+      }
+      if (req.method === 'POST') {
+        const item = await parseBody(req);
+        if (!item.id) item.id = 'form-' + Date.now();
+        const idx = data.formulations.findIndex(f => f.id === item.id);
+        if (idx >= 0) data.formulations[idx] = { ...data.formulations[idx], ...item };
+        else data.formulations.unshift(item);
+        saveLocalData(data);
+        return sendJson(res, { success: true, item });
+      }
+    }
+
+    if (pathname.startsWith('/api/formulations/')) {
+      const id = pathname.replace('/api/formulations/', '');
+      if (!data.formulations) data.formulations = [];
+      if (req.method === 'DELETE') {
+        data.formulations = data.formulations.filter(f => f.id !== id);
+        saveLocalData(data);
+        return sendJson(res, { success: true, id });
+      }
+      if (req.method === 'GET') {
+        const item = data.formulations.find(f => f.id === id);
+        return item ? sendJson(res, item) : sendJson(res, { error: 'Not found' }, 404);
+      }
     }
   }
 

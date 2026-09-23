@@ -19,6 +19,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-bind="email"]').forEach(el => el.textContent = settings.email);
     document.querySelectorAll('[data-bind="address"]').forEach(el => el.textContent = settings.address);
     document.querySelectorAll('[data-bind="slogan"]').forEach(el => el.textContent = settings.slogan);
+    document.querySelectorAll('[data-bind="cert-eyebrow"]').forEach(el => el.textContent = settings.certEyebrow || 'Cam kết chất lượng');
+    document.querySelectorAll('[data-bind="cert-title"]').forEach(el => el.textContent = settings.certTitle || 'Chứng nhận & tiêu chuẩn');
+
+    // 1.5. Render Certifications
+    const certsRow = document.querySelector('#certs-row');
+    if (certsRow && store.getCertifications) {
+      const certs = store.getCertifications().filter(c => c.enabled !== false);
+      if (certs.length > 0) {
+        certsRow.innerHTML = certs.map(c => `
+          <div class="cert-badge" data-cert-id="${c.id}" ${c.desc ? `title="${escapeHtml(c.desc)}"` : ''}>
+            <b>${escapeHtml(c.code)}</b>
+            <span>${escapeHtml(c.title)}</span>
+          </div>
+        `).join('');
+      }
+    }
 
     // Dynamic href attributes for direct click-to-call, email, and Google Maps
     document.querySelectorAll('[data-bind="hotline-link"]').forEach(el => {

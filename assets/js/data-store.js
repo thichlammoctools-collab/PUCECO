@@ -12,11 +12,14 @@
   const STORAGE_KEY_SETTINGS = 'puceco_settings';
   const STORAGE_KEY_AUTH = 'puceco_auth_session';
   const STORAGE_KEY_FORMULATIONS = 'puceco_formulations';
+  const STORAGE_KEY_CERTS = 'puceco_certifications';
 
   // Seed Data mặc định
   const DEFAULT_SETTINGS = {
     brandName: 'PUCECO',
     slogan: 'Chiết xuất từ thiên nhiên & hoạt chất thế hệ mới',
+    certEyebrow: 'Cam kết chất lượng',
+    certTitle: 'Chứng nhận & tiêu chuẩn',
     aboutIntro: 'Công ty chúng tôi chuyên cung cấp các chiết xuất từ thiên nhiên và hoạt chất thế hệ mới, phục vụ cho ngành công nghiệp sản xuất dược phẩm, thực phẩm chức năng, mỹ phẩm. Với cam kết mang đến thị trường những sản phẩm đạt tiêu chuẩn chất lượng quốc tế, giá cả cạnh tranh và phù hợp với xu hướng phát triển thị trường.',
     values: {
       quality: 'Chúng tôi luôn đặt chất lượng sản phẩm và dịch vụ lên hàng đầu, giá trị đi đôi với thương hiệu.',
@@ -36,6 +39,14 @@
     }
   };
 
+  const DEFAULT_CERTS = [
+    { id: 'cert-1', code: 'GMP', title: 'Thực hành sản xuất tốt', desc: 'Đạt chuẩn thực hành sản xuất tốt theo quy chuẩn Bộ Y Tế', enabled: true, order: 1 },
+    { id: 'cert-2', code: 'ISO 9001', title: 'Quản lý chất lượng', desc: 'Hệ thống quản lý chất lượng tiêu chuẩn quốc tế', enabled: true, order: 2 },
+    { id: 'cert-3', code: 'USDA', title: 'Hữu cơ Organic', desc: 'Chứng nhận nguồn gốc nông sản hữu cơ quốc tế', enabled: true, order: 3 },
+    { id: 'cert-4', code: 'HACCP', title: 'An toàn thực phẩm', desc: 'Hệ thống phân tích mối nguy và kiểm soát an toàn vệ sinh thực phẩm', enabled: true, order: 4 },
+    { id: 'cert-5', code: 'HALAL', title: 'Chứng nhận Halal', desc: 'Chứng nhận tiêu chuẩn Hồi giáo cho thị trường xuất khẩu', enabled: true, order: 5 }
+  ];
+
   const DEFAULT_FORMULATIONS = [
     {
       id: 'form-1',
@@ -45,7 +56,7 @@
       desc: 'Công thức ứng dụng Chiết xuất Trà xanh EGCG 98% và Lô hội hữu cơ giúp ngăn ngừa lão hóa, trung hòa gốc tự do và phục hồi màng ẩm tự nhiên.',
       mainIngredient: 'Chiết xuất Trà xanh EGCG 98% (PUCECO)',
       dosageForm: 'Serum dưỡng da dạng tinh chất',
-      image: 'assets/images/form-serum.svg',
+      image: 'assets/images/form-serum.jpg',
       ingredients: [
         { name: 'Chiết xuất Trà xanh EGCG 98% (PUCECO)', ratio: '2.0%', role: 'Chống oxy hóa vượt trội, sáng da' },
         { name: 'Chiết xuất Lô hội 200:1 (PUCECO)', ratio: '5.0%', role: 'Cấp ẩm sâu, làm dịu da nhạy cảm' },
@@ -64,7 +75,7 @@
       desc: 'Ứng dụng Curcumin Nano 35nm kết hợp Chiết xuất Nghệ đen giúp tăng sinh khả dụng gấp 40 lần, hỗ trợ bảo vệ niêm mạc dạ dày và tiêu hóa khỏe mạnh.',
       mainIngredient: 'Curcumin Nano 35nm & Nghệ đen (PUCECO)',
       dosageForm: 'Viên nang mềm (Softgel)',
-      image: 'assets/images/form-capsule.svg',
+      image: 'assets/images/form-capsule.jpg',
       ingredients: [
         { name: 'Curcumin Nano 35nm (PUCECO)', ratio: '150 mg/viên', role: 'Hoạt chất kháng viêm, hấp thu nhanh' },
         { name: 'Chiết xuất Nghệ đen chuẩn hóa (PUCECO)', ratio: '100 mg/viên', role: 'Hỗ trợ hành khí, kiện tỳ vị' },
@@ -82,7 +93,7 @@
       desc: 'Công thức tạo ngọt thanh mát từ Glycoside Stevia Rebaudioside-A 98% và Tinh dầu Sả chanh, hoàn toàn không sinh calo, đáp ứng lối sống lành mạnh.',
       mainIngredient: 'Glycoside Stevia Reb-A 98% & Sả chanh (PUCECO)',
       dosageForm: 'Nước uống thảo dược đóng lon/chai',
-      image: 'assets/images/form-drink.svg',
+      image: 'assets/images/form-drink.jpg',
       ingredients: [
         { name: 'Glycoside Stevia Reb-A 98% (PUCECO)', ratio: '0.04%', role: 'Chất tạo ngọt tự nhiên không calo' },
         { name: 'Tinh dầu Sả chanh hòa tan (PUCECO)', ratio: '0.08%', role: 'Tạo hương tự nhiên, ấm họng' },
@@ -101,7 +112,7 @@
       desc: 'Dạng gel mát dịu chiết xuất từ Lô hội nồng độ cao và Tinh dầu Sả chanh kháng khuẩn, chuyên dùng cho liệu trình phục hồi da tại viện da liễu & spa.',
       mainIngredient: 'Chiết xuất Lô hội 200:1 & Sả chanh (PUCECO)',
       dosageForm: 'Gel dưỡng ẩm sinh học',
-      image: 'assets/images/form-gel.svg',
+      image: 'assets/images/form-gel.jpg',
       ingredients: [
         { name: 'Chiết xuất Lô hội hữu cơ 200:1 (PUCECO)', ratio: '1.0% (= 200% gel tươi)', role: 'Cấp ẩm tức thì, hạ nhiệt da' },
         { name: 'Tinh dầu Sả chanh nano (PUCECO)', ratio: '0.2%', role: 'Kháng khuẩn tự nhiên an toàn' },
@@ -244,7 +255,7 @@
       date: '18 Thg 9, 2026',
       excerpt: 'Nhà máy chiết xuất hoàn thiện nâng cấp dây chuyền chiết xuất áp suất thấp theo tiêu chuẩn GMP mới nhất.',
       content: 'Tháng 9/2026, PUCECO chính thức đón nhận giấy chứng nhận Thực hành Sản xuất Tốt (GMP) phiên bản nâng hạng cho toàn bộ tổ hợp nhà máy chiết xuất dược liệu công nghệ cao. Với dây chuyền tự động hóa khép kín và hệ thống lọc nano tiên tiến, công suất chế biến đạt hơn 1.200 tấn dược liệu tươi mỗi năm, sẵn sàng cung ứng cho các tập đoàn dược phẩm lớn trong và ngoài nước.',
-      image: 'assets/images/news-gmp.svg',
+      image: 'assets/images/news-gmp.jpg',
       bg1: '#E6F1EA',
       bg2: '#C9E3D3',
       author: 'Ban Kiểm Soát Chất Lượng'
@@ -255,7 +266,7 @@
       date: '02 Thg 9, 2026',
       excerpt: 'Liên kết 5 hợp tác xã tại Đắk Lắk và Gia Lai, đảm bảo nguồn cung sả chanh, nghệ vàng và gừng bền vững.',
       content: 'Nhằm chủ động kiểm soát chất lượng từ mầm cây đến giọt chiết xuất cuối cùng, PUCECO đã ký kết liên kết bao tiêu cùng 5 hợp tác xã dược liệu với tổng quy mô hơn 150 ha. Mô hình canh tác đạt chứng nhận Hữu cơ (Organic) nói không với thuốc trừ sâu hóa học, tạo sinh kế bền vững cho hơn 200 hộ đồng bào địa phương.',
-      image: 'assets/images/news-farm.svg',
+      image: 'assets/images/news-farm.jpg',
       bg1: '#F3EFE2',
       bg2: '#E4D6B0',
       author: 'Phòng Phát Triển Vùng Trồng'
@@ -266,7 +277,7 @@
       date: '21 Thg 8, 2026',
       excerpt: 'Công trình R&D nội bộ 3 năm nghiên cứu với kích thước tiểu phân dưới 50nm mang lại hiệu quả hấp thu kỷ lục.',
       content: 'Trung tâm Nghiên cứu & Phát triển PUCECO Labs công bố thương mại hóa thành công dòng nguyên liệu Nano Curcumin tan hoàn toàn trong nước với kích thước hạt trung bình chỉ 35nm. Sản phẩm đạt độ ổn định cao trong dải pH 2.0 - 8.0, tương thích lý tưởng cho các dạng bào chế siro, viên nang mềm, thạch collagen và nước uống chức năng.',
-      image: 'assets/images/news-lab.svg',
+      image: 'assets/images/news-lab.jpg',
       bg1: '#E8F0EC',
       bg2: '#BBD9CA',
       author: 'Viện R&D PUCECO'
@@ -371,14 +382,79 @@
         localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(DEFAULT_PRODUCTS));
       }
     }
-    if (!localStorage.getItem(STORAGE_KEY_NEWS)) {
+    // Auto-upgrade News sang ảnh realistic JPG
+    const storedNews = localStorage.getItem(STORAGE_KEY_NEWS);
+    if (!storedNews) {
       localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));
+    } else {
+      try {
+        let news = JSON.parse(storedNews);
+        let updated = false;
+        const defaultNewsMap = {
+          'news-1': 'assets/images/news-gmp.jpg',
+          'news-2': 'assets/images/news-farm.jpg',
+          'news-3': 'assets/images/news-lab.jpg'
+        };
+        news = news.map(n => {
+          if (defaultNewsMap[n.id] && (!n.image || n.image.endsWith('.svg') || n.image.includes('news-'))) {
+            if (n.image !== defaultNewsMap[n.id]) {
+              n.image = defaultNewsMap[n.id];
+              updated = true;
+            }
+          } else if (n.image && n.image.endsWith('.svg') && n.image.includes('news-')) {
+            n.image = n.image.replace(/\.svg$/, '.jpg');
+            updated = true;
+          }
+          return n;
+        });
+        if (updated) {
+          localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(news));
+        }
+      } catch (e) {
+        localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));
+      }
     }
+
     if (!localStorage.getItem(STORAGE_KEY_LEADS)) {
       localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(DEFAULT_LEADS));
     }
-    if (!localStorage.getItem(STORAGE_KEY_FORMULATIONS)) {
+
+    // Auto-upgrade Formulations sang ảnh realistic JPG
+    const storedForms = localStorage.getItem(STORAGE_KEY_FORMULATIONS);
+    if (!storedForms) {
       localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(DEFAULT_FORMULATIONS));
+    } else {
+      try {
+        let forms = JSON.parse(storedForms);
+        let updated = false;
+        const defaultFormMap = {
+          'form-1': 'assets/images/form-serum.jpg',
+          'form-2': 'assets/images/form-capsule.jpg',
+          'form-3': 'assets/images/form-drink.jpg',
+          'form-4': 'assets/images/form-gel.jpg'
+        };
+        forms = forms.map(f => {
+          if (defaultFormMap[f.id] && (!f.image || f.image.endsWith('.svg') || f.image.includes('form-'))) {
+            if (f.image !== defaultFormMap[f.id]) {
+              f.image = defaultFormMap[f.id];
+              updated = true;
+            }
+          } else if (f.image && f.image.endsWith('.svg') && f.image.includes('form-')) {
+            f.image = f.image.replace(/\.svg$/, '.jpg');
+            updated = true;
+          }
+          return f;
+        });
+        if (updated) {
+          localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(forms));
+        }
+      } catch (e) {
+        localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(DEFAULT_FORMULATIONS));
+      }
+    }
+
+    if (!localStorage.getItem(STORAGE_KEY_CERTS)) {
+      localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(DEFAULT_CERTS));
     }
   }
 
@@ -415,6 +491,10 @@
         if (cloudSettings && typeof cloudSettings === 'object' && cloudSettings.hotline) {
           const current = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{}');
           localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify({ ...current, ...cloudSettings }));
+          if (Array.isArray(cloudSettings.certifications)) {
+            localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(cloudSettings.certifications));
+            emitSync('CERTS_SYNCED', cloudSettings.certifications);
+          }
           emitSync('SETTINGS_SYNCED', cloudSettings);
         }
       }
@@ -680,6 +760,13 @@
       }
       localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(list));
       emitSync('FORMULATION_UPDATED', form);
+
+      fetch('/api/formulations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      }).catch(err => console.warn('Cloudflare D1 formulation save warning:', err));
+
       return form;
     },
 
@@ -688,7 +775,109 @@
       list = list.filter(f => f.id !== id);
       localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(list));
       emitSync('FORMULATION_DELETED', { id });
+
+      fetch('/api/formulations/' + encodeURIComponent(id), {
+        method: 'DELETE'
+      }).catch(err => console.warn('Cloudflare D1 formulation delete warning:', err));
+
       return true;
+    },
+
+    // Certifications (Chứng nhận & Tiêu chuẩn)
+    getCertifications: function () {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY_CERTS));
+        if (Array.isArray(raw) && raw.length > 0) return raw;
+        return DEFAULT_CERTS;
+      } catch (e) {
+        return DEFAULT_CERTS;
+      }
+    },
+
+    getCertificationById: function (id) {
+      const list = this.getCertifications();
+      return list.find(c => c.id === id) || null;
+    },
+
+    saveCertification: function (cert) {
+      const list = this.getCertifications();
+      if (!cert.id) {
+        cert.id = 'cert-' + Date.now();
+        cert.order = list.length + 1;
+        if (cert.enabled === undefined) cert.enabled = true;
+        list.push(cert);
+      } else {
+        const index = list.findIndex(c => c.id === cert.id);
+        if (index >= 0) {
+          list[index] = { ...list[index], ...cert };
+        } else {
+          list.push(cert);
+        }
+      }
+      localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(list));
+      emitSync('CERTS_UPDATED', list);
+      this.syncCertsToSettings(list);
+      return cert;
+    },
+
+    saveCertificationsList: function (newList) {
+      localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(newList));
+      emitSync('CERTS_UPDATED', newList);
+      this.syncCertsToSettings(newList);
+      return newList;
+    },
+
+    deleteCertification: function (id) {
+      let list = this.getCertifications();
+      list = list.filter(c => c.id !== id);
+      localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(list));
+      emitSync('CERTS_UPDATED', list);
+      this.syncCertsToSettings(list);
+      return true;
+    },
+
+    toggleCertification: function (id) {
+      const list = this.getCertifications();
+      const item = list.find(c => c.id === id);
+      if (item) {
+        item.enabled = !item.enabled;
+        localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(list));
+        emitSync('CERTS_UPDATED', list);
+        this.syncCertsToSettings(list);
+        return item.enabled;
+      }
+      return false;
+    },
+
+    reorderCertifications: function (id, direction) {
+      const list = this.getCertifications();
+      const index = list.findIndex(c => c.id === id);
+      if (index < 0) return false;
+      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= list.length) return false;
+
+      const temp = list[index];
+      list[index] = list[targetIndex];
+      list[targetIndex] = temp;
+
+      list.forEach((item, idx) => { item.order = idx + 1; });
+      localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(list));
+      emitSync('CERTS_UPDATED', list);
+      this.syncCertsToSettings(list);
+      return true;
+    },
+
+    syncCertsToSettings: function (certsList) {
+      try {
+        const current = this.getSettings();
+        current.certifications = certsList;
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(current));
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(current)
+        }).catch(() => {});
+      } catch (e) {}
     },
 
     // Settings
@@ -766,7 +955,9 @@
         settings: this.getSettings(),
         products: this.getProducts(),
         news: this.getNews(),
-        leads: this.getLeads()
+        leads: this.getLeads(),
+        formulations: this.getFormulations(),
+        certifications: this.getCertifications()
       }, null, 2);
     },
 
@@ -777,6 +968,8 @@
         if (data.products) localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(data.products));
         if (data.news) localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(data.news));
         if (data.leads) localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(data.leads));
+        if (data.formulations) localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(data.formulations));
+        if (data.certifications) localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(data.certifications));
         emitSync('ALL_DATA_RESTORED', {});
         return { success: true };
       } catch (err) {
@@ -789,6 +982,8 @@
       localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(DEFAULT_PRODUCTS));
       localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));
       localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(DEFAULT_LEADS));
+      localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(DEFAULT_FORMULATIONS));
+      localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(DEFAULT_CERTS));
       emitSync('ALL_DATA_RESTORED', {});
       return true;
     },
