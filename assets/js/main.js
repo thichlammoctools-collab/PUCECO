@@ -544,6 +544,12 @@ document.addEventListener('DOMContentLoaded', () => {
     modalFormulation.querySelector('#modal-f-dosage').textContent = f.dosageForm || '—';
     modalFormulation.querySelector('#modal-f-main').textContent = f.mainIngredient || '—';
 
+    const fImg = modalFormulation.querySelector('#modal-f-img');
+    if (fImg && f.image) {
+      fImg.src = f.image;
+      fImg.alt = f.name;
+    }
+
     const tbody = modalFormulation.querySelector('#modal-f-table-body');
     if (tbody && Array.isArray(f.ingredients)) {
       tbody.innerHTML = f.ingredients.map(ing => `

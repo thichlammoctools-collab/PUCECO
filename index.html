@@ -427,10 +427,15 @@
     <div class="modal-box modal-box-product" style="max-width:760px;">
       <button class="modal-close" type="button" data-close-modal aria-label="Đóng">&times;</button>
       
-      <div class="modal-product-header" style="padding-bottom:12px;border-bottom:1px solid var(--color-border);">
-        <span id="modal-f-badge" class="product-tag modal-product-tag" style="position:static;display:inline-block;margin-bottom:8px;"></span>
-        <h3 id="modal-f-name" style="margin:0;font-size:1.55rem;font-weight:700;color:var(--color-depth);line-height:1.25;"></h3>
-        <p id="modal-f-desc" style="color:var(--color-muted);margin:8px 0 0;font-size:0.98rem;line-height:1.6;"></p>
+      <div class="modal-product-header" style="padding-bottom:12px;border-bottom:1px solid var(--color-border);display:flex;gap:20px;align-items:flex-start;">
+        <div style="flex:1;">
+          <span id="modal-f-badge" class="product-tag modal-product-tag" style="position:static;display:inline-block;margin-bottom:8px;"></span>
+          <h3 id="modal-f-name" style="margin:0;font-size:1.55rem;font-weight:700;color:var(--color-depth);line-height:1.25;"></h3>
+          <p id="modal-f-desc" style="color:var(--color-muted);margin:8px 0 0;font-size:0.98rem;line-height:1.6;"></p>
+        </div>
+        <div class="modal-header-thumb" style="width:130px;height:90px;border-radius:10px;overflow:hidden;flex-shrink:0;box-shadow:var(--shadow-1);">
+          <img id="modal-f-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+        </div>
       </div>
 
       <div class="modal-body" style="padding-top:16px;">
