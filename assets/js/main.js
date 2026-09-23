@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    // 1.8. Render Hero Slider dynamically
+    initHeroSlider();
+
     // Dynamic href attributes for direct click-to-call, email, and Google Maps
     document.querySelectorAll('[data-bind="hotline-link"]').forEach(el => {
       const cleanPhone = (settings.hotline || '').replace(/[^0-9+]/g, '');
@@ -51,13 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const statYears = document.querySelector('[data-stat="years"]');
-    if (statYears) statYears.dataset.count = settings.stats?.years || 12;
+    if (statYears) statYears.dataset.count = settings.stats?.years || 30;
 
     const statPartners = document.querySelector('[data-stat="partners"]');
-    if (statPartners) statPartners.dataset.count = settings.stats?.partners || 320;
+    if (statPartners) statPartners.dataset.count = settings.stats?.partners || 20;
 
     const statLines = document.querySelector('[data-stat="lines"]');
-    if (statLines) statLines.dataset.count = settings.stats?.lines || 48;
+    if (statLines) statLines.dataset.count = settings.stats?.lines || 8;
 
     const statTrace = document.querySelector('[data-stat="traceability"]');
     if (statTrace) statTrace.dataset.count = settings.stats?.traceability || 100;
@@ -338,35 +341,95 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.closeSearch = () => openSearch(false);
 
-  // ===== Hero Slider =====
-  const hero = document.querySelector('[data-hero]');
-  if (hero) {
-    const slides = [...hero.querySelectorAll('[data-slide]')];
-    const dotsWrap = hero.querySelector('[data-hero-dots]');
-    const prev = hero.querySelector('[data-hero-prev]');
-    const next = hero.querySelector('[data-hero-next]');
-    let index = slides.findIndex(s => s.classList.contains('is-active'));
-    if (index < 0) index = 0;
+  // ===== Hero Slider Dynamic Controller =====
+  let heroCurrentIndex = 0;
+  function initHeroSlider() {
+    const hero = document.querySelector('[data-hero]');
+    if (!hero) return;
 
-    slides.forEach((_, i) => {
-      const dot = document.createElement('button');
-      dot.type = 'button';
-      dot.setAttribute('role', 'tab');
-      dot.setAttribute('aria-label', `Đến slide ${i + 1}`);
-      dot.addEventListener('click', () => go(i));
-      dotsWrap?.appendChild(dot);
-    });
+    const track = hero.querySelector('[data-hero-track]');
+    const dotsWrap = hero.querySelector('[data-hero-dots]');
+    const prevBtn = hero.querySelector('[data-hero-prev]');
+    const nextBtn = hero.querySelector('[data-hero-next]');
+
+    if (store && store.getSlides && track) {
+      const slidesData = store.getSlides();
+      const activeSlides = slidesData.filter(s => s.enabled !== false);
+      if (activeSlides.length > 0) {
+        track.innerHTML = activeSlides.map((s, idx) => {
+          let titleFormatted = escapeHtml(s.title || '').replace(/\r?\n/g, '<br>');
+          titleFormatted = titleFormatted.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+
+          const g1 = s.g1 || '#18181B';
+          const g2 = s.g2 || (idx === 0 ? '#B72622' : idx === 1 ? '#991B1B' : '#D4322D');
+          const bgImg = s.bgImage || (idx === 0 ? 'assets/images/hero-bg-1.jpg' : idx === 1 ? 'assets/images/hero-bg-2.jpg' : 'assets/images/hero-bg-3.jpg');
+          const artImg = s.artImage || (idx === 0 ? 'assets/images/hero-botanical-1.svg' : idx === 1 ? 'assets/images/hero-botanical-2.svg' : 'assets/images/hero-botanical-3.svg');
+          const badgeTop = s.badgeTop || (idx === 0 ? 'GMP' : idx === 1 ? '100%' : 'R&D');
+          const badgeBottom = s.badgeBottom || (idx === 0 ? 'đạt chuẩn' : idx === 1 ? 'thiên nhiên' : 'nội bộ');
+          const btn1Text = s.btn1Text || 'Khám phá sản phẩm';
+          const btn1Link = s.btn1Link || '#noi-bat';
+          const btn2Text = s.btn2Text || 'Về chúng tôi';
+          const btn2Link = s.btn2Link || '#gioi-thieu';
+
+          return `
+            <article class="hero-slide ${idx === heroCurrentIndex ? 'is-active' : ''}" data-slide aria-roledescription="slide" aria-label="${idx + 1} trên ${activeSlides.length}">
+              <div class="hero-bg" style="--g1:${g1};--g2:${g2}"><img src="${escapeHtml(bgImg)}" alt="" loading="${idx === 0 ? 'eager' : 'lazy'}"></div>
+              <div class="hero-grid">
+                <div class="hero-copy">
+                  ${s.eyebrow ? `<p class="eyebrow light">${escapeHtml(s.eyebrow)}</p>` : ''}
+                  <h1 class="hero-title">${titleFormatted}</h1>
+                  ${s.lede ? `<p class="hero-lede">${escapeHtml(s.lede)}</p>` : ''}
+                  <div class="hero-actions">
+                    ${btn1Text ? `<a class="btn primary lg" href="${escapeHtml(btn1Link)}">${escapeHtml(btn1Text)}</a>` : ''}
+                    ${btn2Text ? `<a class="btn ghost lg light" href="${escapeHtml(btn2Link)}">${escapeHtml(btn2Text)}</a>` : ''}
+                  </div>
+                </div>
+                <div class="hero-visual" aria-hidden="true">
+                  ${artImg ? `<img class="hero-art" src="${escapeHtml(artImg)}" alt="" width="240" height="240">` : ''}
+                  <span class="hero-badge"><b>${escapeHtml(badgeTop)}</b><span>${escapeHtml(badgeBottom)}</span></span>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+    }
+
+    const slides = [...hero.querySelectorAll('[data-slide]')];
+    if (slides.length === 0) return;
+
+    if (heroCurrentIndex >= slides.length) heroCurrentIndex = 0;
+
+    if (dotsWrap) {
+      dotsWrap.innerHTML = '';
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `Đến slide ${i + 1}`);
+        dot.addEventListener('click', () => go(i));
+        dotsWrap.appendChild(dot);
+      });
+    }
+
     const dots = [...dotsWrap?.children || []];
 
     const go = (i) => {
-      index = (i + slides.length) % slides.length;
-      slides.forEach((s, k) => s.classList.toggle('is-active', k === index));
-      dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === index)));
+      heroCurrentIndex = (i + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle('is-active', k === heroCurrentIndex));
+      dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === heroCurrentIndex)));
     };
 
-    prev?.addEventListener('click', () => go(index - 1));
-    next?.addEventListener('click', () => go(index + 1));
-    go(index);
+    if (prevBtn && !prevBtn._hasHeroListener) {
+      prevBtn.addEventListener('click', () => go(heroCurrentIndex - 1));
+      prevBtn._hasHeroListener = true;
+    }
+    if (nextBtn && !nextBtn._hasHeroListener) {
+      nextBtn.addEventListener('click', () => go(heroCurrentIndex + 1));
+      nextBtn._hasHeroListener = true;
+    }
+
+    go(heroCurrentIndex);
   }
 
   // ===== Count-Up Stats =====

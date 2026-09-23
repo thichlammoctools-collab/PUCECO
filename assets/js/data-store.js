@@ -13,6 +13,7 @@
   const STORAGE_KEY_AUTH = 'puceco_auth_session';
   const STORAGE_KEY_FORMULATIONS = 'puceco_formulations';
   const STORAGE_KEY_CERTS = 'puceco_certifications';
+  const STORAGE_KEY_SLIDES = 'puceco_hero_slides';
 
   // Seed Data mặc định
   const DEFAULT_SETTINGS = {
@@ -32,12 +33,69 @@
     mapsUrl: 'https://maps.app.goo.gl/1Rfge7JdRQY9vLxBA',
     adminPassword: 'admin123',
     stats: {
-      years: 12,
-      partners: 320,
-      lines: 48,
+      years: 30,
+      partners: 20,
+      lines: 8,
       traceability: 100
     }
   };
+
+  const DEFAULT_SLIDES = [
+    {
+      id: 'slide-1',
+      order: 1,
+      enabled: true,
+      eyebrow: 'Nguyên liệu thiên nhiên · Chuẩn quốc tế',
+      title: 'Chiết xuất từ thiên nhiên,\ntin cậy từ khoa học',
+      lede: 'PUCECO cung cấp nguyên liệu dược phẩm và mỹ phẩm chiết xuất từ thảo mộc, đảm bảo nguồn gốc minh bạch và quy trình kiểm soát chất lượng đa điểm.',
+      btn1Text: 'Khám phá sản phẩm',
+      btn1Link: '#noi-bat',
+      btn2Text: 'Về chúng tôi',
+      btn2Link: '#gioi-thieu',
+      badgeTop: 'GMP',
+      badgeBottom: 'đạt chuẩn',
+      bgImage: 'assets/images/hero-bg-1.jpg',
+      artImage: 'assets/images/hero-botanical-1.svg',
+      g1: '#18181B',
+      g2: '#B72622'
+    },
+    {
+      id: 'slide-2',
+      order: 2,
+      enabled: true,
+      eyebrow: 'Hợp tác bền vững',
+      title: 'Đồng hành cùng\nnhà sản xuất Việt',
+      lede: 'Chúng tôi liên kết vùng trồng nguyên liệu sạch, hỗ trợ nông dân địa phương và bảo vệ hệ sinh thái qua từng mẻ chiết xuất đạt chuẩn.',
+      btn1Text: 'Xem lợi ích',
+      btn1Link: '#loi-ich',
+      btn2Text: 'Chứng nhận',
+      btn2Link: '#chung-nhan',
+      badgeTop: '100%',
+      badgeBottom: 'thiên nhiên',
+      bgImage: 'assets/images/hero-bg-2.jpg',
+      artImage: 'assets/images/hero-botanical-2.svg',
+      g1: '#18181B',
+      g2: '#991B1B'
+    },
+    {
+      id: 'slide-3',
+      order: 3,
+      enabled: true,
+      eyebrow: 'Nghiên cứu & phát triển',
+      title: 'Đổi mới từ\nphòng thí nghiệm',
+      lede: 'Đội ngũ R&D của PUCECO phát triển các hoạt chất nano và phân tử tự nhiên với độ sinh khả dụng cao, an toàn và truy xuất nguồn gốc.',
+      btn1Text: 'Tin nghiên cứu',
+      btn1Link: '#tin-tuc',
+      btn2Text: 'Trở thành đối tác',
+      btn2Link: '#lien-he',
+      badgeTop: 'R&D',
+      badgeBottom: 'nội bộ',
+      bgImage: 'assets/images/hero-bg-3.jpg',
+      artImage: 'assets/images/hero-botanical-3.svg',
+      g1: '#18181B',
+      g2: '#D4322D'
+    }
+  ];
 
   const DEFAULT_CERTS = [
     { id: 'cert-1', code: 'GMP', title: 'Thực hành sản xuất tốt', desc: 'Đạt chuẩn thực hành sản xuất tốt theo quy chuẩn Bộ Y Tế', enabled: true, order: 1 },
@@ -338,6 +396,7 @@
           slogan: DEFAULT_SETTINGS.slogan,
           aboutIntro: DEFAULT_SETTINGS.aboutIntro,
           values: DEFAULT_SETTINGS.values,
+          stats: (!s.stats || s.stats.years === 12 || s.stats.partners === 320) ? DEFAULT_SETTINGS.stats : (s.stats || DEFAULT_SETTINGS.stats),
           email: s.email === 'info@puceco.vn' ? DEFAULT_SETTINGS.email : (s.email || DEFAULT_SETTINGS.email),
           hotline: s.hotline === '1900 123 456' ? DEFAULT_SETTINGS.hotline : (s.hotline || DEFAULT_SETTINGS.hotline),
           address: (s.address === 'Khu Công Nghệ Cao, Hà Nội, Việt Nam' || s.address === 'Khu Công Nghệ Cao, Hà Nội') ? DEFAULT_SETTINGS.address : (s.address || DEFAULT_SETTINGS.address),
@@ -456,6 +515,10 @@
     if (!localStorage.getItem(STORAGE_KEY_CERTS)) {
       localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(DEFAULT_CERTS));
     }
+
+    if (!localStorage.getItem(STORAGE_KEY_SLIDES)) {
+      localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(DEFAULT_SLIDES));
+    }
   }
 
   // Tự động đồng bộ 2 chiều với Cloudflare D1 & R2 Backend
@@ -494,6 +557,10 @@
           if (Array.isArray(cloudSettings.certifications)) {
             localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(cloudSettings.certifications));
             emitSync('CERTS_SYNCED', cloudSettings.certifications);
+          }
+          if (Array.isArray(cloudSettings.slides) && cloudSettings.slides.length > 0) {
+            localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(cloudSettings.slides));
+            emitSync('SLIDES_SYNCED', cloudSettings.slides);
           }
           emitSync('SETTINGS_SYNCED', cloudSettings);
         }
@@ -880,6 +947,85 @@
       } catch (e) {}
     },
 
+    // Hero Slides (Trang chủ)
+    getSlides: function () {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY_SLIDES));
+        if (Array.isArray(raw) && raw.length > 0) {
+          return raw.sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+        return DEFAULT_SLIDES;
+      } catch (e) {
+        return DEFAULT_SLIDES;
+      }
+    },
+
+    getSlideById: function (id) {
+      const list = this.getSlides();
+      return list.find(s => s.id === id) || null;
+    },
+
+    saveSlide: function (slide) {
+      const list = this.getSlides();
+      if (!slide.id) {
+        slide.id = 'slide-' + (list.length + 1);
+        slide.order = list.length + 1;
+        if (slide.enabled === undefined) slide.enabled = true;
+        list.push(slide);
+      } else {
+        const index = list.findIndex(s => s.id === slide.id);
+        if (index >= 0) {
+          list[index] = { ...list[index], ...slide };
+        } else {
+          list.push(slide);
+        }
+      }
+      localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(list));
+      emitSync('SLIDES_UPDATED', list);
+      this.syncSlidesToSettings(list);
+      return slide;
+    },
+
+    saveSlidesList: function (newList) {
+      localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(newList));
+      emitSync('SLIDES_UPDATED', newList);
+      this.syncSlidesToSettings(newList);
+      return newList;
+    },
+
+    toggleSlide: function (id) {
+      const list = this.getSlides();
+      const item = list.find(s => s.id === id);
+      if (item) {
+        item.enabled = !item.enabled;
+        localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(list));
+        emitSync('SLIDES_UPDATED', list);
+        this.syncSlidesToSettings(list);
+        return item.enabled;
+      }
+      return false;
+    },
+
+    resetSlidesToDefault: function () {
+      localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(DEFAULT_SLIDES));
+      emitSync('SLIDES_UPDATED', DEFAULT_SLIDES);
+      this.syncSlidesToSettings(DEFAULT_SLIDES);
+      return DEFAULT_SLIDES;
+    },
+
+    syncSlidesToSettings: function (slidesList) {
+      try {
+        const current = this.getSettings();
+        current.slides = slidesList;
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(current));
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(current)
+        }).catch(() => {});
+      } catch (e) {}
+    },
+
     // Settings
     getSettings: function () {
       try {
@@ -957,7 +1103,8 @@
         news: this.getNews(),
         leads: this.getLeads(),
         formulations: this.getFormulations(),
-        certifications: this.getCertifications()
+        certifications: this.getCertifications(),
+        slides: this.getSlides()
       }, null, 2);
     },
 
@@ -970,6 +1117,7 @@
         if (data.leads) localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(data.leads));
         if (data.formulations) localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(data.formulations));
         if (data.certifications) localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(data.certifications));
+        if (data.slides) localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(data.slides));
         emitSync('ALL_DATA_RESTORED', {});
         return { success: true };
       } catch (err) {
@@ -984,6 +1132,7 @@
       localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(DEFAULT_LEADS));
       localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(DEFAULT_FORMULATIONS));
       localStorage.setItem(STORAGE_KEY_CERTS, JSON.stringify(DEFAULT_CERTS));
+      localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(DEFAULT_SLIDES));
       emitSync('ALL_DATA_RESTORED', {});
       return true;
     },
