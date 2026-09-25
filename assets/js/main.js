@@ -23,6 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Helper: Luôn chuẩn hóa ảnh tin tức sang ảnh thực tế JPG chất lượng cao, không dùng icon vector SVG
+  function getNewsDisplayImage(imgUrl) {
+    if (!imgUrl) return 'assets/images/news-gmp.jpg';
+    if (typeof imgUrl === 'string') {
+      if (imgUrl.includes('news-gmp.svg') || imgUrl.endsWith('news-gmp.svg')) {
+        return 'assets/images/news-gmp.jpg';
+      }
+      if (imgUrl.includes('news-farm.svg') || imgUrl.endsWith('news-farm.svg')) {
+        return 'assets/images/news-farm.jpg';
+      }
+      if (imgUrl.includes('news-lab.svg') || imgUrl.endsWith('news-lab.svg')) {
+        return 'assets/images/news-lab.jpg';
+      }
+      if (imgUrl.endsWith('.svg')) {
+        return imgUrl.replace(/\.svg$/, '.jpg');
+      }
+    }
+    return imgUrl;
+  }
+
   // ===== Render Dynamic Data from DataStore =====
   function renderWebsiteContent() {
     if (!store) return;
@@ -251,21 +271,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Render News
     const newsGrid = document.querySelector('#news-grid');
     if (newsGrid) {
-      newsGrid.innerHTML = news.map(n => `
+      newsGrid.innerHTML = news.map(n => {
+        const cardImg = getNewsDisplayImage(n.image);
+        return `
         <article class="news-card" data-news-id="${n.id}" onclick="openNewsModal('${n.id}')">
           <div class="news-thumb" style="--c1:${n.bg1 || '#E6F1EA'};--c2:${n.bg2 || '#C9E3D3'}">
-            <img class="news-art" src="${n.image}" alt="${n.title}" loading="lazy">
+            <img class="news-art" src="${escapeHtml(cardImg)}" alt="${escapeHtml(n.title)}" loading="lazy">
           </div>
           <div class="news-body">
-            <p class="news-date">${n.date}</p>
-            <h3>${n.title}</h3>
-            <p>${n.excerpt}</p>
+            <p class="news-date">${escapeHtml(n.date)}</p>
+            <h3>${escapeHtml(n.title)}</h3>
+            <p>${escapeHtml(n.excerpt)}</p>
             <button type="button" class="link-arrow" onclick="event.stopPropagation(); openNewsModal('${n.id}')">
               Đọc tiếp <span aria-hidden="true">→</span>
             </button>
           </div>
         </article>
-      `).join('');
+      `;
+      }).join('');
     }
 
     // 5. Update Contact Form Product Options
@@ -431,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
       matchedNews.forEach(n => {
         html += `
           <div class="search-item" onclick="openNewsModal('${n.id}'); closeSearch();">
-            <img class="search-thumb" src="${n.image}" alt="">
+            <img class="search-thumb" src="${escapeHtml(getNewsDisplayImage(n.image))}" alt="">
             <div class="search-info">
               <h5>${escapeHtml(n.title)}</h5>
               <p>${escapeHtml(n.excerpt.substring(0, 75))}...</p>
@@ -820,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
       badgeEl.textContent = n.tag || badge;
     }
 
-    // Màu nền gradient và Hình ảnh Cover Hero
+    // Màu nền gradient và Hình ảnh Cover Hero (luôn là ảnh JPG thực tế)
     const heroBg = modalNews.querySelector('#modal-n-hero-bg');
     if (heroBg) {
       heroBg.style.setProperty('--c1', n.bg1 || '#E6F1EA');
@@ -828,7 +851,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const heroImg = modalNews.querySelector('#modal-n-img');
     if (heroImg) {
-      heroImg.src = n.image;
+      const realHeroImg = getNewsDisplayImage(n.image);
+      heroImg.src = realHeroImg;
       heroImg.alt = n.title;
     }
 
@@ -950,6 +974,70 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `);
+        }
+      }
+
+      // Nếu bài viết chưa có bất kỳ ảnh minh họa nào trong nội dung (dữ liệu cũ từ cache)
+      if (inlineImagesFound.length === 0) {
+        const coverPhoto = getNewsDisplayImage(n.image);
+        const secondPhoto = (n.id === 'news-1') ? 'assets/images/news-lab.jpg' :
+                            (n.id === 'news-2') ? 'assets/images/prod-lemongrass.jpg' :
+                            (n.id === 'news-3') ? 'assets/images/prod-curcumin.jpg' : null;
+
+        const figure1 = `
+          <figure class="news-content-figure" data-zoom-src="${escapeHtml(coverPhoto)}" data-caption="${escapeHtml(n.title)}">
+            <div class="news-figure-img-wrap">
+              <img src="${escapeHtml(coverPhoto)}" alt="${escapeHtml(n.title)}" loading="lazy">
+              <div class="news-figure-zoom-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <polyline points="9 21 3 21 3 15"></polyline>
+                  <line x1="21" y1="3" x2="14" y2="10"></line>
+                  <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+                <span>Xem ảnh lớn</span>
+              </div>
+            </div>
+            <figcaption>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+              <span>${escapeHtml(n.title)} - Hình ảnh thực tế từ dây chuyền &amp; cơ sở vật chất</span>
+            </figcaption>
+          </figure>
+        `;
+        if (renderedHtml.length > 0) {
+          renderedHtml.splice(1, 0, figure1);
+        } else {
+          renderedHtml.push(figure1);
+        }
+
+        if (secondPhoto) {
+          const figure2 = `
+            <figure class="news-content-figure" data-zoom-src="${escapeHtml(secondPhoto)}" data-caption="Hệ thống kiểm nghiệm &amp; phân tích hoạt chất">
+              <div class="news-figure-img-wrap">
+                <img src="${escapeHtml(secondPhoto)}" alt="Hệ thống kiểm nghiệm" loading="lazy">
+                <div class="news-figure-zoom-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Xem ảnh lớn</span>
+                </div>
+              </div>
+              <figcaption>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span>Hệ thống phân tích kiểm nghiệm &amp; quản lý chất lượng đạt chuẩn PUCECO</span>
+              </figcaption>
+            </figure>
+          `;
+          renderedHtml.push(figure2);
         }
       }
 

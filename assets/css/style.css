@@ -645,12 +645,6 @@ b, strong {
 .news-card:hover .news-art {
   transform: scale(1.05);
 }
-.news-art[src*=".svg"] {
-  width: 70%;
-  height: auto;
-  max-height: 100px;
-  object-fit: contain;
-}
 .news-body { padding: var(--space-5); flex: 1; display: flex; flex-direction: column; }
 .news-date { font-family: var(--font-mono); font-size: var(--step-n1); color: var(--color-accent-2-ink); margin: 0 0 var(--space-2); }
 .news-body h3 { font-size: var(--step-2); margin-bottom: var(--space-2); }
@@ -962,12 +956,6 @@ b, strong {
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.news-modal-hero-img[src*=".svg"] {
-  width: 65%;
-  height: auto;
-  max-height: 180px;
-  object-fit: contain;
 }
 .news-modal-hero:hover .news-modal-hero-img {
   transform: scale(1.03);

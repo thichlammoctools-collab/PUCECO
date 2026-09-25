@@ -486,6 +486,30 @@
     }
   }
 
+  function normalizeNewsItem(n) {
+    if (!n) return n;
+    const defaultNewsMap = {
+      'news-1': DEFAULT_NEWS[0],
+      'news-2': DEFAULT_NEWS[1],
+      'news-3': DEFAULT_NEWS[2]
+    };
+    const def = defaultNewsMap[n.id];
+    if (def) {
+      // Ép dùng ảnh thực tế JPG chất lượng cao thay vì vector SVG icon
+      n.image = def.image;
+      if (!n.content || !n.content.includes('![')) {
+        n.content = def.content;
+      }
+      n.images = def.images;
+      if (!n.excerpt) n.excerpt = def.excerpt;
+      n.bg1 = def.bg1;
+      n.bg2 = def.bg2;
+    } else if (n.image && typeof n.image === 'string' && n.image.endsWith('.svg')) {
+      n.image = n.image.replace(/\.svg$/, '.jpg');
+    }
+    return n;
+  }
+
   // Khởi tạo Seed Data nếu chưa có & Cập nhật ảnh realistic mới
   function initData() {
     const storedSettings = localStorage.getItem(STORAGE_KEY_SETTINGS);
@@ -551,36 +575,11 @@
     } else {
       try {
         let news = JSON.parse(storedNews);
-        let updated = false;
-        const defaultNewsMap = {
-          'news-1': DEFAULT_NEWS[0],
-          'news-2': DEFAULT_NEWS[1],
-          'news-3': DEFAULT_NEWS[2]
-        };
-        news = news.map(n => {
-          const def = defaultNewsMap[n.id];
-          if (def) {
-            // Cập nhật ảnh đại diện nếu đang là SVG hoặc chưa có ảnh JPG
-            if (!n.image || n.image.endsWith('.svg') || n.image.includes('news-')) {
-              if (n.image !== def.image) {
-                n.image = def.image;
-                updated = true;
-              }
-            } else if (n.image && n.image.endsWith('.svg') && n.image.includes('news-')) {
-              n.image = n.image.replace(/\.svg$/, '.jpg');
-              updated = true;
-            }
-            // Cập nhật nội dung có hình ảnh nếu bài cũ chỉ có văn bản trơn
-            if (!n.content || !n.content.includes('![') || !Array.isArray(n.images) || n.images.length === 0) {
-              n.content = def.content;
-              n.images = def.images;
-              updated = true;
-            }
-          }
-          return n;
-        });
-        if (updated) {
+        if (Array.isArray(news) && news.length > 0) {
+          news = news.map(normalizeNewsItem);
           localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(news));
+        } else {
+          localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));
         }
       } catch (e) {
         localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));
@@ -688,8 +687,9 @@
       if (newsRes && newsRes.ok) {
         const cloudNews = await newsRes.json();
         if (Array.isArray(cloudNews) && cloudNews.length > 0) {
-          localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(cloudNews));
-          emitSync('NEWS_SYNCED', cloudNews);
+          const normalized = cloudNews.map(normalizeNewsItem);
+          localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(normalized));
+          emitSync('NEWS_SYNCED', normalized);
         }
       }
 
@@ -838,15 +838,20 @@
     // News / Blog
     getNews: function () {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY_NEWS)) || [];
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY_NEWS));
+        if (Array.isArray(raw) && raw.length > 0) {
+          return raw.map(normalizeNewsItem);
+        }
+        return DEFAULT_NEWS.map(normalizeNewsItem);
       } catch (e) {
-        return DEFAULT_NEWS;
+        return DEFAULT_NEWS.map(normalizeNewsItem);
       }
     },
 
     getNewsById: function (id) {
       const list = this.getNews();
-      return list.find(n => n.id === id) || null;
+      const item = list.find(n => n.id === id);
+      return item ? normalizeNewsItem(item) : null;
     },
 
     saveNews: function (item) {
