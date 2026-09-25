@@ -56,8 +56,44 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
   
-  <link rel="stylesheet" href="assets/css/style.css?v=20260925_03">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260925_04">
   <style>
+    /* Formulation Modal Spacing Guarantee */
+    .modal-box-formulation .modal-product-header,
+    .modal-box-formulation .modal-formulation-header {
+      padding: 24px 32px 16px 32px !important;
+      padding-right: 68px !important;
+    }
+    .modal-box-formulation .modal-body,
+    .modal-box-formulation .modal-formulation-body {
+      padding: 20px 32px 24px 32px !important;
+    }
+    .modal-box-formulation .modal-footer {
+      padding: 16px 32px 24px 32px !important;
+    }
+
+    @media (max-width: 640px) {
+      .modal-box-formulation .modal-product-header,
+      .modal-box-formulation .modal-formulation-header {
+        padding: 20px 18px 14px 18px !important;
+        padding-right: 60px !important;
+        flex-direction: column-reverse !important;
+        gap: 14px !important;
+      }
+      .modal-box-formulation .modal-header-thumb {
+        width: 100% !important;
+        height: 180px !important;
+        max-width: 100% !important;
+      }
+      .modal-box-formulation .modal-body,
+      .modal-box-formulation .modal-formulation-body {
+        padding: 16px 18px 20px 18px !important;
+      }
+      .modal-box-formulation .modal-footer {
+        padding: 14px 18px 20px 18px !important;
+      }
+    }
+
     @media (min-width: 800px) {
       .modal-box.modal-box-product { max-width: 980px !important; width: 92vw !important; }
       .modal-box.modal-box-formulation { max-width: 980px !important; width: 92vw !important; }
@@ -674,7 +710,7 @@
     <div class="modal-box modal-box-formulation">
       <button class="modal-close" type="button" data-close-modal aria-label="Đóng">&times;</button>
       
-      <div class="modal-product-header" style="padding-bottom:12px;border-bottom:1px solid var(--color-border);display:flex;gap:20px;align-items:flex-start;">
+      <div class="modal-product-header modal-formulation-header" style="border-bottom:1px solid var(--color-border);display:flex;gap:20px;align-items:flex-start;">
         <div style="flex:1;">
           <span id="modal-f-badge" class="product-tag modal-product-tag" style="position:static;display:inline-block;margin-bottom:8px;"></span>
           <h3 id="modal-f-name" style="margin:0;font-size:1.6rem;font-weight:700;color:var(--color-depth);line-height:1.25;"></h3>
@@ -685,7 +721,7 @@
         </div>
       </div>
 
-      <div class="modal-body" style="padding-top:16px;">
+      <div class="modal-body modal-formulation-body">
         <div style="background:var(--color-surface-2);padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:18px;display:flex;gap:20px;flex-wrap:wrap;font-size:0.92rem;">
           <div><b style="color:var(--color-text)">Dạng bào chế mẫu:</b> <span id="modal-f-dosage" style="color:var(--color-accent-text);font-weight:600;"></span></div>
           <div><b style="color:var(--color-text)">Hoạt chất chính PUCECO:</b> <span id="modal-f-main" style="color:var(--color-accent-strong);font-weight:600;"></span></div>
