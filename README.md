@@ -54,12 +54,16 @@ node server.js
 
 ```text
 PUCECO/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml         # Workflow tự động deploy lên Cloudflare Pages qua GitHub Actions
 ├── index.html                 # Trang chủ khách hàng (Tối ưu SEO On-page, Open Graph, JSON-LD)
 ├── admin.html                 # Trang quản trị Admin Dashboard (Bảo vệ noindex, nofollow)
 ├── robots.txt                 # Cấu hình bot tìm kiếm và chỉ mục sitemap
 ├── sitemap.xml                # Sơ đồ trang web chuẩn Google XML sitemap
 ├── generate_og_image.py       # Script tạo ảnh Open Graph chia sẻ mạng xã hội (1200x630px)
 ├── server.js                  # Máy chủ Node.js phục vụ tĩnh & API
+├── wrangler.toml              # Cấu hình Cloudflare Pages, D1 Database & R2 Storage
 ├── package.json               # Cấu hình dự án & kịch bản build
 ├── README.md                  # Hướng dẫn chi tiết
 └── assets/
@@ -77,3 +81,29 @@ PUCECO/
         ├── favicon.png
         └── ...
 ```
+
+---
+
+## ⚡ Tự Động Deploy Qua GitHub Actions (CI/CD)
+
+Dự án đã được tích hợp sẵn GitHub Actions workflow tại [`.github/workflows/deploy.yml`](file:///.github/workflows/deploy.yml) để tự động build và deploy lên **Cloudflare Pages** mỗi khi bạn push code lên nhánh `main`.
+
+### Các bước thiết lập trên GitHub:
+
+1. **Lấy Cloudflare API Token**:
+   - Đăng nhập [Cloudflare Dashboard](https://dash.cloudflare.com/) > nhấp icon Avatar góc phải trên > chọn **My Profile**.
+   - Chọn mục **API Tokens** > bấm **Create Token**.
+   - Chọn template **Edit Cloudflare Workers** (hoặc Custom Token với quyền `Account > Cloudflare Pages > Edit`).
+   - Copy mã API Token được tạo.
+
+2. **Cấu hình Secret trong GitHub Repository**:
+   - Truy cập Repository GitHub của bạn: `https://github.com/thichlammoctools-collab/PUCECO`
+   - Vào **Settings** > **Secrets and variables** > **Actions**.
+   - Nhấp **New repository secret** và thêm:
+     - **Name**: `CLOUDFLARE_API_TOKEN`
+     - **Value**: Dán mã API Token vừa copy ở trên.
+     *(Tùy chọn: `CLOUDFLARE_ACCOUNT_ID` nếu muốn ghi đè ID tài khoản mặc định `6c99b69a2ef00c1754fae70793262cd3`).*
+
+3. **Kích hoạt Deploy**:
+   - **Tự động**: Mỗi khi `git push` lên nhánh `main`, GitHub Actions sẽ tự động kích hoạt tiến trình build và deploy.
+   - **Thủ công**: Vào tab **Actions** trên GitHub > chọn workflow **Deploy to Cloudflare Pages** > bấm **Run workflow**.

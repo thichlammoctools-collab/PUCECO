@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h3>${p.name}</h3>
             <p>${p.desc}</p>
             <button type="button" class="link-arrow" onclick="event.stopPropagation(); openProductModal('${p.id}')">
-              Chi tiết tiêu chuẩn <span aria-hidden="true">→</span>
+              Chi tiết <span aria-hidden="true">→</span>
             </button>
           </div>
         </article>
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="formulation-actions">
               <button type="button" class="link-arrow" onclick="event.stopPropagation(); openFormulationModal('${f.id}')">
-                Xem công thức chi tiết <span aria-hidden="true">→</span>
+                Chi tiết <span aria-hidden="true">→</span>
               </button>
             </div>
           </div>

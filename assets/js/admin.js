@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tabContents.forEach(content => content.classList.toggle('active', content.id === `tab-${tabId}`));
     loadCurrentTab();
   }
+  window.switchTab = switchTab;
 
   navItems.forEach(item => {
     item.addEventListener('click', () => switchTab(item.dataset.tab));
@@ -1904,6 +1905,37 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ===== TAB: MENU & NỘI DUNG ĐỀ MỤC TRANG CHỦ =====
+  window.switchHomepageTopSection = function(type) {
+    const secPanel = document.getElementById('panel-homepage-sections');
+    const menuPanel = document.getElementById('panel-homepage-menu');
+    const btnSec = document.getElementById('btn-topswitch-sections');
+    const btnMenu = document.getElementById('btn-topswitch-menu');
+
+    if (type === 'sections') {
+      if (secPanel) secPanel.style.display = 'block';
+      if (menuPanel) menuPanel.style.display = 'none';
+      if (btnSec) {
+        btnSec.classList.add('btn-primary');
+        btnSec.classList.remove('btn-outline');
+      }
+      if (btnMenu) {
+        btnMenu.classList.add('btn-outline');
+        btnMenu.classList.remove('btn-primary');
+      }
+    } else {
+      if (secPanel) secPanel.style.display = 'none';
+      if (menuPanel) menuPanel.style.display = 'block';
+      if (btnSec) {
+        btnSec.classList.add('btn-outline');
+        btnSec.classList.remove('btn-primary');
+      }
+      if (btnMenu) {
+        btnMenu.classList.add('btn-primary');
+        btnMenu.classList.remove('btn-outline');
+      }
+    }
+  };
+
   function renderHomepageContent() {
     initHomepageSubtabs();
     renderMenuItemsTable();
