@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     switch (currentTab) {
       case 'dashboard': renderDashboard(); break;
       case 'hero': renderHeroSlides(); break;
+      case 'homepage-content': renderHomepageContent(); break;
       case 'products': renderProductsTable(); break;
       case 'formulations': renderFormulationsTable(); break;
       case 'news': renderNewsTable(); break;
@@ -1205,6 +1206,101 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initNewsImageUploader();
 
+  // Helper: Chèn hình ảnh minh họa có chú thích vào nội dung bài viết tin tức
+  function initNewsInlineImageHelper() {
+    const btnToggle = document.getElementById('btn-toggle-news-img-helper');
+    const panel = document.getElementById('news-inline-img-panel');
+    const btnClose = document.getElementById('btn-close-news-img-helper');
+    const selectImg = document.getElementById('news-insert-img-select');
+    const captionInput = document.getElementById('news-insert-img-caption');
+    const customRow = document.getElementById('news-insert-custom-row');
+    const customUrl = document.getElementById('news-insert-custom-url');
+    const btnBrowse = document.getElementById('btn-browse-insert-img');
+    const fileInput = document.getElementById('news-insert-file');
+    const btnConfirm = document.getElementById('btn-confirm-insert-img');
+    const textarea = document.getElementById('news-content');
+
+    if (!btnToggle || !panel) return;
+
+    btnToggle.addEventListener('click', () => {
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      if (panel.style.display === 'block') {
+        captionInput?.focus();
+      }
+    });
+
+    if (btnClose) {
+      btnClose.addEventListener('click', () => {
+        panel.style.display = 'none';
+      });
+    }
+
+    if (selectImg) {
+      selectImg.addEventListener('change', () => {
+        if (selectImg.value === 'custom') {
+          if (customRow) customRow.style.display = 'flex';
+        } else {
+          if (customRow) customRow.style.display = 'none';
+          if (captionInput && !captionInput.value) {
+            const selectedText = selectImg.options[selectImg.selectedIndex]?.text || '';
+            const cleanText = selectedText.replace(/^[^\s]+\s+/, '').replace(/\s*\([^)]+\)$/, '');
+            captionInput.value = cleanText;
+          }
+        }
+      });
+    }
+
+    if (btnBrowse && fileInput) {
+      btnBrowse.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+          const { dataUrl } = await processImageFile(file, 1200, 800, 0.85);
+          if (customUrl) customUrl.value = dataUrl;
+          if (captionInput && !captionInput.value) {
+            captionInput.value = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+          }
+          showAdminToast('Đã tải và xử lý hình ảnh thành công!', 'success');
+        } catch (err) {
+          showAdminToast(err.message || 'Lỗi xử lý hình ảnh', 'error');
+        }
+      });
+    }
+
+    if (btnConfirm && textarea) {
+      btnConfirm.addEventListener('click', () => {
+        let url = '';
+        if (selectImg && selectImg.value !== 'custom') {
+          url = selectImg.value;
+        } else if (customUrl) {
+          url = customUrl.value.trim();
+        }
+
+        if (!url) {
+          showAdminToast('Vui lòng chọn hoặc tải một hình ảnh hợp lệ!', 'warning');
+          return;
+        }
+
+        const caption = captionInput ? captionInput.value.trim() : '';
+        const mdSnippet = `\n\n![${caption}](${url})\n\n`;
+
+        const startPos = textarea.selectionStart;
+        const endPos = textarea.selectionEnd;
+        const currentVal = textarea.value;
+
+        textarea.value = currentVal.substring(0, startPos) + mdSnippet + currentVal.substring(endPos);
+        textarea.selectionStart = textarea.selectionEnd = startPos + mdSnippet.length;
+        textarea.focus();
+
+        showAdminToast('Đã chèn ảnh vào nội dung bài viết!', 'success');
+        panel.style.display = 'none';
+      });
+    }
+  }
+
+  initNewsInlineImageHelper();
+
   window.openAddNewsModal = function () {
     newsForm.reset();
     document.getElementById('news-id').value = '';
@@ -1214,6 +1310,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fileInput) fileInput.value = '';
     const urlInput = document.getElementById('news-image-url');
     if (urlInput) urlInput.value = '';
+    const inlinePanel = document.getElementById('news-inline-img-panel');
+    if (inlinePanel) inlinePanel.style.display = 'none';
     setNewsImage(DEFAULT_NEWS_IMAGE, 'preset');
     modalNews.classList.add('is-open');
   };
@@ -1234,6 +1332,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fileInput) fileInput.value = '';
     const urlInput = document.getElementById('news-image-url');
     if (urlInput) urlInput.value = '';
+    const inlinePanel = document.getElementById('news-inline-img-panel');
+    if (inlinePanel) inlinePanel.style.display = 'none';
     
     setNewsImage(n.image || DEFAULT_NEWS_IMAGE);
 
@@ -1248,6 +1348,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      document.getElementById('news-image-select')?.value ||
                      DEFAULT_NEWS_IMAGE;
 
+      const existingNews = id ? store.getNewsById(id) : null;
       const newsData = {
         id: id || undefined,
         title: document.getElementById('news-title-input').value.trim(),
@@ -1255,7 +1356,8 @@ document.addEventListener('DOMContentLoaded', () => {
         author: document.getElementById('news-author').value.trim(),
         excerpt: document.getElementById('news-excerpt').value.trim(),
         content: document.getElementById('news-content').value.trim(),
-        image: imgVal
+        image: imgVal,
+        images: existingNews?.images || [imgVal]
       };
 
       store.saveNews(newsData);
@@ -1797,6 +1899,384 @@ document.addEventListener('DOMContentLoaded', () => {
         store.resetSlidesToDefault();
         renderHeroSlides();
         showAdminToast('Đã khôi phục 3 slide về mặc định ban đầu!', 'info');
+      }
+    });
+  }
+
+  // ===== TAB: MENU & NỘI DUNG ĐỀ MỤC TRANG CHỦ =====
+  function renderHomepageContent() {
+    initHomepageSubtabs();
+    renderMenuItemsTable();
+    renderHeaderCtaForm();
+    renderHomepageSectionsForm();
+  }
+
+  // Quản lý chuyển đổi các Subtabs đề mục trang chủ
+  let homepageSubtabsInitialized = false;
+  function initHomepageSubtabs() {
+    if (homepageSubtabsInitialized) return;
+    const subtabBtns = document.querySelectorAll('.subtab-pill[data-subtab]');
+    const subtabPanels = document.querySelectorAll('.subtab-panel');
+
+    subtabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.subtab;
+        subtabBtns.forEach(b => b.classList.toggle('active', b === btn));
+        subtabPanels.forEach(p => p.classList.toggle('active', p.id === `subtab-panel-${targetId}`));
+      });
+    });
+    homepageSubtabsInitialized = true;
+  }
+
+  // 1. Render Danh Sách Menu Điều Hướng
+  function renderMenuItemsTable() {
+    const tbody = document.getElementById('menu-items-tbody');
+    if (!tbody || !store.getMenu) return;
+
+    const menu = store.getMenu();
+    if (menu.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--admin-muted);">Chưa có mục menu nào. Hãy nhấn "+ Thêm Mục Menu Mới" để tạo.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = menu.map((m, index) => `
+      <tr data-menu-id="${m.id}">
+        <td style="text-align:center;font-weight:600;color:var(--admin-muted);">${index + 1}</td>
+        <td>
+          <b style="color:var(--admin-text);font-size:0.95rem;">${escapeHtml(m.label)}</b>
+        </td>
+        <td>
+          <span class="menu-url-badge">${escapeHtml(m.url)}</span>
+        </td>
+        <td style="text-align:center;">
+          <span class="badge ${m.target === '_blank' ? 'badge-info' : 'badge-secondary'}" style="font-size:0.75rem;">
+            ${m.target === '_blank' ? 'Tab mới (↗)' : 'Cùng tab'}
+          </span>
+        </td>
+        <td style="text-align:center;">
+          <button type="button" class="btn btn-sm ${m.enabled !== false ? 'btn-secondary' : 'btn-outline'}" 
+                  onclick="toggleMenuItemStatus('${m.id}')" 
+                  title="Nhấn để ${m.enabled !== false ? 'ẩn' : 'hiển thị'} trên website"
+                  style="${m.enabled !== false ? 'color:var(--admin-success);font-weight:700;' : 'color:var(--admin-muted);'}">
+            ${m.enabled !== false ? '✓ Bật' : '✕ Tắt'}
+          </button>
+        </td>
+        <td style="text-align:center;">
+          <div style="display:inline-flex;gap:4px;">
+            <button type="button" class="btn-icon-order" ${index === 0 ? 'disabled' : ''} onclick="reorderMenuItem('${m.id}', 'up')" title="Di chuyển lên">▲</button>
+            <button type="button" class="btn-icon-order" ${index === menu.length - 1 ? 'disabled' : ''} onclick="reorderMenuItem('${m.id}', 'down')" title="Di chuyển xuống">▼</button>
+          </div>
+        </td>
+        <td style="text-align:center;">
+          <div style="display:inline-flex;gap:6px;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="openEditMenuModal('${m.id}')">Sửa</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteMenuItem('${m.id}')">Xóa</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // Modal Menu: Thêm & Sửa
+  const modalMenu = document.getElementById('admin-modal-menu');
+  const menuItemForm = document.getElementById('menu-item-form');
+
+  window.openAddMenuModal = function () {
+    if (!modalMenu) return;
+    document.getElementById('menu-item-id').value = '';
+    document.getElementById('modal-menu-title').textContent = 'Thêm Mục Menu Mới';
+    document.getElementById('menu-item-label').value = '';
+    document.getElementById('menu-item-url').value = '#';
+    document.getElementById('menu-item-target').value = '_self';
+    const menu = store.getMenu ? store.getMenu() : [];
+    document.getElementById('menu-item-order').value = menu.length + 1;
+    document.getElementById('menu-item-enabled').checked = true;
+    modalMenu.classList.add('is-open');
+    document.getElementById('menu-item-label').focus();
+  };
+
+  window.openEditMenuModal = function (id) {
+    if (!modalMenu || !store.getMenuItemById) return;
+    const m = store.getMenuItemById(id);
+    if (!m) return;
+
+    document.getElementById('menu-item-id').value = m.id;
+    document.getElementById('modal-menu-title').textContent = `Chỉnh Sửa Mục Menu: ${m.label}`;
+    document.getElementById('menu-item-label').value = m.label || '';
+    document.getElementById('menu-item-url').value = m.url || '';
+    document.getElementById('menu-item-target').value = m.target || '_self';
+    document.getElementById('menu-item-order').value = m.order || 1;
+    document.getElementById('menu-item-enabled').checked = m.enabled !== false;
+    modalMenu.classList.add('is-open');
+    document.getElementById('menu-item-label').focus();
+  };
+
+  if (menuItemForm) {
+    menuItemForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = document.getElementById('menu-item-id').value;
+      const label = document.getElementById('menu-item-label').value.trim();
+      const url = document.getElementById('menu-item-url').value.trim();
+      const target = document.getElementById('menu-item-target').value;
+      const order = Number(document.getElementById('menu-item-order').value) || 1;
+      const enabled = document.getElementById('menu-item-enabled').checked;
+
+      if (!label || !url) {
+        showAdminToast('Vui lòng nhập Tên menu và Đường dẫn liên kết!', 'warning');
+        return;
+      }
+
+      store.saveMenuItem({
+        id: id || undefined,
+        label,
+        url,
+        target,
+        order,
+        enabled
+      });
+
+      closeAdminModals();
+      renderMenuItemsTable();
+      showAdminToast(`Đã lưu mục menu "${label}" thành công!`, 'success');
+    });
+  }
+
+  window.toggleMenuItemStatus = function (id) {
+    if (!store.toggleMenuItem) return;
+    const newStatus = store.toggleMenuItem(id);
+    renderMenuItemsTable();
+    showAdminToast(`Đã ${newStatus ? 'bật hiển thị' : 'tắt ẩn'} mục menu!`, 'info');
+  };
+
+  window.reorderMenuItem = function (id, direction) {
+    if (!store.reorderMenu) return;
+    store.reorderMenu(id, direction);
+    renderMenuItemsTable();
+  };
+
+  window.confirmDeleteMenuItem = function (id) {
+    const m = store.getMenuItemById ? store.getMenuItemById(id) : null;
+    const name = m ? m.label : 'mục này';
+    if (confirm(`Bạn có chắc chắn muốn xóa mục menu "${name}"?`)) {
+      store.deleteMenuItem(id);
+      renderMenuItemsTable();
+      showAdminToast(`Đã xóa mục menu "${name}"!`, 'warning');
+    }
+  };
+
+  // 2. Render & Lưu Cấu hình Nút Header CTA
+  function renderHeaderCtaForm() {
+    if (!store.getHeaderCta) return;
+    const cta = store.getHeaderCta();
+    const textInput = document.getElementById('header-cta-text');
+    const urlInput = document.getElementById('header-cta-url');
+    const enabledInput = document.getElementById('header-cta-enabled');
+
+    if (textInput) textInput.value = cta.text || 'Nhận mẫu thử';
+    if (urlInput) urlInput.value = cta.url || '#lien-he';
+    if (enabledInput) enabledInput.checked = cta.enabled !== false;
+  }
+
+  const headerCtaForm = document.getElementById('header-cta-form');
+  if (headerCtaForm) {
+    headerCtaForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = document.getElementById('header-cta-text').value.trim();
+      const url = document.getElementById('header-cta-url').value.trim();
+      const enabled = document.getElementById('header-cta-enabled').checked;
+
+      store.saveHeaderCta({ text, url, enabled });
+      showAdminToast('Đã lưu cấu hình nút kêu gọi Header CTA!', 'success');
+    });
+  }
+
+  // 3. Render & Lưu Cấu hình Tiêu Đề & Nội Dung Đề Mục Trang Chủ
+  function renderHomepageSectionsForm() {
+    if (!store.getSections) return;
+    const sec = store.getSections();
+
+    // Intro
+    const intro = sec.intro || {};
+    setVal('sec-intro-eyebrow', intro.eyebrow);
+    setVal('sec-intro-title', intro.title);
+    setVal('sec-intro-lead', intro.lead);
+    setVal('sec-intro-btn1-text', intro.btn1Text);
+    setVal('sec-intro-btn1-url', intro.btn1Url);
+    setVal('sec-intro-btn2-text', intro.btn2Text);
+    setVal('sec-intro-btn2-url', intro.btn2Url);
+    setVal('sec-stat-years', intro.statYears);
+    setVal('sec-stat-years-label', intro.statYearsLabel);
+    setVal('sec-stat-partners', intro.statPartners);
+    setVal('sec-stat-partners-label', intro.statPartnersLabel);
+    setVal('sec-stat-lines', intro.statLines);
+    setVal('sec-stat-lines-label', intro.statLinesLabel);
+    setVal('sec-stat-trace', intro.statTrace);
+    setVal('sec-stat-trace-label', intro.statTraceLabel);
+
+    if (Array.isArray(intro.values)) {
+      if (intro.values[0]) {
+        setVal('sec-val1-title', intro.values[0].title);
+        setVal('sec-val1-desc', intro.values[0].desc);
+      }
+      if (intro.values[1]) {
+        setVal('sec-val2-title', intro.values[1].title);
+        setVal('sec-val2-desc', intro.values[1].desc);
+      }
+      if (intro.values[2]) {
+        setVal('sec-val3-title', intro.values[2].title);
+        setVal('sec-val3-desc', intro.values[2].desc);
+      }
+    }
+
+    // Certs
+    const certs = sec.certs || {};
+    setVal('sec-certs-eyebrow', certs.eyebrow);
+    setVal('sec-certs-title', certs.title);
+
+    // Featured Products
+    const feat = sec.featuredProducts || {};
+    setVal('sec-feat-eyebrow', feat.eyebrow);
+    setVal('sec-feat-title', feat.title);
+    setVal('sec-feat-sub', feat.sub);
+
+    // New Products
+    const newSec = sec.newProducts || {};
+    setVal('sec-new-eyebrow', newSec.eyebrow);
+    setVal('sec-new-title', newSec.title);
+    setVal('sec-new-sub', newSec.sub);
+
+    // Formulations
+    const form = sec.formulations || {};
+    setVal('sec-form-eyebrow', form.eyebrow);
+    setVal('sec-form-title', form.title);
+    setVal('sec-form-sub', form.sub);
+
+    // News
+    const news = sec.news || {};
+    setVal('sec-news-eyebrow', news.eyebrow);
+    setVal('sec-news-title', news.title);
+    setVal('sec-news-sub', news.sub);
+
+    // Contact
+    const contact = sec.contact || {};
+    setVal('sec-contact-title', contact.title);
+    setVal('sec-contact-desc', contact.desc);
+    setVal('sec-contact-btn', contact.formBtnText);
+
+    // Footer
+    const footer = sec.footer || {};
+    setVal('sec-footer-slogan', footer.slogan);
+    setVal('sec-footer-col1', footer.col1Title);
+    setVal('sec-footer-col2', footer.col2Title);
+    setVal('sec-footer-col3', footer.col3Title);
+    setVal('sec-footer-copy', footer.copyright);
+  }
+
+  function setVal(elementId, value) {
+    const el = document.getElementById(elementId);
+    if (el && value !== undefined && value !== null) {
+      el.value = value;
+    }
+  }
+
+  function getVal(elementId, defaultVal = '') {
+    const el = document.getElementById(elementId);
+    return el ? el.value.trim() : defaultVal;
+  }
+
+  const homepageSectionsForm = document.getElementById('homepage-sections-form');
+  if (homepageSectionsForm) {
+    homepageSectionsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const updatedSections = {
+        intro: {
+          eyebrow: getVal('sec-intro-eyebrow'),
+          title: getVal('sec-intro-title'),
+          lead: getVal('sec-intro-lead'),
+          btn1Text: getVal('sec-intro-btn1-text'),
+          btn1Url: getVal('sec-intro-btn1-url'),
+          btn2Text: getVal('sec-intro-btn2-text'),
+          btn2Url: getVal('sec-intro-btn2-url'),
+          statYears: Number(getVal('sec-stat-years', '30')),
+          statYearsLabel: getVal('sec-stat-years-label', 'năm kinh nghiệm'),
+          statPartners: Number(getVal('sec-stat-partners', '20')),
+          statPartnersLabel: getVal('sec-stat-partners-label', 'đối tác toàn cầu'),
+          statLines: Number(getVal('sec-stat-lines', '8')),
+          statLinesLabel: getVal('sec-stat-lines-label', 'dòng nguyên liệu'),
+          statTrace: Number(getVal('sec-stat-trace', '100')),
+          statTraceLabel: getVal('sec-stat-trace-label', 'truy xuất nguồn gốc'),
+          values: [
+            { title: getVal('sec-val1-title', 'Chất Lượng'), desc: getVal('sec-val1-desc') },
+            { title: getVal('sec-val2-title', 'Uy Tín'), desc: getVal('sec-val2-desc') },
+            { title: getVal('sec-val3-title', 'Chuyên Nghiệp'), desc: getVal('sec-val3-desc') }
+          ]
+        },
+        certs: {
+          eyebrow: getVal('sec-certs-eyebrow'),
+          title: getVal('sec-certs-title')
+        },
+        featuredProducts: {
+          eyebrow: getVal('sec-feat-eyebrow'),
+          title: getVal('sec-feat-title'),
+          sub: getVal('sec-feat-sub')
+        },
+        newProducts: {
+          eyebrow: getVal('sec-new-eyebrow'),
+          title: getVal('sec-new-title'),
+          sub: getVal('sec-new-sub')
+        },
+        formulations: {
+          eyebrow: getVal('sec-form-eyebrow'),
+          title: getVal('sec-form-title'),
+          sub: getVal('sec-form-sub')
+        },
+        news: {
+          eyebrow: getVal('sec-news-eyebrow'),
+          title: getVal('sec-news-title'),
+          sub: getVal('sec-news-sub')
+        },
+        contact: {
+          title: getVal('sec-contact-title'),
+          desc: getVal('sec-contact-desc'),
+          formBtnText: getVal('sec-contact-btn')
+        },
+        footer: {
+          slogan: getVal('sec-footer-slogan'),
+          col1Title: getVal('sec-footer-col1'),
+          col2Title: getVal('sec-footer-col2'),
+          col3Title: getVal('sec-footer-col3'),
+          copyright: getVal('sec-footer-copy')
+        }
+      };
+
+      store.saveSections(updatedSections);
+
+      // Cập nhật cả certEyebrow và certTitle vào Settings chung để đồng bộ 2 chiều
+      store.saveSettings({
+        certEyebrow: updatedSections.certs.eyebrow,
+        certTitle: updatedSections.certs.title,
+        slogan: updatedSections.footer.slogan
+      });
+
+      const statusEl = document.getElementById('sections-save-status');
+      if (statusEl) {
+        statusEl.textContent = '✓ Đã lưu thành công lúc ' + new Date().toLocaleTimeString('vi-VN');
+        statusEl.style.color = 'var(--admin-success)';
+      }
+
+      showAdminToast('Đã lưu tất cả thay đổi nội dung đề mục trang chủ thành công!', 'success');
+    });
+  }
+
+  // Khôi phục mặc định nội dung đề mục trang chủ & menu
+  const resetHomepageBtn = document.getElementById('btn-reset-homepage-content');
+  if (resetHomepageBtn) {
+    resetHomepageBtn.addEventListener('click', () => {
+      if (confirm('Bạn có chắc chắn muốn khôi phục toàn bộ Menu điều hướng và Tiêu đề & Nội dung các đề mục trang chủ về bản gốc ban đầu?')) {
+        store.resetSectionsToDefault();
+        store.resetMenuToDefault();
+        renderHomepageContent();
+        showAdminToast('Đã khôi phục toàn bộ Menu và Đề mục về mặc định ban đầu!', 'info');
       }
     });
   }

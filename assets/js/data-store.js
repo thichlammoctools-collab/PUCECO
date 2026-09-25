@@ -14,6 +14,97 @@
   const STORAGE_KEY_FORMULATIONS = 'puceco_formulations';
   const STORAGE_KEY_CERTS = 'puceco_certifications';
   const STORAGE_KEY_SLIDES = 'puceco_hero_slides';
+  const STORAGE_KEY_MENU = 'puceco_menu';
+  const STORAGE_KEY_HEADER_CTA = 'puceco_header_cta';
+  const STORAGE_KEY_SECTIONS = 'puceco_sections';
+
+  // Seed Menu mặc định
+  const DEFAULT_MENU = [
+    { id: 'menu-1', label: 'Trang Chủ', url: '#top', target: '_self', enabled: true, order: 1 },
+    { id: 'menu-2', label: 'Giới Thiệu', url: '#gioi-thieu', target: '_self', enabled: true, order: 2 },
+    { id: 'menu-3', label: 'Sản Phẩm', url: '#noi-bat', target: '_self', enabled: true, order: 3 },
+    { id: 'menu-4', label: 'Công Thức Mẫu', url: '#cong-thuc-mau', target: '_self', enabled: true, order: 4 },
+    { id: 'menu-5', label: 'Tin Tức', url: '#tin-tuc', target: '_self', enabled: true, order: 5 },
+    { id: 'menu-6', label: 'Liên Hệ', url: '#lien-he', target: '_self', enabled: true, order: 6 }
+  ];
+
+  // Nút kêu gọi hành động trên Header
+  const DEFAULT_HEADER_CTA = {
+    text: 'Nhận mẫu thử',
+    url: '#lien-he',
+    enabled: true
+  };
+
+  // Cấu hình Tiêu đề & Nội dung từng phần đề mục Trang chủ
+  const DEFAULT_SECTIONS = {
+    intro: {
+      eyebrow: 'GIỚI THIỆU — PUCECO',
+      title: 'Chiết xuất từ thiên nhiên\n& Hoạt chất thế hệ mới',
+      lead: 'Công ty chúng tôi chuyên cung cấp các chiết xuất từ thiên nhiên và hoạt chất thế hệ mới, phục vụ cho ngành công nghiệp sản xuất dược phẩm, thực phẩm chức năng, mỹ phẩm. Với cam kết mang đến thị trường những sản phẩm đạt tiêu chuẩn chất lượng quốc tế, giá cả cạnh tranh và phù hợp với xu hướng phát triển thị trường.',
+      btn1Text: 'Tìm Hiểu Sản Phẩm',
+      btn1Url: '#noi-bat',
+      btn2Text: 'Xem Công Thức Mẫu',
+      btn2Url: '#cong-thuc-mau',
+      statYears: 30,
+      statYearsLabel: 'năm kinh nghiệm',
+      statPartners: 20,
+      statPartnersLabel: 'đối tác toàn cầu',
+      statLines: 8,
+      statLinesLabel: 'dòng nguyên liệu',
+      statTrace: 100,
+      statTraceLabel: 'truy xuất nguồn gốc',
+      values: [
+        {
+          title: 'Chất Lượng',
+          desc: 'Chúng tôi luôn đặt chất lượng sản phẩm và dịch vụ lên hàng đầu, giá trị đi đôi với thương hiệu.'
+        },
+        {
+          title: 'Uy Tín',
+          desc: 'Cam kết cung cấp sản phẩm chính hãng, rõ nguồn gốc xuất xứ từ các thương hiệu uy tín.'
+        },
+        {
+          title: 'Chuyên Nghiệp',
+          desc: 'Đội ngũ nhân viên chuyên nghiệp, nhiệt tình, luôn sẵn sàng tư vấn và hỗ trợ khách hàng.'
+        }
+      ]
+    },
+    certs: {
+      eyebrow: 'Cam kết chất lượng',
+      title: 'Chứng nhận & tiêu chuẩn'
+    },
+    featuredProducts: {
+      eyebrow: 'Danh mục',
+      title: 'Sản phẩm nổi bật',
+      sub: 'Các dòng nguyên liệu chiết xuất được các đối tác dược mỹ phẩm tin dùng nhiều nhất.'
+    },
+    newProducts: {
+      eyebrow: 'Mới ra mắt',
+      title: 'Sản phẩm mới',
+      sub: 'Những đột phá công nghệ chiết xuất và hoạt chất sinh học mới nhất từ phòng thí nghiệm.'
+    },
+    formulations: {
+      eyebrow: 'R&D & Ứng Dụng Chuyển Giao',
+      title: 'Công Thức Mẫu',
+      sub: 'Các giải pháp phối chế mẫu chuẩn hóa từ phòng thí nghiệm PUCECO, giúp đối tác rút ngắn thời gian R&D và thương mại hóa nhanh chóng.'
+    },
+    news: {
+      eyebrow: 'Tin tức & sự kiện',
+      title: 'Tin mới nhất',
+      sub: 'Cập nhật tin tức chuyên ngành, hoạt động R&D và sự kiện nổi bật của PUCECO.'
+    },
+    contact: {
+      title: 'Trở thành đối tác của PUCECO',
+      desc: 'Nhận báo giá sỉ, hồ sơ kỹ thuật (COA, Spec Sheet) và mẫu thử nghiệm cho dự án của bạn. Đội ngũ chuyên gia phản hồi trong 24 giờ.',
+      formBtnText: 'Gửi yêu cầu mẫu & Báo giá'
+    },
+    footer: {
+      slogan: 'Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học.',
+      col1Title: 'Sản phẩm & R&D',
+      col2Title: 'Điều hướng',
+      col3Title: 'Liên hệ',
+      copyright: '© 2026 PUCECO. All rights reserved. Tiêu chuẩn GMP & USDA Organic.'
+    }
+  };
 
   // Seed Data mặc định
   const DEFAULT_SETTINGS = {
@@ -312,8 +403,12 @@
       title: 'PUCECO đạt chứng nhận GMP nâng hạng',
       date: '18 Thg 9, 2026',
       excerpt: 'Nhà máy chiết xuất hoàn thiện nâng cấp dây chuyền chiết xuất áp suất thấp theo tiêu chuẩn GMP mới nhất.',
-      content: 'Tháng 9/2026, PUCECO chính thức đón nhận giấy chứng nhận Thực hành Sản xuất Tốt (GMP) phiên bản nâng hạng cho toàn bộ tổ hợp nhà máy chiết xuất dược liệu công nghệ cao. Với dây chuyền tự động hóa khép kín và hệ thống lọc nano tiên tiến, công suất chế biến đạt hơn 1.200 tấn dược liệu tươi mỗi năm, sẵn sàng cung ứng cho các tập đoàn dược phẩm lớn trong và ngoài nước.',
+      content: 'Tháng 9/2026, PUCECO chính thức đón nhận giấy chứng nhận Thực hành Sản xuất Tốt (GMP) phiên bản nâng hạng cho toàn bộ tổ hợp nhà máy chiết xuất dược liệu công nghệ cao. Với dây chuyền tự động hóa khép kín và hệ thống lọc nano tiên tiến, công suất chế biến đạt hơn 1.200 tấn dược liệu tươi mỗi năm, sẵn sàng cung ứng cho các tập đoàn dược phẩm lớn trong và ngoài nước.\n\n![Dây chuyền chiết xuất áp suất thấp tự động hóa khép kín đạt chuẩn GMP nâng hạng tại tổ hợp nhà máy PUCECO](assets/images/news-gmp.jpg)\n\n### Quy trình chiết xuất áp suất thấp & kiểm soát đa tầng\nKhác với phương pháp nhiệt cổ truyền làm hao hụt hoạt tính sinh học quý giá, công nghệ chiết xuất áp suất giảm tại nhiệt độ thấp giúp bảo toàn gần như trọn vẹn 100% hàm lượng tinh chất, flavonoid và polyphenol trong từng mẻ dược liệu.\n\nToàn bộ thông số nhiệt độ, áp suất, độ chân không và thời gian tuần hoàn đều được giám sát thời gian thực bằng hệ thống SCADA tự động hóa, đảm bảo sự đồng nhất tuyệt đối giữa các lô mẻ thành phẩm trước khi xuất xưởng.\n\n![Hệ thống phòng kiểm nghiệm vi sinh và sắc ký phân tích hoạt chất HPLC đạt tiêu chuẩn Dược điển tại PUCECO Labs](assets/images/news-lab.jpg)\n\nViệc đón nhận chứng nhận GMP nâng hạng không chỉ khẳng định năng lực kỹ thuật vượt bậc của PUCECO mà còn đánh dấu bước tiến quan trọng trong sứ mệnh đưa dược liệu chuẩn hóa Việt Nam vươn tầm chuỗi cung ứng quốc tế.',
       image: 'assets/images/news-gmp.jpg',
+      images: [
+        'assets/images/news-gmp.jpg',
+        'assets/images/news-lab.jpg'
+      ],
       bg1: '#E6F1EA',
       bg2: '#C9E3D3',
       author: 'Ban Kiểm Soát Chất Lượng'
@@ -323,8 +418,12 @@
       title: 'Mở rộng vùng trồng nguyên liệu sạch tại Tây Nguyên',
       date: '02 Thg 9, 2026',
       excerpt: 'Liên kết 5 hợp tác xã tại Đắk Lắk và Gia Lai, đảm bảo nguồn cung sả chanh, nghệ vàng và gừng bền vững.',
-      content: 'Nhằm chủ động kiểm soát chất lượng từ mầm cây đến giọt chiết xuất cuối cùng, PUCECO đã ký kết liên kết bao tiêu cùng 5 hợp tác xã dược liệu với tổng quy mô hơn 150 ha. Mô hình canh tác đạt chứng nhận Hữu cơ (Organic) nói không với thuốc trừ sâu hóa học, tạo sinh kế bền vững cho hơn 200 hộ đồng bào địa phương.',
+      content: 'Nhằm chủ động kiểm soát chất lượng từ mầm cây đến giọt chiết xuất cuối cùng, PUCECO đã ký kết liên kết bao tiêu cùng 5 hợp tác xã dược liệu với tổng quy mô hơn 150 ha. Mô hình canh tác đạt chứng nhận Hữu cơ (Organic) nói không với thuốc trừ sâu hóa học, tạo sinh kế bền vững cho hơn 200 hộ đồng bào địa phương.\n\n![Vùng trồng dược liệu hữu cơ bạt ngàn tại cao nguyên Đắk Lắk và Gia Lai trong mùa thu hoạch](assets/images/news-farm.jpg)\n\n### Chuẩn hóa nguồn giống & canh tác không hóa chất\nCác loại thảo dược chủ lực như sả chanh, nghệ vàng, gừng sẻ và cỏ ngọt được chọn lọc kỹ lưỡng từ nguồn giống thuần chủng có hàm lượng tinh chất cao nhất. Đội ngũ kỹ sư nông nghiệp của PUCECO trực tiếp chuyển giao kỹ thuật canh tác an toàn sinh học và kiểm tra dư lượng định kỳ trước ngày thu hoạch.\n\n![Dược liệu tươi đạt chuẩn hữu cơ được phân loại nghiêm ngặt trước khi đưa vào chiết xuất](assets/images/prod-lemongrass.jpg)\n\nMô hình liên kết khép kín này giúp đối tác hoàn toàn an tâm về tính truy xuất nguồn gốc (Traceability) và sự ổn định dài hạn của chuỗi cung ứng.',
       image: 'assets/images/news-farm.jpg',
+      images: [
+        'assets/images/news-farm.jpg',
+        'assets/images/prod-lemongrass.jpg'
+      ],
       bg1: '#F3EFE2',
       bg2: '#E4D6B0',
       author: 'Phòng Phát Triển Vùng Trồng'
@@ -334,8 +433,12 @@
       title: 'Ra mắt Curcumin nano thế hệ mới cho dược phẩm',
       date: '21 Thg 8, 2026',
       excerpt: 'Công trình R&D nội bộ 3 năm nghiên cứu với kích thước tiểu phân dưới 50nm mang lại hiệu quả hấp thu kỷ lục.',
-      content: 'Trung tâm Nghiên cứu & Phát triển PUCECO Labs công bố thương mại hóa thành công dòng nguyên liệu Nano Curcumin tan hoàn toàn trong nước với kích thước hạt trung bình chỉ 35nm. Sản phẩm đạt độ ổn định cao trong dải pH 2.0 - 8.0, tương thích lý tưởng cho các dạng bào chế siro, viên nang mềm, thạch collagen và nước uống chức năng.',
+      content: 'Trung tâm Nghiên cứu & Phát triển PUCECO Labs công bố thương mại hóa thành công dòng nguyên liệu Nano Curcumin tan hoàn toàn trong nước với kích thước hạt trung bình chỉ 35nm. Sản phẩm đạt độ ổn định cao trong dải pH 2.0 - 8.0, tương thích lý tưởng cho các dạng bào chế siro, viên nang mềm, thạch collagen và nước uống chức năng.\n\n![Đội ngũ chuyên gia R&D kiểm định kích thước tiểu phân Nano Curcumin qua hệ thống phân tích hiện đại](assets/images/news-lab.jpg)\n\n### Độ hòa tan đột phá & sinh khả dụng tăng gấp 40 lần\nNhờ công nghệ bao vi nang thế hệ mới với màng sinh học tự nhiên, các hạt Nano Curcumin được bảo vệ tối đa qua môi trường acid dạ dày và giải phóng nhanh tại ruột non, nâng cao hiệu quả hấp thu vào cơ thể lên gấp 40 lần so với Curcumin thông thường.\n\n![Nguyên liệu Nano Curcumin phân tán trong suốt tan hoàn toàn không lắng cặn](assets/images/prod-curcumin.jpg)\n\nDòng nguyên liệu mới đã sẵn sàng cung ứng theo lô lớn với đầy đủ hồ sơ kiểm nghiệm COA, phổ UV-Vis và chuẩn phân tích HPLC.',
       image: 'assets/images/news-lab.jpg',
+      images: [
+        'assets/images/news-lab.jpg',
+        'assets/images/prod-curcumin.jpg'
+      ],
       bg1: '#E8F0EC',
       bg2: '#BBD9CA',
       author: 'Viện R&D PUCECO'
@@ -441,7 +544,7 @@
         localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(DEFAULT_PRODUCTS));
       }
     }
-    // Auto-upgrade News sang ảnh realistic JPG
+    // Auto-upgrade News sang ảnh realistic JPG và nội dung có ảnh chi tiết
     const storedNews = localStorage.getItem(STORAGE_KEY_NEWS);
     if (!storedNews) {
       localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));
@@ -450,19 +553,29 @@
         let news = JSON.parse(storedNews);
         let updated = false;
         const defaultNewsMap = {
-          'news-1': 'assets/images/news-gmp.jpg',
-          'news-2': 'assets/images/news-farm.jpg',
-          'news-3': 'assets/images/news-lab.jpg'
+          'news-1': DEFAULT_NEWS[0],
+          'news-2': DEFAULT_NEWS[1],
+          'news-3': DEFAULT_NEWS[2]
         };
         news = news.map(n => {
-          if (defaultNewsMap[n.id] && (!n.image || n.image.endsWith('.svg') || n.image.includes('news-'))) {
-            if (n.image !== defaultNewsMap[n.id]) {
-              n.image = defaultNewsMap[n.id];
+          const def = defaultNewsMap[n.id];
+          if (def) {
+            // Cập nhật ảnh đại diện nếu đang là SVG hoặc chưa có ảnh JPG
+            if (!n.image || n.image.endsWith('.svg') || n.image.includes('news-')) {
+              if (n.image !== def.image) {
+                n.image = def.image;
+                updated = true;
+              }
+            } else if (n.image && n.image.endsWith('.svg') && n.image.includes('news-')) {
+              n.image = n.image.replace(/\.svg$/, '.jpg');
               updated = true;
             }
-          } else if (n.image && n.image.endsWith('.svg') && n.image.includes('news-')) {
-            n.image = n.image.replace(/\.svg$/, '.jpg');
-            updated = true;
+            // Cập nhật nội dung có hình ảnh nếu bài cũ chỉ có văn bản trơn
+            if (!n.content || !n.content.includes('![') || !Array.isArray(n.images) || n.images.length === 0) {
+              n.content = def.content;
+              n.images = def.images;
+              updated = true;
+            }
           }
           return n;
         });
@@ -519,6 +632,39 @@
     if (!localStorage.getItem(STORAGE_KEY_SLIDES)) {
       localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(DEFAULT_SLIDES));
     }
+
+    // Menu điều hướng
+    if (!localStorage.getItem(STORAGE_KEY_MENU)) {
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(DEFAULT_MENU));
+    }
+
+    // Header CTA Button
+    if (!localStorage.getItem(STORAGE_KEY_HEADER_CTA)) {
+      localStorage.setItem(STORAGE_KEY_HEADER_CTA, JSON.stringify(DEFAULT_HEADER_CTA));
+    }
+
+    // Cấu hình đề mục trang chủ
+    const storedSections = localStorage.getItem(STORAGE_KEY_SECTIONS);
+    if (!storedSections) {
+      localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(DEFAULT_SECTIONS));
+    } else {
+      try {
+        const sec = JSON.parse(storedSections);
+        const merged = {
+          intro: { ...DEFAULT_SECTIONS.intro, ...(sec.intro || {}) },
+          certs: { ...DEFAULT_SECTIONS.certs, ...(sec.certs || {}) },
+          featuredProducts: { ...DEFAULT_SECTIONS.featuredProducts, ...(sec.featuredProducts || {}) },
+          newProducts: { ...DEFAULT_SECTIONS.newProducts, ...(sec.newProducts || {}) },
+          formulations: { ...DEFAULT_SECTIONS.formulations, ...(sec.formulations || {}) },
+          news: { ...DEFAULT_SECTIONS.news, ...(sec.news || {}) },
+          contact: { ...DEFAULT_SECTIONS.contact, ...(sec.contact || {}) },
+          footer: { ...DEFAULT_SECTIONS.footer, ...(sec.footer || {}) }
+        };
+        localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(merged));
+      } catch (e) {
+        localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(DEFAULT_SECTIONS));
+      }
+    }
   }
 
   // Tự động đồng bộ 2 chiều với Cloudflare D1 & R2 Backend
@@ -561,6 +707,20 @@
           if (Array.isArray(cloudSettings.slides) && cloudSettings.slides.length > 0) {
             localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(cloudSettings.slides));
             emitSync('SLIDES_SYNCED', cloudSettings.slides);
+          }
+          if (Array.isArray(cloudSettings.menu) && cloudSettings.menu.length > 0) {
+            localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(cloudSettings.menu));
+            emitSync('MENU_SYNCED', cloudSettings.menu);
+          }
+          if (cloudSettings.headerCta && typeof cloudSettings.headerCta === 'object') {
+            localStorage.setItem(STORAGE_KEY_HEADER_CTA, JSON.stringify(cloudSettings.headerCta));
+            emitSync('HEADER_CTA_SYNCED', cloudSettings.headerCta);
+          }
+          if (cloudSettings.sections && typeof cloudSettings.sections === 'object') {
+            const curSec = JSON.parse(localStorage.getItem(STORAGE_KEY_SECTIONS) || '{}');
+            const mergedSec = { ...DEFAULT_SECTIONS, ...curSec, ...cloudSettings.sections };
+            localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(mergedSec));
+            emitSync('SECTIONS_SYNCED', mergedSec);
           }
           emitSync('SETTINGS_SYNCED', cloudSettings);
         }
@@ -1026,6 +1186,200 @@
       } catch (e) {}
     },
 
+    // ===== Menu Điều Hướng (Navigation Items) =====
+    getMenu: function () {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY_MENU));
+        if (Array.isArray(raw) && raw.length > 0) {
+          return raw.sort((a, b) => (a.order || 0) - (b.order || 0));
+        }
+        return DEFAULT_MENU;
+      } catch (e) {
+        return DEFAULT_MENU;
+      }
+    },
+
+    getMenuItemById: function (id) {
+      const list = this.getMenu();
+      return list.find(m => m.id === id) || null;
+    },
+
+    saveMenuItem: function (item) {
+      const list = this.getMenu();
+      if (!item.id) {
+        item.id = 'menu-' + Date.now();
+        item.order = list.length + 1;
+        if (item.enabled === undefined) item.enabled = true;
+        if (!item.target) item.target = '_self';
+        list.push(item);
+      } else {
+        const index = list.findIndex(m => m.id === item.id);
+        if (index >= 0) {
+          list[index] = { ...list[index], ...item };
+        } else {
+          list.push(item);
+        }
+      }
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(list));
+      emitSync('MENU_UPDATED', list);
+      this.syncMenuToSettings(list);
+      return item;
+    },
+
+    saveMenuList: function (newList) {
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(newList));
+      emitSync('MENU_UPDATED', newList);
+      this.syncMenuToSettings(newList);
+      return newList;
+    },
+
+    deleteMenuItem: function (id) {
+      let list = this.getMenu();
+      list = list.filter(m => m.id !== id);
+      list.forEach((m, idx) => { m.order = idx + 1; });
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(list));
+      emitSync('MENU_UPDATED', list);
+      this.syncMenuToSettings(list);
+      return true;
+    },
+
+    toggleMenuItem: function (id) {
+      const list = this.getMenu();
+      const item = list.find(m => m.id === id);
+      if (item) {
+        item.enabled = !item.enabled;
+        localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(list));
+        emitSync('MENU_UPDATED', list);
+        this.syncMenuToSettings(list);
+        return item.enabled;
+      }
+      return false;
+    },
+
+    reorderMenu: function (id, direction) {
+      const list = this.getMenu();
+      const index = list.findIndex(m => m.id === id);
+      if (index < 0) return false;
+      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= list.length) return false;
+
+      const temp = list[index];
+      list[index] = list[targetIndex];
+      list[targetIndex] = temp;
+
+      list.forEach((m, idx) => { m.order = idx + 1; });
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(list));
+      emitSync('MENU_UPDATED', list);
+      this.syncMenuToSettings(list);
+      return true;
+    },
+
+    resetMenuToDefault: function () {
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(DEFAULT_MENU));
+      emitSync('MENU_UPDATED', DEFAULT_MENU);
+      this.syncMenuToSettings(DEFAULT_MENU);
+      return DEFAULT_MENU;
+    },
+
+    syncMenuToSettings: function (menuList) {
+      try {
+        const current = this.getSettings();
+        current.menu = menuList;
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(current));
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(current)
+        }).catch(() => {});
+      } catch (e) {}
+    },
+
+    // ===== Header CTA Button =====
+    getHeaderCta: function () {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_HEADER_CTA)) || DEFAULT_HEADER_CTA;
+      } catch (e) {
+        return DEFAULT_HEADER_CTA;
+      }
+    },
+
+    saveHeaderCta: function (cta) {
+      const updated = { ...DEFAULT_HEADER_CTA, ...cta };
+      localStorage.setItem(STORAGE_KEY_HEADER_CTA, JSON.stringify(updated));
+      emitSync('HEADER_CTA_UPDATED', updated);
+      try {
+        const current = this.getSettings();
+        current.headerCta = updated;
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(current));
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(current)
+        }).catch(() => {});
+      } catch (e) {}
+      return updated;
+    },
+
+    // ===== Tiêu đề & Nội dung từng phần đề mục Trang Chủ (Sections) =====
+    getSections: function () {
+      try {
+        const raw = JSON.parse(localStorage.getItem(STORAGE_KEY_SECTIONS));
+        if (raw && typeof raw === 'object') {
+          return {
+            intro: { ...DEFAULT_SECTIONS.intro, ...(raw.intro || {}) },
+            certs: { ...DEFAULT_SECTIONS.certs, ...(raw.certs || {}) },
+            featuredProducts: { ...DEFAULT_SECTIONS.featuredProducts, ...(raw.featuredProducts || {}) },
+            newProducts: { ...DEFAULT_SECTIONS.newProducts, ...(raw.newProducts || {}) },
+            formulations: { ...DEFAULT_SECTIONS.formulations, ...(raw.formulations || {}) },
+            news: { ...DEFAULT_SECTIONS.news, ...(raw.news || {}) },
+            contact: { ...DEFAULT_SECTIONS.contact, ...(raw.contact || {}) },
+            footer: { ...DEFAULT_SECTIONS.footer, ...(raw.footer || {}) }
+          };
+        }
+        return DEFAULT_SECTIONS;
+      } catch (e) {
+        return DEFAULT_SECTIONS;
+      }
+    },
+
+    saveSections: function (newSections) {
+      const current = this.getSections();
+      const updated = {
+        intro: { ...current.intro, ...(newSections.intro || {}) },
+        certs: { ...current.certs, ...(newSections.certs || {}) },
+        featuredProducts: { ...current.featuredProducts, ...(newSections.featuredProducts || {}) },
+        newProducts: { ...current.newProducts, ...(newSections.newProducts || {}) },
+        formulations: { ...current.formulations, ...(newSections.formulations || {}) },
+        news: { ...current.news, ...(newSections.news || {}) },
+        contact: { ...current.contact, ...(newSections.contact || {}) },
+        footer: { ...current.footer, ...(newSections.footer || {}) }
+      };
+      localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(updated));
+      emitSync('SECTIONS_UPDATED', updated);
+      this.syncSectionsToSettings(updated);
+      return updated;
+    },
+
+    resetSectionsToDefault: function () {
+      localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(DEFAULT_SECTIONS));
+      emitSync('SECTIONS_UPDATED', DEFAULT_SECTIONS);
+      this.syncSectionsToSettings(DEFAULT_SECTIONS);
+      return DEFAULT_SECTIONS;
+    },
+
+    syncSectionsToSettings: function (sectionsData) {
+      try {
+        const current = this.getSettings();
+        current.sections = sectionsData;
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(current));
+        fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(current)
+        }).catch(() => {});
+      } catch (e) {}
+    },
+
     // Settings
     getSettings: function () {
       try {
@@ -1096,9 +1450,12 @@
     // Backup & Restore
     exportAllData: function () {
       return JSON.stringify({
-        version: '1.0.0',
+        version: '2.1.0',
         exportedAt: new Date().toISOString(),
         settings: this.getSettings(),
+        menu: this.getMenu(),
+        headerCta: this.getHeaderCta(),
+        sections: this.getSections(),
         products: this.getProducts(),
         news: this.getNews(),
         leads: this.getLeads(),
@@ -1112,6 +1469,9 @@
       try {
         const data = JSON.parse(jsonString);
         if (data.settings) localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(data.settings));
+        if (data.menu) localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(data.menu));
+        if (data.headerCta) localStorage.setItem(STORAGE_KEY_HEADER_CTA, JSON.stringify(data.headerCta));
+        if (data.sections) localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(data.sections));
         if (data.products) localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(data.products));
         if (data.news) localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(data.news));
         if (data.leads) localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(data.leads));
@@ -1127,6 +1487,9 @@
 
     resetToDefault: function () {
       localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+      localStorage.setItem(STORAGE_KEY_MENU, JSON.stringify(DEFAULT_MENU));
+      localStorage.setItem(STORAGE_KEY_HEADER_CTA, JSON.stringify(DEFAULT_HEADER_CTA));
+      localStorage.setItem(STORAGE_KEY_SECTIONS, JSON.stringify(DEFAULT_SECTIONS));
       localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(DEFAULT_PRODUCTS));
       localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(DEFAULT_NEWS));
       localStorage.setItem(STORAGE_KEY_LEADS, JSON.stringify(DEFAULT_LEADS));

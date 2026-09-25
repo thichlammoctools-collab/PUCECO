@@ -62,6 +62,10 @@
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/><circle cx="12" cy="10" r="3"/></svg>
           Hero Slider (Trang Chủ)
         </button>
+        <button class="nav-item" data-tab="homepage-content">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16m-7 6h7"/><rect x="2" y="3" width="20" height="18" rx="2"/></svg>
+          Menu &amp; Đề Mục Trang Chủ
+        </button>
         <button class="nav-item" data-tab="products">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 7v9"/></svg>
           Quản lý Sản phẩm
@@ -253,6 +257,373 @@
               <div class="admin-hero-simulator" id="admin-hero-simulator">
                 <!-- Dynamic simulated hero slide -->
               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== TAB: MENU & NỘI DUNG TRANG CHỦ ===== -->
+        <section id="tab-homepage-content" class="tab-content">
+          <!-- Header Banner -->
+          <div class="panel">
+            <div class="panel-header" style="flex-wrap:wrap;gap:12px;">
+              <div>
+                <h3>Quản Lý Menu Điều Hướng &amp; Nội Dung Đề Mục Trang Chủ</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Tùy chỉnh danh sách menu, nút kêu gọi hành động (CTA), và tiêu đề, nhãn phụ, đoạn văn cho từng khối nội dung trên website</p>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-reset-homepage-content">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  Khôi phục đề mục gốc
+                </button>
+                <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  Xem website
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- PHẦN 1: QUẢN LÝ MENU ĐIỀU HƯỚNG & NÚT CTA HEADER -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>1. Menu Điều Hướng &amp; Nút Kêu Gọi Header</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Quản lý các liên kết trên thanh menu đầu trang và thanh điều hướng di động</p>
+              </div>
+              <button class="btn btn-primary" onclick="openAddMenuModal()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Thêm Mục Menu Mới
+              </button>
+            </div>
+            <div class="panel-body" style="padding:0;">
+              <div class="table-responsive">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th style="width:48px;text-align:center;">STT</th>
+                      <th style="width:180px;">Tên Hiển Thị</th>
+                      <th>Đường Dẫn Liên Kết (URL / Anchor)</th>
+                      <th style="width:130px;text-align:center;">Mở Tab</th>
+                      <th style="width:120px;text-align:center;">Trạng Thái</th>
+                      <th style="width:120px;text-align:center;">Thứ Tự</th>
+                      <th style="width:140px;text-align:center;">Hành Động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="menu-items-tbody">
+                    <!-- Dynamic rendered by admin.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!-- Cấu hình Nút Header CTA -->
+            <div class="panel-body" style="border-top:1px solid var(--admin-border);background:#FAFAFA;">
+              <form id="header-cta-form" style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px;">
+                <div style="flex:1;min-width:200px;">
+                  <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px;">Chữ hiển thị trên Nút Kêu Gọi (Header CTA)</label>
+                  <input id="header-cta-text" type="text" class="form-control" placeholder="VD: Nhận mẫu thử" required>
+                </div>
+                <div style="flex:1;min-width:200px;">
+                  <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px;">Đường dẫn nút (URL / Anchor)</label>
+                  <input id="header-cta-url" type="text" class="form-control" placeholder="VD: #lien-he" required>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;padding-bottom:10px;">
+                  <input id="header-cta-enabled" type="checkbox" style="width:18px;height:18px;cursor:pointer;">
+                  <label for="header-cta-enabled" style="font-size:0.88rem;font-weight:600;cursor:pointer;">Hiển thị nút</label>
+                </div>
+                <button type="submit" class="btn btn-secondary btn-sm" style="margin-bottom:2px;">
+                  Lưu Nút CTA
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- PHẦN 2: CHỈNH SỬA TIÊU ĐỀ & NỘI DUNG TỪNG ĐỀ MỤC TRANG CHỦ -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>2. Tiêu Đề &amp; Nội Dung Từng Khối Đề Mục Trang Chủ</h3>
+                <p style="font-size:0.85rem;color:var(--admin-muted);margin-top:2px;">Chọn từng tab đề mục bên dưới để tùy chỉnh nội dung chi tiết hiển thị cho người xem</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <!-- Subtabs Navigation -->
+              <div class="admin-subtabs-nav" id="section-subtabs-nav">
+                <button type="button" class="subtab-pill active" data-subtab="sec-intro">1. Giới Thiệu &amp; Trụ Cột</button>
+                <button type="button" class="subtab-pill" data-subtab="sec-certs">2. Chứng Nhận</button>
+                <button type="button" class="subtab-pill" data-subtab="sec-feat">3. Sản Phẩm Nổi Bật</button>
+                <button type="button" class="subtab-pill" data-subtab="sec-new">4. Sản Phẩm Mới</button>
+                <button type="button" class="subtab-pill" data-subtab="sec-form">5. Công Thức Mẫu</button>
+                <button type="button" class="subtab-pill" data-subtab="sec-news">6. Tin Tức &amp; Nghiên Cứu</button>
+                <button type="button" class="subtab-pill" data-subtab="sec-contact">7. Liên Hệ &amp; CTA</button>
+                <button type="button" class="subtab-pill" data-subtab="sec-footer">8. Chân Trang (Footer)</button>
+              </div>
+
+              <form id="homepage-sections-form">
+                <!-- SUBTAB 1: GIỚI THIỆU -->
+                <div class="subtab-panel active" id="subtab-panel-sec-intro">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Tiêu Đề &amp; Lời Giới Thiệu Chung</h4>
+                    </div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label>Dòng nhãn phụ (Eyebrow)</label>
+                        <input id="sec-intro-eyebrow" type="text" class="form-control" placeholder="VD: GIỚI THIỆU — PUCECO">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề chính khối (Title) <small style="color:var(--admin-muted);">(Nhấn Enter hoặc gõ &lt;br&gt; để xuống dòng)</small></label>
+                        <textarea id="sec-intro-title" class="form-control" rows="2" placeholder="VD: Chiết xuất từ thiên nhiên&#10;&amp; Hoạt chất thế hệ mới"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Đoạn văn giới thiệu chi tiết (Lead text)</label>
+                      <textarea id="sec-intro-lead" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label>Nút hành động 1 (Chính - Đỏ)</label>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                          <input id="sec-intro-btn1-text" type="text" class="form-control" placeholder="Tên nút (VD: Tìm Hiểu Sản Phẩm)">
+                          <input id="sec-intro-btn1-url" type="text" class="form-control" placeholder="Liên kết (VD: #noi-bat)">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Nút hành động 2 (Phụ - Viền)</label>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                          <input id="sec-intro-btn2-text" type="text" class="form-control" placeholder="Tên nút (VD: Xem Công Thức Mẫu)">
+                          <input id="sec-intro-btn2-url" type="text" class="form-control" placeholder="Liên kết (VD: #cong-thuc-mau)">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 4 Thông Số Thống Kê Thành Tựu -->
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>4 Chỉ Số Thành Tựu &amp; Nhãn Diễn Giải</h4>
+                    </div>
+                    <div class="form-grid-4">
+                      <div class="form-group">
+                        <label>Chỉ số 1 (Năm kinh nghiệm)</label>
+                        <input id="sec-stat-years" type="number" class="form-control" min="1">
+                        <input id="sec-stat-years-label" type="text" class="form-control form-control-sm" style="margin-top:6px;" placeholder="Nhãn: năm kinh nghiệm">
+                      </div>
+                      <div class="form-group">
+                        <label>Chỉ số 2 (Đối tác toàn cầu)</label>
+                        <input id="sec-stat-partners" type="number" class="form-control" min="1">
+                        <input id="sec-stat-partners-label" type="text" class="form-control form-control-sm" style="margin-top:6px;" placeholder="Nhãn: đối tác toàn cầu">
+                      </div>
+                      <div class="form-group">
+                        <label>Chỉ số 3 (Dòng nguyên liệu)</label>
+                        <input id="sec-stat-lines" type="number" class="form-control" min="1">
+                        <input id="sec-stat-lines-label" type="text" class="form-control form-control-sm" style="margin-top:6px;" placeholder="Nhãn: dòng nguyên liệu">
+                      </div>
+                      <div class="form-group">
+                        <label>Chỉ số 4 (% Truy xuất nguồn gốc)</label>
+                        <input id="sec-stat-trace" type="number" class="form-control" min="1" max="100">
+                        <input id="sec-stat-trace-label" type="text" class="form-control form-control-sm" style="margin-top:6px;" placeholder="Nhãn: truy xuất nguồn gốc">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- 3 Trụ Cột Giá Trị -->
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>3 Trụ Cột Giá Trị Cốt Lõi</h4>
+                    </div>
+                    <div class="form-grid-3">
+                      <div class="form-group" style="background:#fff;padding:14px;border-radius:6px;border:1px solid var(--admin-border);">
+                        <label style="color:var(--admin-primary);font-weight:700;">Trụ cột 1</label>
+                        <input id="sec-val1-title" type="text" class="form-control" placeholder="Tiêu đề 1" style="margin-bottom:8px;">
+                        <textarea id="sec-val1-desc" class="form-control" rows="3" placeholder="Mô tả giá trị 1"></textarea>
+                      </div>
+                      <div class="form-group" style="background:#fff;padding:14px;border-radius:6px;border:1px solid var(--admin-border);">
+                        <label style="color:var(--admin-primary);font-weight:700;">Trụ cột 2</label>
+                        <input id="sec-val2-title" type="text" class="form-control" placeholder="Tiêu đề 2" style="margin-bottom:8px;">
+                        <textarea id="sec-val2-desc" class="form-control" rows="3" placeholder="Mô tả giá trị 2"></textarea>
+                      </div>
+                      <div class="form-group" style="background:#fff;padding:14px;border-radius:6px;border:1px solid var(--admin-border);">
+                        <label style="color:var(--admin-primary);font-weight:700;">Trụ cột 3</label>
+                        <input id="sec-val3-title" type="text" class="form-control" placeholder="Tiêu đề 3" style="margin-bottom:8px;">
+                        <textarea id="sec-val3-desc" class="form-control" rows="3" placeholder="Mô tả giá trị 3"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUBTAB 2: CHỨNG NHẬN & TIÊU CHUẨN -->
+                <div class="subtab-panel" id="subtab-panel-sec-certs">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Tiêu Đề Khối "Chứng Nhận &amp; Tiêu Chuẩn"</h4>
+                    </div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label>Dòng nhãn phụ phía trên (Eyebrow)</label>
+                        <input id="sec-certs-eyebrow" type="text" class="form-control" placeholder="VD: Cam kết chất lượng">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề chính khu vực (Section Title)</label>
+                        <input id="sec-certs-title" type="text" class="form-control" placeholder="VD: Chứng nhận &amp; tiêu chuẩn">
+                      </div>
+                    </div>
+                    <p class="section-desc-hint">Mẹo: Để quản lý các chứng chỉ (GMP, ISO, USDA, HACCP...), vui lòng truy cập tab "Chứng nhận &amp; Tiêu chuẩn" ở thanh menu bên trái.</p>
+                  </div>
+                </div>
+
+                <!-- SUBTAB 3: SẢN PHẨM NỔI BẬT -->
+                <div class="subtab-panel" id="subtab-panel-sec-feat">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Tiêu Đề Khối "Sản Phẩm Nổi Bật"</h4>
+                    </div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label>Dòng nhãn phụ (Eyebrow)</label>
+                        <input id="sec-feat-eyebrow" type="text" class="form-control" placeholder="VD: Danh mục">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề chính (Section Title)</label>
+                        <input id="sec-feat-title" type="text" class="form-control" placeholder="VD: Sản phẩm nổi bật">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Dòng mô tả phụ phía dưới (Subtitle)</label>
+                      <textarea id="sec-feat-sub" class="form-control" rows="2" placeholder="VD: Các dòng nguyên liệu chiết xuất được các đối tác dược mỹ phẩm tin dùng nhiều nhất."></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUBTAB 4: SẢN PHẨM MỚI -->
+                <div class="subtab-panel" id="subtab-panel-sec-new">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Tiêu Đề Khối "Sản Phẩm Mới Ra Mắt"</h4>
+                    </div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label>Dòng nhãn phụ (Eyebrow)</label>
+                        <input id="sec-new-eyebrow" type="text" class="form-control" placeholder="VD: Mới ra mắt">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề chính (Section Title)</label>
+                        <input id="sec-new-title" type="text" class="form-control" placeholder="VD: Sản phẩm mới">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Dòng mô tả phụ phía dưới (Subtitle)</label>
+                      <textarea id="sec-new-sub" class="form-control" rows="2" placeholder="VD: Những đột phá công nghệ chiết xuất và hoạt chất sinh học mới nhất từ phòng thí nghiệm."></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUBTAB 5: CÔNG THỨC MẪU -->
+                <div class="subtab-panel" id="subtab-panel-sec-form">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Tiêu Đề Khối "Công Thức Mẫu R&amp;D"</h4>
+                    </div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label>Dòng nhãn phụ (Eyebrow)</label>
+                        <input id="sec-form-eyebrow" type="text" class="form-control" placeholder="VD: R&D &amp; Ứng Dụng Chuyển Giao">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề chính (Section Title)</label>
+                        <input id="sec-form-title" type="text" class="form-control" placeholder="VD: Công Thức Mẫu">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Dòng mô tả phụ phía dưới (Subtitle)</label>
+                      <textarea id="sec-form-sub" class="form-control" rows="2" placeholder="VD: Các giải pháp phối chế mẫu chuẩn hóa từ phòng thí nghiệm PUCECO..."></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUBTAB 6: TIN TỨC & NGHIÊN CỨU -->
+                <div class="subtab-panel" id="subtab-panel-sec-news">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Tiêu Đề Khối "Tin Tức &amp; Sự Kiện"</h4>
+                    </div>
+                    <div class="form-grid-2">
+                      <div class="form-group">
+                        <label>Dòng nhãn phụ (Eyebrow)</label>
+                        <input id="sec-news-eyebrow" type="text" class="form-control" placeholder="VD: Tin tức &amp; sự kiện">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề chính (Section Title)</label>
+                        <input id="sec-news-title" type="text" class="form-control" placeholder="VD: Tin mới nhất">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Dòng mô tả phụ phía dưới (Subtitle - tùy chọn)</label>
+                      <textarea id="sec-news-sub" class="form-control" rows="2" placeholder="VD: Cập nhật tin tức chuyên ngành, hoạt động R&D và sự kiện nổi bật của PUCECO."></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUBTAB 7: LIÊN HỆ & BÁO GIÁ -->
+                <div class="subtab-panel" id="subtab-panel-sec-contact">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Khối Kêu Gọi Hành Động (CTA / Liên Hệ &amp; Đăng Ký Mẫu Thử)</h4>
+                    </div>
+                    <div class="form-group">
+                      <label>Tiêu đề chính khối liên hệ</label>
+                      <input id="sec-contact-title" type="text" class="form-control" placeholder="VD: Trở thành đối tác của PUCECO">
+                    </div>
+                    <div class="form-group">
+                      <label>Đoạn văn mô tả hướng dẫn khách hàng</label>
+                      <textarea id="sec-contact-desc" class="form-control" rows="2" placeholder="VD: Nhận báo giá sỉ, hồ sơ kỹ thuật (COA, Spec Sheet) và mẫu thử nghiệm..."></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label>Chữ hiển thị trên nút gửi biểu mẫu (Submit Button Text)</label>
+                      <input id="sec-contact-btn" type="text" class="form-control" placeholder="VD: Gửi yêu cầu mẫu &amp; Báo giá">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SUBTAB 8: CHÂN TRANG FOOTER -->
+                <div class="subtab-panel" id="subtab-panel-sec-footer">
+                  <div class="section-edit-card">
+                    <div class="section-edit-header">
+                      <h4>Nội Dung Chân Trang (Footer)</h4>
+                    </div>
+                    <div class="form-group">
+                      <label>Câu Slogan / Giới thiệu tóm tắt dưới Logo</label>
+                      <textarea id="sec-footer-slogan" class="form-control" rows="2" placeholder="VD: Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học."></textarea>
+                    </div>
+                    <div class="form-grid-3">
+                      <div class="form-group">
+                        <label>Tiêu đề Cột 1</label>
+                        <input id="sec-footer-col1" type="text" class="form-control" placeholder="VD: Sản phẩm &amp; R&amp;D">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề Cột 2</label>
+                        <input id="sec-footer-col2" type="text" class="form-control" placeholder="VD: Điều hướng">
+                      </div>
+                      <div class="form-group">
+                        <label>Tiêu đề Cột 3</label>
+                        <input id="sec-footer-col3" type="text" class="form-control" placeholder="VD: Liên hệ">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Dòng thông tin bản quyền (Copyright)</label>
+                      <input id="sec-footer-copy" type="text" class="form-control" placeholder="VD: © 2026 PUCECO. All rights reserved. Tiêu chuẩn GMP &amp; USDA Organic.">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Nút lưu toàn bộ -->
+                <div style="margin-top:20px;display:flex;gap:12px;align-items:center;">
+                  <button type="submit" class="btn btn-primary" style="padding:11px 24px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Lưu Thay Đổi Nội Dung Đề Mục Trang Chủ
+                  </button>
+                  <span id="sections-save-status" style="font-size:0.88rem;color:var(--admin-muted);"></span>
+                </div>
+              </form>
             </div>
           </div>
         </section>
@@ -846,8 +1217,58 @@
           </div>
 
           <div class="form-group">
-            <label>Nội dung chi tiết bài viết *</label>
-            <textarea id="news-content" class="form-control" rows="5" placeholder="Nội dung bài viết đầy đủ..." required></textarea>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
+              <label style="margin:0;">Nội dung chi tiết bài viết *</label>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-toggle-news-img-helper" style="font-size:0.8rem;padding:4px 10px;display:inline-flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span>➕ Chèn hình ảnh vào bài viết</span>
+              </button>
+            </div>
+
+            <!-- Panel công cụ chèn ảnh vào nội dung bài viết -->
+            <div id="news-inline-img-panel" style="display:none;background:var(--admin-card);border:1px solid var(--admin-border);border-radius:8px;padding:12px 14px;margin-bottom:10px;">
+              <div style="font-size:0.84rem;font-weight:600;color:var(--admin-text);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                <span>Chèn hình ảnh minh họa có chú thích vào bài viết:</span>
+                <button type="button" id="btn-close-news-img-helper" class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:0.75rem;">✕ Đóng</button>
+              </div>
+              <div class="form-grid-2" style="gap:10px;margin-bottom:8px;">
+                <div>
+                  <label style="font-size:0.78rem;color:var(--admin-muted);margin-bottom:3px;display:block;">Chọn ảnh thư viện hoặc tải ảnh mới:</label>
+                  <select id="news-insert-img-select" class="form-control" style="font-size:0.85rem;padding:6px 10px;">
+                    <option value="assets/images/news-gmp.jpg">🏭 Nhà máy &amp; dây chuyền GMP (news-gmp.jpg)</option>
+                    <option value="assets/images/news-lab.jpg">🔬 Phòng R&amp;D &amp; Kiểm nghiệm HPLC (news-lab.jpg)</option>
+                    <option value="assets/images/news-farm.jpg">🌱 Nông trại dược liệu hữu cơ (news-farm.jpg)</option>
+                    <option value="assets/images/prod-curcumin.jpg">✨ Nano Curcumin 35nm (prod-curcumin.jpg)</option>
+                    <option value="assets/images/prod-lemongrass.jpg">🍋 Thu hoạch Sả chanh &amp; Tinh dầu (prod-lemongrass.jpg)</option>
+                    <option value="assets/images/prod-green-tea.jpg">🍵 Chiết xuất Trà xanh EGCG (prod-green-tea.jpg)</option>
+                    <option value="assets/images/prod-aloe.jpg">🌿 Gel Lô hội nha đam (prod-aloe.jpg)</option>
+                    <option value="custom">-- Tải ảnh từ máy / Dán link URL --</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.78rem;color:var(--admin-muted);margin-bottom:3px;display:block;">Chú thích ảnh (Caption hiển thị dưới ảnh):</label>
+                  <input id="news-insert-img-caption" type="text" class="form-control" placeholder="VD: Dây chuyền chiết xuất áp suất thấp hiện đại" style="font-size:0.85rem;padding:6px 10px;">
+                </div>
+              </div>
+              <div id="news-insert-custom-row" style="display:none;margin-bottom:8px;display:none;gap:10px;align-items:center;">
+                <input id="news-insert-custom-url" type="text" class="form-control" placeholder="Dán link ảnh hoặc bấm nút tải ảnh bên phải..." style="font-size:0.85rem;padding:6px 10px;flex:1;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-browse-insert-img">Tải ảnh máy tính</button>
+                <input type="file" id="news-insert-file" accept="image/*" style="display:none;">
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span style="font-size:0.78rem;color:var(--admin-muted);">Ảnh sẽ được chèn dạng <code>![Chú thích](đường-dẫn)</code></span>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-confirm-insert-img" style="font-size:0.82rem;padding:6px 14px;">Chèn ảnh vào bài viết</button>
+              </div>
+            </div>
+
+            <textarea id="news-content" class="form-control" rows="8" placeholder="Nội dung bài viết đầy đủ..." required></textarea>
+            <p style="font-size:0.78rem;color:var(--admin-muted);margin-top:6px;">
+              💡 Mẹo: Bạn có thể chèn ảnh minh họa ở bất cứ đoạn văn nào bằng nút "Chèn hình ảnh" ở trên, hoặc gõ cú pháp <code>![Chú thích ảnh](đường_dẫn_ảnh)</code>. Trong chi tiết bài viết, người đọc có thể bấm vào ảnh để xem kích thước lớn phóng to.
+            </p>
           </div>
         </div>
         <div class="admin-modal-footer">
@@ -1165,8 +1586,57 @@
     </div>
   </div>
 
+  <!-- ===== MODAL THÊM / SỬA MỤC MENU ===== -->
+  <div id="admin-modal-menu" class="admin-modal" role="dialog" aria-modal="true">
+    <div class="admin-modal-box" style="max-width:520px;">
+      <div class="admin-modal-header">
+        <h3 id="modal-menu-title">Thêm Mục Menu Mới</h3>
+        <button type="button" class="btn btn-outline btn-sm" data-close-admin-modal style="padding:4px 8px;">✕</button>
+      </div>
+      <form id="menu-item-form">
+        <input type="hidden" id="menu-item-id">
+        <div class="admin-modal-body">
+          <div class="form-group">
+            <label>Tên mục menu hiển thị *</label>
+            <input id="menu-item-label" type="text" class="form-control" placeholder="VD: Giới Thiệu, Sản Phẩm..." required>
+          </div>
+          <div class="form-group">
+            <label>Đường dẫn liên kết (URL / Anchor) *</label>
+            <input id="menu-item-url" type="text" class="form-control" placeholder="VD: #gioi-thieu, #noi-bat, hoặc https://..." required>
+            <small style="color:var(--admin-muted);margin-top:4px;display:block;">
+              Dùng <code>#top</code> (Trang chủ), <code>#gioi-thieu</code>, <code>#noi-bat</code> (Sản phẩm), <code>#cong-thuc-mau</code>, <code>#tin-tuc</code>, <code>#lien-he</code> để cuộn trang mượt mà.
+            </small>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Cách mở liên kết</label>
+              <select id="menu-item-target" class="form-control">
+                <option value="_self">Cùng trang (_self)</option>
+                <option value="_blank">Mở tab mới (_blank)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Thứ tự hiển thị (STT)</label>
+              <input id="menu-item-order" type="number" class="form-control" min="1" value="1">
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:8px;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input id="menu-item-enabled" type="checkbox" checked style="width:18px;height:18px;">
+              <span>Kích hoạt hiển thị trên website</span>
+            </label>
+          </div>
+        </div>
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-outline" data-close-admin-modal>Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Lưu Mục Menu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- SCRIPTS -->
-  <script src="assets/js/data-store.js?v=20260923"></script>
-  <script src="assets/js/admin.js?v=20260923"></script>
+  <script src="assets/js/data-store.js?v=20260925"></script>
+  <script src="assets/js/admin.js?v=20260925"></script>
 </body>
 </html>

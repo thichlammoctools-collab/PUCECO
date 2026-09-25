@@ -7,20 +7,146 @@ document.addEventListener('DOMContentLoaded', () => {
   const store = window.PUCECO_STORE;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Helper gán text an toàn
+  function setElemText(selector, text) {
+    if (text === undefined || text === null) return;
+    document.querySelectorAll(selector).forEach(el => el.textContent = text);
+  }
+
+  // Helper gán html (hỗ trợ <br>) an toàn
+  function setElemHtml(selector, html) {
+    if (html === undefined || html === null) return;
+    document.querySelectorAll(selector).forEach(el => {
+      // Hỗ trợ xuống dòng thành <br>
+      const formatted = escapeHtml(html).replace(/\r?\n/g, '<br>').replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+      el.innerHTML = formatted;
+    });
+  }
+
   // ===== Render Dynamic Data from DataStore =====
   function renderWebsiteContent() {
     if (!store) return;
     const settings = store.getSettings();
     const products = store.getProducts();
     const news = store.getNews();
+    const sections = store.getSections ? store.getSections() : {};
 
-    // 1. Render Settings (Hotline, Email, Address, Stats, Brand)
-    document.querySelectorAll('[data-bind="hotline"]').forEach(el => el.textContent = settings.hotline);
-    document.querySelectorAll('[data-bind="email"]').forEach(el => el.textContent = settings.email);
-    document.querySelectorAll('[data-bind="address"]').forEach(el => el.textContent = settings.address);
-    document.querySelectorAll('[data-bind="slogan"]').forEach(el => el.textContent = settings.slogan);
-    document.querySelectorAll('[data-bind="cert-eyebrow"]').forEach(el => el.textContent = settings.certEyebrow || 'Cam kết chất lượng');
-    document.querySelectorAll('[data-bind="cert-title"]').forEach(el => el.textContent = settings.certTitle || 'Chứng nhận & tiêu chuẩn');
+    // 0. Render Menu Điều Hướng (Navigation Bar)
+    const menuEl = document.querySelector('#site-nav') || document.querySelector('.site-nav');
+    if (menuEl && store.getMenu) {
+      const menuItems = store.getMenu().filter(m => m.enabled !== false);
+      if (menuItems.length > 0) {
+        menuEl.innerHTML = menuItems.map(m => `
+          <a href="${escapeHtml(m.url)}" target="${m.target || '_self'}">${escapeHtml(m.label)}</a>
+        `).join('');
+      }
+    }
+
+    // 0.5. Render Header CTA Button
+    if (store.getHeaderCta) {
+      const cta = store.getHeaderCta();
+      const ctaEl = document.querySelector('[data-bind="header-cta"]') || document.querySelector('.head-cta');
+      if (ctaEl) {
+        if (cta.enabled !== false) {
+          ctaEl.style.display = '';
+          ctaEl.textContent = cta.text || 'Nhận mẫu thử';
+          ctaEl.href = cta.url || '#lien-he';
+        } else {
+          ctaEl.style.display = 'none';
+        }
+      }
+    }
+
+    // 1. Render Settings (Hotline, Email, Address, Slogan)
+    setElemText('[data-bind="hotline"]', settings.hotline);
+    setElemText('[data-bind="email"]', settings.email);
+    setElemText('[data-bind="address"]', settings.address);
+    setElemText('[data-bind="slogan"]', settings.slogan);
+
+    // 1.2. Render Sections (Tiêu đề, Nhãn phụ, Mô tả & Nút từng đề mục)
+    // Intro Section
+    const intro = sections.intro || {};
+    setElemText('[data-bind="intro-eyebrow"]', intro.eyebrow);
+    setElemHtml('[data-bind="intro-title"]', intro.title);
+    setElemText('[data-bind="intro-lead"]', intro.lead);
+    const introBtn1 = document.querySelector('[data-bind="intro-btn1"]');
+    if (introBtn1) {
+      introBtn1.textContent = intro.btn1Text || 'Tìm Hiểu Sản Phẩm';
+      introBtn1.href = intro.btn1Url || '#noi-bat';
+    }
+    const introBtn2 = document.querySelector('[data-bind="intro-btn2"]');
+    if (introBtn2) {
+      introBtn2.textContent = intro.btn2Text || 'Xem Công Thức Mẫu';
+      introBtn2.href = intro.btn2Url || '#cong-thuc-mau';
+    }
+
+    // Stats
+    const statYears = document.querySelector('[data-stat="years"]');
+    if (statYears) statYears.dataset.count = intro.statYears !== undefined ? intro.statYears : (settings.stats?.years || 30);
+    setElemText('[data-bind="stat-years-label"]', intro.statYearsLabel);
+
+    const statPartners = document.querySelector('[data-stat="partners"]');
+    if (statPartners) statPartners.dataset.count = intro.statPartners !== undefined ? intro.statPartners : (settings.stats?.partners || 20);
+    setElemText('[data-bind="stat-partners-label"]', intro.statPartnersLabel);
+
+    const statLines = document.querySelector('[data-stat="lines"]');
+    if (statLines) statLines.dataset.count = intro.statLines !== undefined ? intro.statLines : (settings.stats?.lines || 8);
+    setElemText('[data-bind="stat-lines-label"]', intro.statLinesLabel);
+
+    const statTrace = document.querySelector('[data-stat="traceability"]');
+    if (statTrace) statTrace.dataset.count = intro.statTrace !== undefined ? intro.statTrace : (settings.stats?.traceability || 100);
+    setElemText('[data-bind="stat-trace-label"]', intro.statTraceLabel);
+
+    // 3 Trụ cột giá trị
+    if (Array.isArray(intro.values)) {
+      intro.values.forEach((v, idx) => {
+        setElemText(`[data-bind="value-${idx + 1}-title"]`, v.title);
+        setElemText(`[data-bind="value-${idx + 1}-desc"]`, v.desc);
+      });
+    }
+
+    // Certs Section
+    const certsSec = sections.certs || {};
+    setElemText('[data-bind="cert-eyebrow"]', certsSec.eyebrow || settings.certEyebrow || 'Cam kết chất lượng');
+    setElemText('[data-bind="cert-title"]', certsSec.title || settings.certTitle || 'Chứng nhận & tiêu chuẩn');
+
+    // Featured Products Section
+    const featSec = sections.featuredProducts || {};
+    setElemText('[data-bind="featured-eyebrow"]', featSec.eyebrow);
+    setElemText('[data-bind="featured-title"]', featSec.title);
+    setElemText('[data-bind="featured-sub"]', featSec.sub);
+
+    // New Products Section
+    const newSec = sections.newProducts || {};
+    setElemText('[data-bind="new-eyebrow"]', newSec.eyebrow);
+    setElemText('[data-bind="new-title"]', newSec.title);
+    setElemText('[data-bind="new-sub"]', newSec.sub);
+
+    // Formulations Section
+    const formSec = sections.formulations || {};
+    setElemText('[data-bind="formulations-eyebrow"]', formSec.eyebrow);
+    setElemText('[data-bind="formulations-title"]', formSec.title);
+    setElemText('[data-bind="formulations-sub"]', formSec.sub);
+
+    // News Section
+    const newsSec = sections.news || {};
+    setElemText('[data-bind="news-eyebrow"]', newsSec.eyebrow);
+    setElemText('[data-bind="news-title"]', newsSec.title);
+    setElemText('[data-bind="news-sub"]', newsSec.sub);
+
+    // Contact Section
+    const contactSec = sections.contact || {};
+    setElemText('[data-bind="contact-title"]', contactSec.title);
+    setElemText('[data-bind="contact-desc"]', contactSec.desc);
+    setElemText('[data-bind="contact-btn"]', contactSec.formBtnText);
+
+    // Footer Section
+    const footerSec = sections.footer || {};
+    setElemText('[data-bind="footer-slogan"]', footerSec.slogan || settings.slogan);
+    setElemText('[data-bind="footer-col1-title"]', footerSec.col1Title);
+    setElemText('[data-bind="footer-col2-title"]', footerSec.col2Title);
+    setElemText('[data-bind="footer-col3-title"]', footerSec.col3Title);
+    setElemText('[data-bind="footer-copy"]', footerSec.copyright);
 
     // 1.5. Render Certifications
     const certsRow = document.querySelector('#certs-row');
@@ -52,18 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
         el.href = settings.mapsUrl;
       }
     });
-
-    const statYears = document.querySelector('[data-stat="years"]');
-    if (statYears) statYears.dataset.count = settings.stats?.years || 30;
-
-    const statPartners = document.querySelector('[data-stat="partners"]');
-    if (statPartners) statPartners.dataset.count = settings.stats?.partners || 20;
-
-    const statLines = document.querySelector('[data-stat="lines"]');
-    if (statLines) statLines.dataset.count = settings.stats?.lines || 8;
-
-    const statTrace = document.querySelector('[data-stat="traceability"]');
-    if (statTrace) statTrace.dataset.count = settings.stats?.traceability || 100;
 
     // 2. Render Featured Products
     const featuredGrid = document.querySelector('#featured-products-grid');
@@ -728,16 +842,130 @@ document.addEventListener('DOMContentLoaded', () => {
       leadBox.style.display = 'none';
     }
 
-    // Nội dung bài viết (tự động ngắt đoạn p văn bản chuẩn)
+    // Nội dung bài viết (hỗ trợ định dạng đoạn văn, tiêu đề phụ, ảnh minh họa & thư viện ảnh)
     const contentEl = modalNews.querySelector('#modal-n-content');
     if (contentEl) {
       const bodyText = n.content || n.excerpt || '';
       const paragraphs = bodyText.split(/\r?\n\s*\r?\n|\r?\n/).map(p => p.trim()).filter(Boolean);
-      if (paragraphs.length > 0) {
-        contentEl.innerHTML = paragraphs.map(p => `<p class="news-modal-p">${escapeHtml(p)}</p>`).join('');
-      } else {
-        contentEl.innerHTML = `<p class="news-modal-p">${escapeHtml(bodyText)}</p>`;
+      
+      const renderedHtml = [];
+      const inlineImagesFound = [];
+
+      paragraphs.forEach(rawP => {
+        // Kiểm tra xem đoạn có phải là hình ảnh Markdown: ![Chú thích](duong-dan-anh)
+        const mdImgMatch = rawP.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+        // Kiểm tra cú pháp ảnh dạng [image: duong-dan-anh | Chú thích]
+        const customImgMatch = rawP.match(/^\[image:\s*([^\s|]+)(?:\s*\|\s*([^\]]+))?\]$/i);
+
+        if (mdImgMatch) {
+          const caption = (mdImgMatch[1] || '').trim();
+          const imgSrc = (mdImgMatch[2] || '').trim();
+          inlineImagesFound.push(imgSrc);
+          renderedHtml.push(`
+            <figure class="news-content-figure" data-zoom-src="${escapeHtml(imgSrc)}" data-caption="${escapeHtml(caption)}">
+              <div class="news-figure-img-wrap">
+                <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(caption || n.title)}" loading="lazy">
+                <div class="news-figure-zoom-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Xem ảnh lớn</span>
+                </div>
+              </div>
+              ${caption ? `
+                <figcaption>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                  <span>${escapeHtml(caption)}</span>
+                </figcaption>
+              ` : ''}
+            </figure>
+          `);
+        } else if (customImgMatch) {
+          const imgSrc = (customImgMatch[1] || '').trim();
+          const caption = (customImgMatch[2] || '').trim();
+          inlineImagesFound.push(imgSrc);
+          renderedHtml.push(`
+            <figure class="news-content-figure" data-zoom-src="${escapeHtml(imgSrc)}" data-caption="${escapeHtml(caption)}">
+              <div class="news-figure-img-wrap">
+                <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(caption || n.title)}" loading="lazy">
+                <div class="news-figure-zoom-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                  </svg>
+                  <span>Xem ảnh lớn</span>
+                </div>
+              </div>
+              ${caption ? `
+                <figcaption>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                  <span>${escapeHtml(caption)}</span>
+                </figcaption>
+              ` : ''}
+            </figure>
+          `);
+        } else if (rawP.startsWith('### ') || rawP.startsWith('## ')) {
+          const headingText = rawP.replace(/^#{2,3}\s+/, '');
+          renderedHtml.push(`<h3 class="news-modal-h3">${escapeHtml(headingText)}</h3>`);
+        } else {
+          // Định dạng chữ đậm **text**
+          let formattedP = escapeHtml(rawP);
+          formattedP = formattedP.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+          renderedHtml.push(`<p class="news-modal-p">${formattedP}</p>`);
+        }
+      });
+
+      // Nếu bài viết có mảng ảnh `images` bổ sung mà chưa hiển thị ở inline markdown
+      if (Array.isArray(n.images) && n.images.length > 0) {
+        const extraImages = n.images.filter(img => img && !inlineImagesFound.includes(img) && img !== n.image);
+        if (extraImages.length > 0) {
+          renderedHtml.push(`
+            <div class="news-modal-gallery">
+              <h4 class="news-gallery-heading">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                Hình ảnh thực tế từ dự án &amp; quy trình
+              </h4>
+              <div class="news-gallery-grid">
+                ${extraImages.map((extraImg, idx) => `
+                  <div class="news-gallery-item" data-zoom-src="${escapeHtml(extraImg)}" data-caption="${escapeHtml(n.title)} - Ảnh ${idx + 1}" title="Nhấn để phóng to ảnh">
+                    <img src="${escapeHtml(extraImg)}" alt="${escapeHtml(n.title)}" loading="lazy">
+                    <div class="news-gallery-caption">Xem ảnh lớn</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `);
+        }
       }
+
+      contentEl.innerHTML = renderedHtml.join('');
+
+      // Đăng ký sự kiện Click mở Lightbox phóng to cho các hình ảnh trong nội dung bài viết
+      contentEl.querySelectorAll('.news-content-figure, .news-gallery-item').forEach(fig => {
+        fig.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const src = fig.getAttribute('data-zoom-src') || fig.querySelector('img')?.src;
+          const caption = fig.getAttribute('data-caption') || fig.querySelector('img')?.alt || n.title;
+          if (src) {
+            openLightbox(src, caption);
+          }
+        });
+      });
     }
 
     // Nút chia sẻ bài viết

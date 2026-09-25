@@ -85,9 +85,38 @@ VALUES
 
 INSERT OR IGNORE INTO news (id, title, date, excerpt, content, image, bg1, bg2, author, created_at)
 VALUES
-  ('news-1', 'PUCECO đạt chứng nhận GMP nâng hạng', '18 Thg 9, 2026', 'Nhà máy chiết xuất hoàn thiện nâng cấp dây chuyền chiết xuất áp suất thấp theo tiêu chuẩn GMP mới nhất.', 'Tháng 9/2026, PUCECO chính thức đón nhận giấy chứng nhận Thực hành Sản xuất Tốt (GMP) phiên bản nâng hạng cho toàn bộ tổ hợp nhà máy chiết xuất dược liệu công nghệ cao. Với dây chuyền tự động hóa khép kín và hệ thống lọc nano tiên tiến, công suất chế biến đạt hơn 1.200 tấn dược liệu tươi mỗi năm, sẵn sàng cung ứng cho các tập đoàn dược phẩm lớn trong và ngoài nước.', 'assets/images/news-gmp.svg', '#E6F1EA', '#C9E3D3', 'Ban Kiểm Soát Chất Lượng', '2026-09-18'),
-  ('news-2', 'Mở rộng vùng trồng nguyên liệu sạch tại Tây Nguyên', '02 Thg 9, 2026', 'Liên kết 5 hợp tác xã tại Đắk Lắk và Gia Lai, đảm bảo nguồn cung sả chanh, nghệ vàng và gừng bền vững.', 'Nhằm chủ động kiểm soát chất lượng từ mầm cây đến giọt chiết xuất cuối cùng, PUCECO đã ký kết liên kết bao tiêu cùng 5 hợp tác xã dược liệu với tổng quy mô hơn 150 ha. Mô hình canh tác đạt chứng nhận Hữu cơ (Organic) nói không với thuốc trừ sâu hóa học, tạo sinh kế bền vững cho hơn 200 hộ đồng bào địa phương.', 'assets/images/news-farm.svg', '#F3EFE2', '#E4D6B0', 'Phòng Phát Triển Vùng Trồng', '2026-09-02'),
-  ('news-3', 'Ra mắt Curcumin nano thế hệ mới cho dược phẩm', '21 Thg 8, 2026', 'Công trình R&D nội bộ 3 năm nghiên cứu với kích thước tiểu phân dưới 50nm mang lại hiệu quả hấp thu kỷ lục.', 'Trung tâm Nghiên cứu & Phát triển PUCECO Labs công bố thương mại hóa thành công dòng nguyên liệu Nano Curcumin tan hoàn toàn trong nước với kích thước hạt trung bình chỉ 35nm. Sản phẩm đạt độ ổn định cao trong dải pH 2.0 - 8.0, tương thích lý tưởng cho các dạng bào chế siro, viên nang mềm, thạch collagen và nước uống chức năng.', 'assets/images/news-lab.svg', '#E8F0EC', '#BBD9CA', 'Viện R&D PUCECO', '2026-08-21');
+  ('news-1', 'PUCECO đạt chứng nhận GMP nâng hạng', '18 Thg 9, 2026', 'Nhà máy chiết xuất hoàn thiện nâng cấp dây chuyền chiết xuất áp suất thấp theo tiêu chuẩn GMP mới nhất.', 'Tháng 9/2026, PUCECO chính thức đón nhận giấy chứng nhận Thực hành Sản xuất Tốt (GMP) phiên bản nâng hạng cho toàn bộ tổ hợp nhà máy chiết xuất dược liệu công nghệ cao. Với dây chuyền tự động hóa khép kín và hệ thống lọc nano tiên tiến, công suất chế biến đạt hơn 1.200 tấn dược liệu tươi mỗi năm, sẵn sàng cung ứng cho các tập đoàn dược phẩm lớn trong và ngoài nước.
+
+![Dây chuyền chiết xuất áp suất thấp tự động hóa khép kín đạt chuẩn GMP nâng hạng tại tổ hợp nhà máy PUCECO](assets/images/news-gmp.jpg)
+
+### Quy trình chiết xuất áp suất thấp & kiểm soát đa tầng
+Khác với phương pháp nhiệt cổ truyền làm hao hụt hoạt tính sinh học quý giá, công nghệ chiết xuất áp suất giảm tại nhiệt độ thấp giúp bảo toàn gần như trọn vẹn 100% hàm lượng tinh chất, flavonoid và polyphenol trong từng mẻ dược liệu.
+
+Toàn bộ thông số nhiệt độ, áp suất, độ chân không và thời gian tuần hoàn đều được giám sát thời gian thực bằng hệ thống SCADA tự động hóa, đảm bảo sự đồng nhất tuyệt đối giữa các lô mẻ thành phẩm trước khi xuất xưởng.
+
+![Hệ thống phòng kiểm nghiệm vi sinh và sắc ký phân tích hoạt chất HPLC đạt tiêu chuẩn Dược điển tại PUCECO Labs](assets/images/news-lab.jpg)
+
+Việc đón nhận chứng nhận GMP nâng hạng không chỉ khẳng định năng lực kỹ thuật vượt bậc của PUCECO mà còn đánh dấu bước tiến quan trọng trong sứ mệnh đưa dược liệu chuẩn hóa Việt Nam vươn tầm chuỗi cung ứng quốc tế.', 'assets/images/news-gmp.jpg', '#E6F1EA', '#C9E3D3', 'Ban Kiểm Soát Chất Lượng', '2026-09-18'),
+  ('news-2', 'Mở rộng vùng trồng nguyên liệu sạch tại Tây Nguyên', '02 Thg 9, 2026', 'Liên kết 5 hợp tác xã tại Đắk Lắk và Gia Lai, đảm bảo nguồn cung sả chanh, nghệ vàng và gừng bền vững.', 'Nhằm chủ động kiểm soát chất lượng từ mầm cây đến giọt chiết xuất cuối cùng, PUCECO đã ký kết liên kết bao tiêu cùng 5 hợp tác xã dược liệu với tổng quy mô hơn 150 ha. Mô hình canh tác đạt chứng nhận Hữu cơ (Organic) nói không với thuốc trừ sâu hóa học, tạo sinh kế bền vững cho hơn 200 hộ đồng bào địa phương.
+
+![Vùng trồng dược liệu hữu cơ bạt ngàn tại cao nguyên Đắk Lắk và Gia Lai trong mùa thu hoạch](assets/images/news-farm.jpg)
+
+### Chuẩn hóa nguồn giống & canh tác không hóa chất
+Các loại thảo dược chủ lực như sả chanh, nghệ vàng, gừng sẻ và cỏ ngọt được chọn lọc kỹ lưỡng từ nguồn giống thuần chủng có hàm lượng tinh chất cao nhất. Đội ngũ kỹ sư nông nghiệp của PUCECO trực tiếp chuyển giao kỹ thuật canh tác an toàn sinh học và kiểm tra dư lượng định kỳ trước ngày thu hoạch.
+
+![Dược liệu tươi đạt chuẩn hữu cơ được phân loại nghiêm ngặt trước khi đưa vào chiết xuất](assets/images/prod-lemongrass.jpg)
+
+Mô hình liên kết khép kín này giúp đối tác hoàn toàn an tâm về tính truy xuất nguồn gốc (Traceability) và sự ổn định dài hạn của chuỗi cung ứng.', 'assets/images/news-farm.jpg', '#F3EFE2', '#E4D6B0', 'Phòng Phát Triển Vùng Trồng', '2026-09-02'),
+  ('news-3', 'Ra mắt Curcumin nano thế hệ mới cho dược phẩm', '21 Thg 8, 2026', 'Công trình R&D nội bộ 3 năm nghiên cứu với kích thước tiểu phân dưới 50nm mang lại hiệu quả hấp thu kỷ lục.', 'Trung tâm Nghiên cứu & Phát triển PUCECO Labs công bố thương mại hóa thành công dòng nguyên liệu Nano Curcumin tan hoàn toàn trong nước với kích thước hạt trung bình chỉ 35nm. Sản phẩm đạt độ ổn định cao trong dải pH 2.0 - 8.0, tương thích lý tưởng cho các dạng bào chế siro, viên nang mềm, thạch collagen và nước uống chức năng.
+
+![Đội ngũ chuyên gia R&D kiểm định kích thước tiểu phân Nano Curcumin qua hệ thống phân tích hiện đại](assets/images/news-lab.jpg)
+
+### Độ hòa tan đột phá & sinh khả dụng tăng gấp 40 lần
+Nhờ công nghệ bao vi nang thế hệ mới với màng sinh học tự nhiên, các hạt Nano Curcumin được bảo vệ tối đa qua môi trường acid dạ dày và giải phóng nhanh tại ruột non, nâng cao hiệu quả hấp thu vào cơ thể lên gấp 40 lần so với Curcumin thông thường.
+
+![Nguyên liệu Nano Curcumin phân tán trong suốt tan hoàn toàn không lắng cặn](assets/images/prod-curcumin.jpg)
+
+Dòng nguyên liệu mới đã sẵn sàng cung ứng theo lô lớn với đầy đủ hồ sơ kiểm nghiệm COA, phổ UV-Vis và chuẩn phân tích HPLC.', 'assets/images/news-lab.jpg', '#E8F0EC', '#BBD9CA', 'Viện R&D PUCECO', '2026-08-21');
 
 INSERT OR IGNORE INTO leads (id, full_name, email, phone, company, product_of_interest, message, status, created_at)
 VALUES

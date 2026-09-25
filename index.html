@@ -210,7 +210,7 @@
         <img class="brand-logo" src="assets/images/logo-puceco.png" alt="PUCECO — Nguyên liệu chiết xuất thiên nhiên & Dược phẩm chuẩn hóa" width="124" height="38">
       </a>
 
-      <nav class="site-nav" aria-label="Điều hướng chính">
+      <nav id="site-nav" class="site-nav" aria-label="Điều hướng chính">
         <a href="#top">Trang Chủ</a>
         <a href="#gioi-thieu">Giới Thiệu</a>
         <a href="#noi-bat">Sản Phẩm</a>
@@ -226,7 +226,7 @@
             <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
         </button>
-        <a class="btn primary head-cta" href="#lien-he">Nhận mẫu thử</a>
+        <a class="btn primary head-cta" href="#lien-he" data-bind="header-cta">Nhận mẫu thử</a>
       </div>
     </div>
 
@@ -327,21 +327,21 @@
     <section id="gioi-thieu" class="section intro" data-reveal>
       <div class="intro-grid">
         <div class="intro-text">
-          <p class="eyebrow intro-eyebrow">GIỚI THIỆU — PUCECO</p>
-          <h2 class="section-title intro-heading">Chiết xuất từ thiên nhiên<br>&amp; Hoạt chất thế hệ mới</h2>
-          <p class="lead intro-lead">
+          <p class="eyebrow intro-eyebrow" data-bind="intro-eyebrow">GIỚI THIỆU — PUCECO</p>
+          <h2 class="section-title intro-heading" data-bind="intro-title">Chiết xuất từ thiên nhiên<br>&amp; Hoạt chất thế hệ mới</h2>
+          <p class="lead intro-lead" data-bind="intro-lead">
             Công ty chúng tôi chuyên cung cấp các chiết xuất từ thiên nhiên và hoạt chất thế hệ mới, phục vụ cho ngành công nghiệp sản xuất dược phẩm, thực phẩm chức năng, mỹ phẩm. Với cam kết mang đến thị trường những sản phẩm đạt tiêu chuẩn chất lượng quốc tế, giá cả cạnh tranh và phù hợp với xu hướng phát triển thị trường.
           </p>
           <div class="intro-actions">
-            <a class="btn btn-intro-primary" href="#san-pham">Tìm Hiểu Sản Phẩm</a>
-            <a class="btn btn-intro-secondary" href="#cong-thuc-mau">Xem Công Thức Mẫu</a>
+            <a class="btn btn-intro-primary" href="#noi-bat" data-bind="intro-btn1">Tìm Hiểu Sản Phẩm</a>
+            <a class="btn btn-intro-secondary" href="#cong-thuc-mau" data-bind="intro-btn2">Xem Công Thức Mẫu</a>
           </div>
         </div>
         <div class="intro-stats" aria-label="Thành tựu">
-          <div class="stat"><span class="stat-num" data-stat="years" data-count="30">30</span><span class="stat-label">năm kinh nghiệm</span></div>
-          <div class="stat"><span class="stat-num" data-stat="partners" data-count="20">20</span><span class="stat-label">đối tác toàn cầu</span></div>
-          <div class="stat"><span class="stat-num" data-stat="lines" data-count="8">8</span><span class="stat-label">dòng nguyên liệu</span></div>
-          <div class="stat"><span class="stat-num" data-stat="traceability" data-count="100" data-suffix="%">100%</span><span class="stat-label">truy xuất nguồn gốc</span></div>
+          <div class="stat"><span class="stat-num" data-stat="years" data-count="30">30</span><span class="stat-label" data-bind="stat-years-label">năm kinh nghiệm</span></div>
+          <div class="stat"><span class="stat-num" data-stat="partners" data-count="20">20</span><span class="stat-label" data-bind="stat-partners-label">đối tác toàn cầu</span></div>
+          <div class="stat"><span class="stat-num" data-stat="lines" data-count="8">8</span><span class="stat-label" data-bind="stat-lines-label">dòng nguyên liệu</span></div>
+          <div class="stat"><span class="stat-num" data-stat="traceability" data-count="100" data-suffix="%">100%</span><span class="stat-label" data-bind="stat-trace-label">truy xuất nguồn gốc</span></div>
         </div>
       </div>
 
@@ -353,8 +353,8 @@
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
           </div>
-          <h3>Chất Lượng</h3>
-          <p>Chúng tôi luôn đặt chất lượng sản phẩm và dịch vụ lên hàng đầu, giá trị đi đôi với thương hiệu.</p>
+          <h3 data-bind="value-1-title">Chất Lượng</h3>
+          <p data-bind="value-1-desc">Chúng tôi luôn đặt chất lượng sản phẩm và dịch vụ lên hàng đầu, giá trị đi đôi với thương hiệu.</p>
         </article>
 
         <article class="value-card">
@@ -363,8 +363,8 @@
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
           </div>
-          <h3>Uy Tín</h3>
-          <p>Cam kết cung cấp sản phẩm chính hãng, rõ nguồn gốc xuất xứ từ các thương hiệu uy tín.</p>
+          <h3 data-bind="value-2-title">Uy Tín</h3>
+          <p data-bind="value-2-desc">Cam kết cung cấp sản phẩm chính hãng, rõ nguồn gốc xuất xứ từ các thương hiệu uy tín.</p>
         </article>
 
         <article class="value-card">
@@ -376,8 +376,8 @@
               <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
           </div>
-          <h3>Chuyên Nghiệp</h3>
-          <p>Đội ngũ nhân viên chuyên nghiệp, nhiệt tình, luôn sẵn sàng tư vấn và hỗ trợ khách hàng.</p>
+          <h3 data-bind="value-3-title">Chuyên Nghiệp</h3>
+          <p data-bind="value-3-desc">Đội ngũ nhân viên chuyên nghiệp, nhiệt tình, luôn sẵn sàng tư vấn và hỗ trợ khách hàng.</p>
         </article>
       </div>
     </section>
@@ -401,9 +401,9 @@
     <!-- ===== SẢN PHẨM NỔI BẬT (Render động từ DataStore) ===== -->
     <section id="noi-bat" class="section products" data-reveal>
       <div class="section-head">
-        <p class="eyebrow">Danh mục</p>
-        <h2 class="section-title">Sản phẩm nổi bật</h2>
-        <p class="section-sub">Các dòng nguyên liệu chiết xuất được các đối tác dược mỹ phẩm tin dùng nhiều nhất.</p>
+        <p class="eyebrow" data-bind="featured-eyebrow">Danh mục</p>
+        <h2 class="section-title" data-bind="featured-title">Sản phẩm nổi bật</h2>
+        <p class="section-sub" data-bind="featured-sub">Các dòng nguyên liệu chiết xuất được các đối tác dược mỹ phẩm tin dùng nhiều nhất.</p>
       </div>
       <div id="featured-products-grid" class="product-grid" data-stagger>
         <!-- Render tự động bởi main.js -->
@@ -413,9 +413,9 @@
     <!-- ===== SẢN PHẨM MỚI (Render động từ DataStore) ===== -->
     <section id="moi" class="section products-new" data-reveal>
       <div class="section-head">
-        <p class="eyebrow">Mới ra mắt</p>
-        <h2 class="section-title">Sản phẩm mới</h2>
-        <p class="section-sub">Những đột phá công nghệ chiết xuất và hoạt chất sinh học mới nhất từ phòng thí nghiệm.</p>
+        <p class="eyebrow" data-bind="new-eyebrow">Mới ra mắt</p>
+        <h2 class="section-title" data-bind="new-title">Sản phẩm mới</h2>
+        <p class="section-sub" data-bind="new-sub">Những đột phá công nghệ chiết xuất và hoạt chất sinh học mới nhất từ phòng thí nghiệm.</p>
       </div>
       <div id="new-products-grid" class="product-grid two" data-stagger>
         <!-- Render tự động bởi main.js -->
@@ -425,9 +425,9 @@
     <!-- ===== CÔNG THỨC MẪU (Render động từ DataStore) ===== -->
     <section id="cong-thuc-mau" class="section formulations" data-reveal>
       <div class="section-head">
-        <p class="eyebrow">R&D &amp; Ứng Dụng Chuyển Giao</p>
-        <h2 class="section-title">Công Thức Mẫu</h2>
-        <p class="section-sub">Các giải pháp phối chế mẫu chuẩn hóa từ phòng thí nghiệm PUCECO, giúp đối tác rút ngắn thời gian R&D và thương mại hóa nhanh chóng.</p>
+        <p class="eyebrow" data-bind="formulations-eyebrow">R&D &amp; Ứng Dụng Chuyển Giao</p>
+        <h2 class="section-title" data-bind="formulations-title">Công Thức Mẫu</h2>
+        <p class="section-sub" data-bind="formulations-sub">Các giải pháp phối chế mẫu chuẩn hóa từ phòng thí nghiệm PUCECO, giúp đối tác rút ngắn thời gian R&D và thương mại hóa nhanh chóng.</p>
       </div>
       <div id="formulations-grid" class="formulation-grid" data-stagger>
         <!-- Render tự động bởi main.js -->
@@ -437,8 +437,8 @@
     <!-- ===== TIN TỨC & SỰ KIỆN (Render động từ DataStore) ===== -->
     <section id="tin-tuc" class="section news" data-reveal>
       <div class="section-head">
-        <p class="eyebrow">Tin tức &amp; sự kiện</p>
-        <h2 class="section-title">Tin mới nhất</h2>
+        <p class="eyebrow" data-bind="news-eyebrow">Tin tức &amp; sự kiện</p>
+        <h2 class="section-title" data-bind="news-title">Tin mới nhất</h2>
       </div>
       <div id="news-grid" class="news-grid" data-stagger>
         <!-- Render tự động bởi main.js -->
@@ -449,8 +449,8 @@
     <section id="lien-he" class="section cta" data-reveal>
       <div class="cta-card">
         <div class="cta-text">
-          <h2>Trở thành đối tác của PUCECO</h2>
-          <p>Nhận báo giá sỉ, hồ sơ kỹ thuật (COA, Spec Sheet) và mẫu thử nghiệm cho dự án của bạn. Đội ngũ chuyên gia phản hồi trong 24 giờ.</p>
+          <h2 data-bind="contact-title">Trở thành đối tác của PUCECO</h2>
+          <p data-bind="contact-desc">Nhận báo giá sỉ, hồ sơ kỹ thuật (COA, Spec Sheet) và mẫu thử nghiệm cho dự án của bạn. Đội ngũ chuyên gia phản hồi trong 24 giờ.</p>
           <div class="cta-contact-info">
             <div><b>Hotline tư vấn:</b> <a href="tel:+84827227259" data-bind="hotline-link"><span data-bind="hotline">(+84) 08 272 272 59</span></a></div>
             <div><b>Email phòng kinh doanh:</b> <a href="mailto:puceco2018@gmail.com" data-bind="email-link"><span data-bind="email">puceco2018@gmail.com</span></a></div>
@@ -470,7 +470,7 @@
             <option value="">-- Chọn nguyên liệu quan tâm --</option>
           </select>
           <textarea name="message" placeholder="Nhu cầu mẫu thử, số lượng dự kiến hoặc yêu cầu kỹ thuật..."></textarea>
-          <button class="btn primary lg" type="submit">Gửi yêu cầu mẫu & Báo giá</button>
+          <button class="btn primary lg" type="submit" data-bind="contact-btn">Gửi yêu cầu mẫu & Báo giá</button>
         </form>
       </div>
     </section>
@@ -483,17 +483,17 @@
         <a class="brand" href="#top" aria-label="PUCECO trang chủ">
           <img class="brand-logo" src="assets/images/logo-puceco-white.png" alt="PUCECO — Nhà cung ứng nguyên liệu chiết xuất thiên nhiên" width="124" height="38">
         </a>
-        <p class="foot-tag" data-bind="slogan">Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học.</p>
+        <p class="foot-tag" data-bind="footer-slogan">Nguyên liệu chiết xuất từ thiên nhiên — tin cậy từ khoa học.</p>
       </div>
       <nav class="foot-col" aria-label="Sản phẩm & Ứng dụng">
-        <h4>Sản phẩm &amp; R&amp;D</h4>
+        <h4 data-bind="footer-col1-title">Sản phẩm &amp; R&amp;D</h4>
         <a href="#noi-bat">Chiết xuất thực vật</a>
         <a href="#noi-bat">Tinh dầu thiên nhiên</a>
         <a href="#noi-bat">Hoạt chất Nano</a>
         <a href="#cong-thuc-mau">Công thức mẫu R&amp;D</a>
       </nav>
       <nav class="foot-col" aria-label="Công ty">
-        <h4>Điều hướng</h4>
+        <h4 data-bind="footer-col2-title">Điều hướng</h4>
         <a href="#top">Trang chủ</a>
         <a href="#gioi-thieu">Giới thiệu</a>
         <a href="#noi-bat">Sản phẩm</a>
@@ -502,14 +502,14 @@
         <a href="#lien-he">Liên hệ</a>
       </nav>
       <div class="foot-col">
-        <h4>Liên hệ</h4>
+        <h4 data-bind="footer-col3-title">Liên hệ</h4>
         <p>Email: <a href="mailto:puceco2018@gmail.com" data-bind="email-link"><span data-bind="email">puceco2018@gmail.com</span></a></p>
         <p>Hotline: <a href="tel:+84827227259" data-bind="hotline-link"><span data-bind="hotline">(+84) 08 272 272 59</span></a></p>
         <p>Địa chỉ: <a href="https://maps.app.goo.gl/1Rfge7JdRQY9vLxBA" target="_blank" rel="noopener noreferrer" data-bind="address-link"><span data-bind="address">679/38 Quang Trung , Phường 11, Quận Gò Vấp , Thành phố Hồ Chí Minh, Việt Nam</span></a></p>
       </div>
     </div>
     <div class="foot-bottom">
-      <p>© 2026 PUCECO. All rights reserved. Tiêu chuẩn GMP &amp; USDA Organic.</p>
+      <p data-bind="footer-copy">© 2026 PUCECO. All rights reserved. Tiêu chuẩn GMP &amp; USDA Organic.</p>
       <nav aria-label="Mạng xã hội">
         <a href="#footer">Facebook</a> · <a href="#footer">LinkedIn</a> · <a href="#footer">YouTube</a>
       </nav>
