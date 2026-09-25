@@ -1849,3 +1849,124 @@ b, strong {
   .hero-actions { gap: 8px; max-width: 320px; }
   .hero-actions .btn { font-size: 0.82rem; padding: 10px 10px; }
 }
+
+/* ===== Floating Chat Buttons (Zalo & Facebook) ===== */
+.floating-chat {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  pointer-events: none;
+}
+.floating-chat-btn {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.floating-chat-btn:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22), 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+.floating-chat-btn:active {
+  transform: scale(0.95);
+}
+.floating-chat-btn.btn-zalo {
+  background: #0068FF;
+}
+.floating-chat-btn.btn-facebook {
+  background: #ffffff;
+  border: 1px solid rgba(0, 132, 255, 0.15);
+}
+.floating-chat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+.floating-chat-tooltip {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  background: rgba(24, 24, 27, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.floating-chat-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  transform: translateY(-50%);
+  border-width: 5px 0 5px 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent rgba(24, 24, 27, 0.92);
+}
+.floating-chat-btn:hover .floating-chat-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}
+.floating-chat-ping {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid #0068FF;
+  opacity: 0.75;
+  animation: chatPulse 2.4s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes chatPulse {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  60% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .floating-chat {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    right: 14px;
+    gap: 10px;
+    z-index: 95;
+  }
+  .floating-chat-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .floating-chat-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+  .floating-chat-tooltip {
+    display: none;
+  }
+}
