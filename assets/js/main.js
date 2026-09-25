@@ -376,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="hero-bg" style="--g1:${g1};--g2:${g2}"><img src="${escapeHtml(bgImg)}" alt="" loading="${idx === 0 ? 'eager' : 'lazy'}"></div>
               <div class="hero-grid">
                 <div class="hero-copy">
+                  ${badgeTop ? `<div class="hero-mobile-badge"><span class="badge-pill"><b>${escapeHtml(badgeTop)}</b> ${escapeHtml(badgeBottom)}</span></div>` : ''}
                   ${s.eyebrow ? `<p class="eyebrow light">${escapeHtml(s.eyebrow)}</p>` : ''}
                   <h1 class="hero-title">${titleFormatted}</h1>
                   ${s.lede ? `<p class="hero-lede">${escapeHtml(s.lede)}</p>` : ''}
