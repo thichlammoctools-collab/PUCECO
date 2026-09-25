@@ -119,6 +119,8 @@
       professional: 'Đội ngũ nhân viên chuyên nghiệp, nhiệt tình, luôn sẵn sàng tư vấn và hỗ trợ khách hàng.'
     },
     hotline: '(+84) 08 272 272 59',
+    zalo: '0827227259',
+    facebookUrl: 'https://m.me/puceco',
     email: 'puceco2018@gmail.com',
     address: '679/38 Quang Trung , Phường 11, Quận Gò Vấp , Thành phố Hồ Chí Minh, Việt Nam',
     mapsUrl: 'https://maps.app.goo.gl/1Rfge7JdRQY9vLxBA',

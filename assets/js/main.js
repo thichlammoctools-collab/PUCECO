@@ -198,6 +198,15 @@ document.addEventListener('DOMContentLoaded', () => {
         el.href = settings.mapsUrl;
       }
     });
+    document.querySelectorAll('[data-bind="zalo-link"]').forEach(el => {
+      const zaloPhone = (settings.zalo || settings.hotline || '0827227259').replace(/[^0-9]/g, '');
+      el.href = `https://zalo.me/${zaloPhone}`;
+    });
+    document.querySelectorAll('[data-bind="facebook-link"]').forEach(el => {
+      if (settings.facebookUrl) {
+        el.href = settings.facebookUrl;
+      }
+    });
 
     // 2. Render Featured Products
     const featuredGrid = document.querySelector('#featured-products-grid');

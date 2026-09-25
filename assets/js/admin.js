@@ -2420,6 +2420,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settings-address').value = settings.address || '';
     const mapsEl = document.getElementById('settings-maps');
     if (mapsEl) mapsEl.value = settings.mapsUrl || '';
+    const zaloEl = document.getElementById('settings-zalo');
+    if (zaloEl) zaloEl.value = settings.zalo || '';
+    const fbEl = document.getElementById('settings-facebook');
+    if (fbEl) fbEl.value = settings.facebookUrl || '';
 
     document.getElementById('settings-stat-years').value = settings.stats?.years || 12;
     document.getElementById('settings-stat-partners').value = settings.stats?.partners || 320;
@@ -2432,10 +2436,14 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const mapsInput = document.getElementById('settings-maps');
+      const zaloInput = document.getElementById('settings-zalo');
+      const fbInput = document.getElementById('settings-facebook');
       const updated = {
         brandName: document.getElementById('settings-brand').value.trim(),
         slogan: document.getElementById('settings-slogan').value.trim(),
         hotline: document.getElementById('settings-hotline').value.trim(),
+        zalo: zaloInput ? zaloInput.value.trim() : '',
+        facebookUrl: fbInput ? fbInput.value.trim() : '',
         email: document.getElementById('settings-email').value.trim(),
         address: document.getElementById('settings-address').value.trim(),
         mapsUrl: mapsInput ? mapsInput.value.trim() : '',
