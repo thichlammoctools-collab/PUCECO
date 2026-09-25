@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (featuredGrid) {
       const featured = products.filter(p => p.isFeatured !== false);
       featuredGrid.innerHTML = featured.map(p => `
-        <article class="product-card" data-product-id="${p.id}">
+        <article class="product-card" data-product-id="${p.id}" onclick="openProductModal('${p.id}')">
           <div class="product-thumb" style="--c1:${p.bg1 || '#E6F1EA'};--c2:${p.bg2 || '#C9E3D3'}">
             <img class="product-art" src="${p.image}" alt="${p.name}" loading="lazy">
             <span class="product-tag ${p.tag === 'Organic' ? 'alt' : ''}">${p.tag || 'Bán chạy'}</span>
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="product-body">
             <h3>${p.name}</h3>
             <p>${p.desc}</p>
-            <button type="button" class="link-arrow" onclick="openProductModal('${p.id}')">
+            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openProductModal('${p.id}')">
               Chi tiết tiêu chuẩn <span aria-hidden="true">→</span>
             </button>
           </div>
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (newGrid) {
       const newProds = products.filter(p => p.isNew === true);
       newGrid.innerHTML = newProds.map(p => `
-        <article class="product-card wide" data-product-id="${p.id}">
+        <article class="product-card wide" data-product-id="${p.id}" onclick="openProductModal('${p.id}')">
           <div class="product-thumb tall" style="--c1:${p.bg1 || '#F3EFE2'};--c2:${p.bg2 || '#E0CFA6'}">
             <img class="product-art" src="${p.image}" alt="${p.name}" loading="lazy">
             <span class="product-tag">${p.tag || 'Mới'}</span>
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="product-body">
             <h3>${p.name}</h3>
             <p>${p.desc}</p>
-            <button type="button" class="link-arrow" onclick="openProductModal('${p.id}')">
+            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openProductModal('${p.id}')">
               Yêu cầu mẫu thử <span aria-hidden="true">→</span>
             </button>
           </div>
@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formGrid && store.getFormulations) {
       const forms = store.getFormulations();
       formGrid.innerHTML = forms.map(f => `
-        <article class="formulation-card" data-formulation-id="${f.id}">
-          <div class="formulation-thumb" onclick="openFormulationModal('${f.id}')">
+        <article class="formulation-card" data-formulation-id="${f.id}" onclick="openFormulationModal('${f.id}')">
+          <div class="formulation-thumb">
             <img src="${f.image}" alt="${f.name}" loading="lazy">
             <span class="formulation-tag">${f.badge || 'Công thức mẫu'}</span>
           </div>
@@ -125,11 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <div><b>Hoạt chất PUCECO:</b> ${f.mainIngredient || '—'}</div>
             </div>
             <div class="formulation-actions">
-              <button type="button" class="link-arrow" onclick="openFormulationModal('${f.id}')">
+              <button type="button" class="link-arrow" onclick="event.stopPropagation(); openFormulationModal('${f.id}')">
                 Xem công thức chi tiết <span aria-hidden="true">→</span>
-              </button>
-              <button type="button" class="btn primary sm" onclick="requestFormulationSample('${escapeHtml(f.name)}')">
-                Yêu cầu mẫu
               </button>
             </div>
           </div>
@@ -141,15 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const newsGrid = document.querySelector('#news-grid');
     if (newsGrid) {
       newsGrid.innerHTML = news.map(n => `
-        <article class="news-card" data-news-id="${n.id}">
-          <div class="news-thumb" style="--c1:${n.bg1 || '#E6F1EA'};--c2:${n.bg2 || '#C9E3D3'}" onclick="openNewsModal('${n.id}')">
+        <article class="news-card" data-news-id="${n.id}" onclick="openNewsModal('${n.id}')">
+          <div class="news-thumb" style="--c1:${n.bg1 || '#E6F1EA'};--c2:${n.bg2 || '#C9E3D3'}">
             <img class="news-art" src="${n.image}" alt="${n.title}" loading="lazy">
           </div>
           <div class="news-body">
             <p class="news-date">${n.date}</p>
             <h3>${n.title}</h3>
             <p>${n.excerpt}</p>
-            <button type="button" class="link-arrow" onclick="openNewsModal('${n.id}')">
+            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openNewsModal('${n.id}')">
               Đọc tiếp <span aria-hidden="true">→</span>
             </button>
           </div>
