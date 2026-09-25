@@ -400,6 +400,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (heroCurrentIndex >= slides.length) heroCurrentIndex = 0;
 
+    // Reset previous autoplay timer if reinitializing
+    if (hero._autoplayTimer) {
+      clearInterval(hero._autoplayTimer);
+      hero._autoplayTimer = null;
+    }
+
+    const startAutoplay = () => {
+      stopAutoplay();
+      if (slides.length > 1) {
+        hero._autoplayTimer = setInterval(() => {
+          go(heroCurrentIndex + 1);
+        }, 5500);
+      }
+    };
+
+    const stopAutoplay = () => {
+      if (hero._autoplayTimer) {
+        clearInterval(hero._autoplayTimer);
+        hero._autoplayTimer = null;
+      }
+    };
+
+    const go = (i) => {
+      heroCurrentIndex = (i + slides.length) % slides.length;
+      slides.forEach((s, k) => s.classList.toggle('is-active', k === heroCurrentIndex));
+      dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === heroCurrentIndex)));
+      startAutoplay();
+    };
+
     if (dotsWrap) {
       dotsWrap.innerHTML = '';
       slides.forEach((_, i) => {
@@ -414,12 +443,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dots = [...dotsWrap?.children || []];
 
-    const go = (i) => {
-      heroCurrentIndex = (i + slides.length) % slides.length;
-      slides.forEach((s, k) => s.classList.toggle('is-active', k === heroCurrentIndex));
-      dots.forEach((d, k) => d.setAttribute('aria-selected', String(k === heroCurrentIndex)));
-    };
-
     if (prevBtn && !prevBtn._hasHeroListener) {
       prevBtn.addEventListener('click', () => go(heroCurrentIndex - 1));
       prevBtn._hasHeroListener = true;
@@ -427,6 +450,51 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nextBtn && !nextBtn._hasHeroListener) {
       nextBtn.addEventListener('click', () => go(heroCurrentIndex + 1));
       nextBtn._hasHeroListener = true;
+    }
+
+    // Touch Swipe Gesture for Mobile
+    if (track && !track._hasHeroTouchListeners) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchStartTime = 0;
+
+      track.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchStartTime = Date.now();
+          stopAutoplay();
+        }
+      }, { passive: true });
+
+      track.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches.length > 0) {
+          const touchEndX = e.changedTouches[0].clientX;
+          const touchEndY = e.changedTouches[0].clientY;
+          const diffX = touchEndX - touchStartX;
+          const diffY = touchEndY - touchStartY;
+          const elapsed = Date.now() - touchStartTime;
+
+          // Dominant horizontal swipe with >35px threshold
+          if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) * 1.1 && elapsed < 800) {
+            if (diffX < 0) {
+              go(heroCurrentIndex + 1);
+            } else {
+              go(heroCurrentIndex - 1);
+            }
+          }
+        }
+        startAutoplay();
+      }, { passive: true });
+
+      track._hasHeroTouchListeners = true;
+    }
+
+    // Pause autoplay on mouse hover (desktop)
+    if (!hero._hasHeroHoverListeners) {
+      hero.addEventListener('mouseenter', stopAutoplay);
+      hero.addEventListener('mouseleave', startAutoplay);
+      hero._hasHeroHoverListeners = true;
     }
 
     go(heroCurrentIndex);

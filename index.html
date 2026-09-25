@@ -556,24 +556,115 @@
   <div id="modal-news" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-n-title">
     <div class="modal-box modal-box-news">
       <button class="modal-close" type="button" data-close-modal aria-label="Đóng">&times;</button>
-      <div class="modal-header" style="align-items:flex-start;">
-        <div style="flex:1;">
-          <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;font-size:0.85rem;color:var(--color-accent-2-ink);font-family:var(--font-mono);">
-            <span id="modal-n-date"></span>
-            <span>•</span>
-            <span id="modal-n-author"></span>
+      
+      <!-- News Hero Banner -->
+      <div class="news-modal-hero" id="modal-n-hero">
+        <div class="news-modal-hero-bg" id="modal-n-hero-bg">
+          <img id="modal-n-img" src="" alt="" class="news-modal-hero-img">
+        </div>
+        <div class="news-modal-hero-overlay"></div>
+        <div class="news-modal-badge-wrap">
+          <span class="news-category-badge" id="modal-n-badge">Tin tức &amp; Sự kiện</span>
+        </div>
+        <button id="modal-n-zoom-btn" class="modal-img-zoom-btn news-zoom-btn" type="button" aria-label="Xem ảnh phóng to" title="Nhấn để xem kích thước lớn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+          </svg>
+          <span>Xem ảnh lớn</span>
+        </button>
+      </div>
+
+      <!-- News Article Header & Metadata -->
+      <div class="news-modal-header">
+        <div class="news-modal-meta">
+          <div class="news-meta-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span id="modal-n-date" class="news-meta-date"></span>
           </div>
-          <h3 id="modal-n-title" style="margin:0;font-size:1.55rem;line-height:1.25;"></h3>
+          <span class="news-meta-sep" aria-hidden="true">•</span>
+          <div class="news-meta-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span id="modal-n-author" class="news-meta-author"></span>
+          </div>
+          <span class="news-meta-sep" aria-hidden="true">•</span>
+          <div class="news-meta-item news-meta-readtime">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="modal-n-reading-time">2 phút đọc</span>
+          </div>
         </div>
-        <div class="modal-header-thumb" style="width:110px;height:80px;border-radius:10px;overflow:hidden;flex-shrink:0;box-shadow:var(--shadow-1);">
-          <img id="modal-n-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+        <h2 id="modal-n-title" class="news-modal-title"></h2>
+      </div>
+
+      <!-- News Article Body -->
+      <div class="news-modal-body">
+        <!-- Lead / Sapo Paragraph -->
+        <div class="news-modal-lead" id="modal-n-lead-box">
+          <div class="news-lead-quote-mark" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9.983 3v7.391c0 5.704-3.731 9.57-8.983 10.609l-.995-2.151c2.432-.917 3.995-3.638 3.995-5.849h-4v-10h9.983zm14.017 0v7.391c0 5.704-3.748 9.57-9 10.609l-.996-2.151c2.433-.917 3.996-3.638 3.996-5.849h-3.983v-10h9.983z"/>
+            </svg>
+          </div>
+          <p id="modal-n-excerpt" class="news-lead-text"></p>
+        </div>
+
+        <!-- Article Content -->
+        <div class="news-modal-content" id="modal-n-content">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <!-- Callout Box: Cam kết chất lượng & chuẩn hóa dược liệu -->
+        <div class="news-modal-callout">
+          <div class="news-callout-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+          </div>
+          <div class="news-callout-text">
+            <b>Tiêu chuẩn vùng trồng &amp; nguyên liệu sạch PUCECO</b>
+            <p>100% thảo dược và tinh chất được kiểm soát chất lượng từ khâu chọn giống, canh tác an toàn sinh học, có đầy đủ phiếu kiểm nghiệm (COA) đạt tiêu chuẩn Dược điển và xuất khẩu.</p>
+          </div>
         </div>
       </div>
-      <div class="modal-body" id="modal-n-content" style="padding:22px 28px;font-size:1.02rem;">
-        <!-- Content injected dynamically -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn ghost sm" type="button" data-close-modal>Đóng</button>
+
+      <!-- News Article Footer -->
+      <div class="modal-footer news-modal-footer">
+        <div class="news-footer-left">
+          <button type="button" class="btn ghost sm news-btn-share" id="modal-n-share-btn" title="Sao chép liên kết chia sẻ">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+            </svg>
+            <span>Chia sẻ bài viết</span>
+          </button>
+        </div>
+        <div class="news-footer-right">
+          <button class="btn ghost sm" type="button" data-close-modal>Đóng</button>
+          <button id="modal-n-contact-btn" class="btn primary sm" type="button">
+            <span>Liên hệ hợp tác</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>

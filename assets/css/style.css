@@ -315,10 +315,25 @@ b, strong {
 
 /* ===== Hero slider ===== */
 .hero { position: relative; overflow: hidden; background: var(--color-depth); }
-.hero-track { position: relative; min-height: clamp(520px, 62vh, 620px); }
-.hero-slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+.hero-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: clamp(520px, 62vh, 620px);
+}
+.hero-slide {
+  grid-area: 1 / 1;
+  width: 100%;
+  position: relative;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease), visibility var(--dur-slow);
+}
 .hero-slide.is-active {
-  opacity: 1; visibility: visible;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
   animation: slideFade var(--dur-slow) var(--ease) both;
 }
 @keyframes slideFade { from { opacity: 0; } to { opacity: 1; } }
@@ -328,6 +343,7 @@ b, strong {
 .hero-bg {
   position: absolute; inset: 0;
   overflow: hidden;
+  pointer-events: none;
 }
 .hero-bg img {
   position: absolute; inset: 0;
@@ -377,12 +393,14 @@ b, strong {
   position: absolute; left: 0; right: 0; bottom: var(--space-5); z-index: 5;
   max-width: 1240px; margin: 0 auto; padding: 0 var(--space-5);
   display: flex; align-items: center; gap: var(--space-4);
+  pointer-events: none;
 }
 .hero-arrow {
   width: 46px; height: 46px; border-radius: 50%; flex: none;
   display: inline-flex; align-items: center; justify-content: center;
   background: rgba(255,255,255,.14); color: #fff; border: 1px solid rgba(255,255,255,.28);
   cursor: pointer; transition: background var(--dur-fast), transform var(--dur-fast);
+  pointer-events: auto;
 }
 .hero-arrow:hover { background: rgba(255,255,255,.28); }
 .hero-arrow:active { transform: scale(.92); }
@@ -1165,8 +1183,20 @@ b, strong {
 
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .hero-visual { min-height: 200px; order: -1; }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding: clamp(36px, 5vw, 60px) var(--space-5) clamp(90px, 10vw, 110px);
+  }
+  .hero-visual {
+    order: -1;
+    min-height: 180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-art { max-width: 180px; max-height: 180px; }
   .intro-grid { grid-template-columns: 1fr; }
   .benefit-grid { grid-template-columns: repeat(2, 1fr); }
   .core-values-grid { grid-template-columns: 1fr; }
@@ -1189,10 +1219,163 @@ b, strong {
   .section-title.center { text-align: left; }
   .eyebrow.center { text-align: left; }
   .toast-container { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+
+  /* ===== Hero Slider Mobile Optimization ===== */
+  .hero-track {
+    min-height: auto;
+  }
+  .hero-grid {
+    padding: clamp(16px, 4vw, 24px) 16px clamp(68px, 12vw, 80px) 16px;
+    gap: 8px;
+    text-align: left;
+  }
+  .hero-visual {
+    order: -1;
+    min-height: unset;
+    height: auto;
+    margin: 0 auto 4px auto;
+    width: fit-content;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-art {
+    max-width: 120px;
+    max-height: 120px;
+    width: auto;
+    height: auto;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
+  }
+  .hero-badge {
+    width: 60px;
+    height: 60px;
+    bottom: -4px;
+    right: -10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+  }
+  .hero-badge b {
+    font-size: 0.92rem;
+  }
+  .hero-badge span {
+    font-size: 0.55rem;
+  }
+  .hero-bg::after {
+    background: linear-gradient(180deg, rgba(24, 24, 27, 0.38) 0%, rgba(24, 24, 27, 0.82) 42%, rgba(24, 24, 27, 0.96) 100%);
+  }
+  .hero-copy {
+    max-width: 100%;
+  }
+  .hero-copy .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .hero-title {
+    font-size: clamp(1.4rem, 5.4vw, 1.72rem);
+    line-height: 1.25;
+    margin-bottom: 8px;
+    text-wrap: balance;
+  }
+  .hero-lede {
+    font-size: 0.86rem;
+    line-height: 1.45;
+    margin-bottom: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .hero-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+  }
+  .hero-actions .btn {
+    flex: 1;
+    padding: 10px 10px;
+    font-size: 0.84rem;
+    text-align: center;
+    justify-content: center;
+    white-space: nowrap;
+    min-height: 42px;
+  }
+  .hero-controls {
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    padding: 0 16px;
+    justify-content: center;
+    gap: 12px;
+  }
+  .hero-arrow {
+    width: 38px;
+    height: 38px;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    touch-action: manipulation;
+  }
+  .hero-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+  .hero-arrow:active {
+    transform: scale(0.9);
+    background: rgba(255, 255, 255, 0.25);
+  }
+  .hero-dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .hero-dots button {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    background: transparent;
+    transition: all 0.25s ease;
+    padding: 0;
+  }
+  .hero-dots button[aria-selected="true"] {
+    width: 22px;
+    border-radius: 8px;
+    background: #fff;
+    border-color: #fff;
+    transform: none;
+  }
 }
 
 @media (max-width: 420px) {
   .head-inner { padding: 10px var(--space-4); }
   .section { padding-left: var(--space-4); padding-right: var(--space-4); }
   .intro-stats { grid-template-columns: 1fr; }
+
+  /* Extra compact for narrow mobile */
+  .hero-art {
+    max-width: 105px;
+    max-height: 105px;
+  }
+  .hero-badge {
+    width: 54px;
+    height: 54px;
+    right: -8px;
+    bottom: -2px;
+  }
+  .hero-badge b { font-size: 0.82rem; }
+  .hero-badge span { font-size: 0.5rem; }
+  .hero-title { font-size: 1.34rem; }
+  .hero-actions { gap: 6px; }
+  .hero-actions .btn { font-size: 0.78rem; padding: 9px 8px; }
 }
