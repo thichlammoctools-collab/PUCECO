@@ -875,6 +875,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const renderedHtml = [];
       const inlineImagesFound = [];
 
+      const isSameAsHeroCover = (imgSrc) => {
+        if (!imgSrc || !n.image) return false;
+        const clean = s => (s || '').replace(/^\.?\//, '').trim().toLowerCase();
+        const heroSrc = getNewsDisplayImage(n.image);
+        const s = clean(imgSrc);
+        return s === clean(n.image) || s === clean(heroSrc) || s.endsWith(clean(n.image)) || clean(n.image).endsWith(s);
+      };
+
       paragraphs.forEach(rawP => {
         // Kiểm tra xem đoạn có phải là hình ảnh Markdown: ![Chú thích](duong-dan-anh)
         const mdImgMatch = rawP.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
@@ -884,6 +892,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mdImgMatch) {
           const caption = (mdImgMatch[1] || '').trim();
           const imgSrc = (mdImgMatch[2] || '').trim();
+
+          // Tránh lặp lại ảnh cover hero ở đầu bài viết
+          if (isSameAsHeroCover(imgSrc)) return;
+
           inlineImagesFound.push(imgSrc);
           renderedHtml.push(`
             <figure class="news-content-figure" data-zoom-src="${escapeHtml(imgSrc)}" data-caption="${escapeHtml(caption)}">
@@ -913,6 +925,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (customImgMatch) {
           const imgSrc = (customImgMatch[1] || '').trim();
           const caption = (customImgMatch[2] || '').trim();
+
+          // Tránh lặp lại ảnh cover hero ở đầu bài viết
+          if (isSameAsHeroCover(imgSrc)) return;
+
           inlineImagesFound.push(imgSrc);
           renderedHtml.push(`
             <figure class="news-content-figure" data-zoom-src="${escapeHtml(imgSrc)}" data-caption="${escapeHtml(caption)}">
@@ -952,7 +968,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Nếu bài viết có mảng ảnh `images` bổ sung mà chưa hiển thị ở inline markdown
       if (Array.isArray(n.images) && n.images.length > 0) {
-        const extraImages = n.images.filter(img => img && !inlineImagesFound.includes(img) && img !== n.image);
+        const extraImages = n.images.filter(img => img && !inlineImagesFound.includes(img) && !isSameAsHeroCover(img));
         if (extraImages.length > 0) {
           renderedHtml.push(`
             <div class="news-modal-gallery">
@@ -977,43 +993,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Nếu bài viết chưa có bất kỳ ảnh minh họa nào trong nội dung (dữ liệu cũ từ cache)
+      // Nếu bài viết chưa có bất kỳ ảnh minh họa nào trong nội dung và có ảnh phụ khác ảnh cover
       if (inlineImagesFound.length === 0) {
-        const coverPhoto = getNewsDisplayImage(n.image);
         const secondPhoto = (n.id === 'news-1') ? 'assets/images/news-lab.jpg' :
                             (n.id === 'news-2') ? 'assets/images/prod-lemongrass.jpg' :
                             (n.id === 'news-3') ? 'assets/images/prod-curcumin.jpg' : null;
 
-        const figure1 = `
-          <figure class="news-content-figure" data-zoom-src="${escapeHtml(coverPhoto)}" data-caption="${escapeHtml(n.title)}">
-            <div class="news-figure-img-wrap">
-              <img src="${escapeHtml(coverPhoto)}" alt="${escapeHtml(n.title)}" loading="lazy">
-              <div class="news-figure-zoom-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <polyline points="9 21 3 21 3 15"></polyline>
-                  <line x1="21" y1="3" x2="14" y2="10"></line>
-                  <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
-                <span>Xem ảnh lớn</span>
-              </div>
-            </div>
-            <figcaption>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
-              </svg>
-              <span>${escapeHtml(n.title)} - Hình ảnh thực tế từ dây chuyền &amp; cơ sở vật chất</span>
-            </figcaption>
-          </figure>
-        `;
-        if (renderedHtml.length > 0) {
-          renderedHtml.splice(1, 0, figure1);
-        } else {
-          renderedHtml.push(figure1);
-        }
-
-        if (secondPhoto) {
+        if (secondPhoto && !isSameAsHeroCover(secondPhoto)) {
           const figure2 = `
             <figure class="news-content-figure" data-zoom-src="${escapeHtml(secondPhoto)}" data-caption="Hệ thống kiểm nghiệm &amp; phân tích hoạt chất">
               <div class="news-figure-img-wrap">
@@ -1037,7 +1023,11 @@ document.addEventListener('DOMContentLoaded', () => {
               </figcaption>
             </figure>
           `;
-          renderedHtml.push(figure2);
+          if (renderedHtml.length > 2) {
+            renderedHtml.splice(2, 0, figure2);
+          } else {
+            renderedHtml.push(figure2);
+          }
         }
       }
 
