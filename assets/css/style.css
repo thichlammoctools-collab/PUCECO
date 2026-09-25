@@ -38,9 +38,10 @@
   --accent-900: #450A0A;
 
   /* Typography */
-  --font-heading: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-body: "Source Sans 3", system-ui, -apple-system, sans-serif;
-  --font-ui: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  --font-heading: "Comfortaa", cursive, sans-serif;
+  --font-display: "Comfortaa", cursive, sans-serif;
+  --font-body: "Comfortaa", cursive, sans-serif;
+  --font-ui: "Comfortaa", cursive, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
   --step-n2: 0.78rem;
   --step-n1: 0.875rem;
@@ -52,10 +53,11 @@
   --step-5: 3rem;
   --step-6: 3.9rem;
   --step-7: 5rem;
-  --weight-heading: 600;
-  --tracking-heading: -0.015em;
+  --weight-heading: 700;
+  --weight-body: 600;
+  --tracking-heading: -0.01em;
   --leading-body: 1.65;
-  --leading-heading: 1.15;
+  --leading-heading: 1.25;
   --measure: 64ch;
 
   /* Spacing */
@@ -95,6 +97,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: var(--font-body);
+  font-weight: var(--weight-body);
   font-size: var(--step-0);
   line-height: var(--leading-body);
   color: var(--color-text);
@@ -103,16 +106,24 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+button, input, select, textarea {
+  font-family: inherit;
+}
+
 img, svg { display: block; max-width: 100%; }
 a { color: var(--color-accent-text); text-decoration: none; }
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: var(--weight-heading);
   letter-spacing: var(--tracking-heading);
   line-height: var(--leading-heading);
   margin: 0;
   color: var(--color-text);
+}
+
+b, strong {
+  font-weight: 700;
 }
 
 :focus-visible {

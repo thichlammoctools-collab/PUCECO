@@ -19,17 +19,31 @@
   --radius-sm: 6px;
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
-  --font: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-heading: "Fraunces", Georgia, serif;
+  --font: "Comfortaa", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, cursive, sans-serif;
+  --font-heading: "Comfortaa", Georgia, cursive, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: var(--font);
+  font-weight: 600;
   background: var(--admin-bg);
   color: var(--admin-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+b, strong {
+  font-weight: 700;
 }
 
 /* Auth / Login Screen */
