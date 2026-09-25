@@ -583,6 +583,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Zoom và xem ảnh phóng to cho bài viết tin tức
+  const nHero = document.querySelector('#modal-n-hero');
+  const nZoomBtn = document.querySelector('#modal-n-zoom-btn');
+  const nImg = document.querySelector('#modal-n-img');
+
+  if (nHero && nImg) {
+    nHero.addEventListener('click', (e) => {
+      if (e.target.closest('#modal-n-zoom-btn')) return;
+      if (nImg.src) {
+        openLightbox(nImg.src, modalNews?.querySelector('#modal-n-title')?.textContent);
+      }
+    });
+  }
+  if (nZoomBtn && nImg) {
+    nZoomBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (nImg.src) {
+        openLightbox(nImg.src, modalNews?.querySelector('#modal-n-title')?.textContent);
+      }
+    });
+  }
+
   window.openProductModal = function (id) {
     const p = store.getProductById(id);
     if (!p || !modalProduct) return;
@@ -650,14 +672,107 @@ document.addEventListener('DOMContentLoaded', () => {
     const n = store.getNewsById(id);
     if (!n || !modalNews) return;
 
-    modalNews.querySelector('#modal-n-title').textContent = n.title;
-    modalNews.querySelector('#modal-n-date').textContent = n.date;
-    modalNews.querySelector('#modal-n-author').textContent = n.author || 'PUCECO R&D';
-    modalNews.querySelector('#modal-n-img').src = n.image;
-    modalNews.querySelector('#modal-n-content').innerHTML = `
-      <p style="font-size:1.1rem;font-weight:500;color:var(--color-accent-text);margin-bottom:16px;">${escapeHtml(n.excerpt)}</p>
-      <p style="line-height:1.75;color:var(--color-text);">${escapeHtml(n.content || n.excerpt)}</p>
-    `;
+    // Tiêu đề bài viết
+    const titleEl = modalNews.querySelector('#modal-n-title');
+    if (titleEl) titleEl.textContent = n.title;
+
+    // Ngày xuất bản
+    const dateEl = modalNews.querySelector('#modal-n-date');
+    if (dateEl) dateEl.textContent = n.date || '';
+
+    // Tác giả / Phòng ban
+    const authorEl = modalNews.querySelector('#modal-n-author');
+    if (authorEl) authorEl.textContent = n.author || 'PUCECO R&D';
+
+    // Tính thời gian đọc ước tính
+    const readTimeEl = modalNews.querySelector('#modal-n-reading-time');
+    if (readTimeEl) {
+      const fullText = `${n.title || ''} ${n.excerpt || ''} ${n.content || ''}`;
+      const words = fullText.trim().split(/\s+/).filter(Boolean).length;
+      const minutes = Math.max(1, Math.ceil(words / 120));
+      readTimeEl.textContent = `${minutes} phút đọc`;
+    }
+
+    // Huy hiệu chủ đề / danh mục
+    const badgeEl = modalNews.querySelector('#modal-n-badge');
+    if (badgeEl) {
+      let badge = 'Tin tức & Sự kiện';
+      const textForTag = `${n.title || ''} ${n.author || ''}`.toLowerCase();
+      if (textForTag.includes('vùng trồng') || textForTag.includes('nông nghiệp') || textForTag.includes('tây nguyên') || textForTag.includes('vật liệu')) {
+        badge = 'Vùng Trồng Dược Liệu';
+      } else if (textForTag.includes('gmp') || textForTag.includes('tiêu chuẩn') || textForTag.includes('kiểm soát') || textForTag.includes('chất lượng')) {
+        badge = 'Chuẩn Hóa GMP & ISO';
+      } else if (textForTag.includes('nano') || textForTag.includes('curcumin') || textForTag.includes('r&d') || textForTag.includes('viện') || textForTag.includes('nghiên cứu')) {
+        badge = 'R&D & Đột Phá Khoa Học';
+      }
+      badgeEl.textContent = n.tag || badge;
+    }
+
+    // Màu nền gradient và Hình ảnh Cover Hero
+    const heroBg = modalNews.querySelector('#modal-n-hero-bg');
+    if (heroBg) {
+      heroBg.style.setProperty('--c1', n.bg1 || '#E6F1EA');
+      heroBg.style.setProperty('--c2', n.bg2 || '#C9E3D3');
+    }
+    const heroImg = modalNews.querySelector('#modal-n-img');
+    if (heroImg) {
+      heroImg.src = n.image;
+      heroImg.alt = n.title;
+    }
+
+    // Đoạn dẫn nhập (Sapo / Excerpt)
+    const leadBox = modalNews.querySelector('#modal-n-lead-box');
+    const excerptEl = modalNews.querySelector('#modal-n-excerpt');
+    if (n.excerpt && n.excerpt.trim()) {
+      if (leadBox) leadBox.style.display = 'flex';
+      if (excerptEl) excerptEl.textContent = n.excerpt;
+    } else if (leadBox) {
+      leadBox.style.display = 'none';
+    }
+
+    // Nội dung bài viết (tự động ngắt đoạn p văn bản chuẩn)
+    const contentEl = modalNews.querySelector('#modal-n-content');
+    if (contentEl) {
+      const bodyText = n.content || n.excerpt || '';
+      const paragraphs = bodyText.split(/\r?\n\s*\r?\n|\r?\n/).map(p => p.trim()).filter(Boolean);
+      if (paragraphs.length > 0) {
+        contentEl.innerHTML = paragraphs.map(p => `<p class="news-modal-p">${escapeHtml(p)}</p>`).join('');
+      } else {
+        contentEl.innerHTML = `<p class="news-modal-p">${escapeHtml(bodyText)}</p>`;
+      }
+    }
+
+    // Nút chia sẻ bài viết
+    const shareBtn = modalNews.querySelector('#modal-n-share-btn');
+    if (shareBtn) {
+      shareBtn.onclick = () => {
+        const shareUrl = `${window.location.origin}${window.location.pathname}#news-${n.id || ''}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            showToast('Đã sao chép liên kết bài viết!', 'success');
+          }).catch(() => {
+            showToast('Đã sao chép liên kết!', 'success');
+          });
+        } else {
+          showToast('Đã sao chép liên kết bài viết!', 'success');
+        }
+      };
+    }
+
+    // Nút liên hệ tư vấn hợp tác
+    const contactBtn = modalNews.querySelector('#modal-n-contact-btn');
+    if (contactBtn) {
+      contactBtn.onclick = () => {
+        closeModals();
+        const contactSelect = document.querySelector('#contact-product');
+        const msgTextarea = document.querySelector('#contact-form textarea[name="message"]');
+        if (contactSelect) contactSelect.value = 'Yêu cầu tư vấn khác';
+        if (msgTextarea && n.title) {
+          msgTextarea.value = `Tôi quan tâm đến nội dung bài viết: "${n.title}". Vui lòng liên hệ tư vấn thêm cho tôi.`;
+        }
+        document.querySelector('#lien-he')?.scrollIntoView({ behavior: 'smooth' });
+      };
+    }
 
     modalNews.classList.add('is-open');
     document.body.style.overflow = 'hidden';
