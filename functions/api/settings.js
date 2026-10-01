@@ -1,4 +1,5 @@
 // Cloudflare Pages Function: /api/settings
+import { requireAdmin } from '../_shared/auth.js';
 // GET /api/settings - Lấy cài đặt website (Hotline, Email, Địa chỉ, Slogan, Stats)
 // POST /api/settings - Lưu cài đặt website
 
@@ -8,7 +9,6 @@ const DEFAULT_SETTINGS = {
   address: 'Thôn Đìa, Xã Nam Hồng, Huyện Đông Anh, TP Hà Nội',
   slogan: 'Chiết xuất từ thiên nhiên, tin cậy từ khoa học. Nhà cung ứng nguyên liệu dược phẩm chuẩn hóa hàng đầu.',
   mapsUrl: 'https://maps.google.com/?q=Thôn+Đìa,+Nam+Hồng,+Đông+Anh,+Hà+Nội',
-  adminPasswordHash: 'admin123',
   stats: {
     years: 12,
     partners: 320,
@@ -28,7 +28,15 @@ export async function onRequestGet(context) {
   try {
     const row = await db.prepare('SELECT value FROM settings WHERE key = ?').bind('site_settings').first();
     if (row && row.value) {
-      return new Response(row.value, {
+      let publicSettings = {};
+      try {
+        publicSettings = JSON.parse(row.value);
+      } catch (e) {
+        publicSettings = {};
+      }
+      delete publicSettings.adminPassword;
+      delete publicSettings.adminPasswordHash;
+      return new Response(JSON.stringify(publicSettings), {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
@@ -48,6 +56,9 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestPost(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   if (!db) {
     return new Response(JSON.stringify({ error: 'Database binding not available' }), {

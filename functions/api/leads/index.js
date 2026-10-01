@@ -1,8 +1,12 @@
 // Cloudflare Pages Function: /api/leads
 // GET /api/leads - Lấy danh sách liên hệ khách hàng (Admin)
 // POST /api/leads - Tiếp nhận liên hệ / yêu cầu báo giá từ form Website
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestGet(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   if (!db) {
     return new Response(JSON.stringify({ error: 'Database binding not available' }), {

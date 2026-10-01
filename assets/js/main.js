@@ -13,6 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll(selector).forEach(el => el.textContent = text);
   }
 
+  function safeColor(value, fallback) {
+    return /^#[0-9a-f]{3,8}$/i.test(String(value || '')) ? value : fallback;
+  }
+
+  function safeUrl(value, fallback = '#') {
+    const url = String(value || '').trim();
+    return /^(#|https?:\/\/|mailto:|tel:)/i.test(url) ? url : fallback;
+  }
+
   // Helper gán html (hỗ trợ <br>) an toàn
   function setElemHtml(selector, html) {
     if (html === undefined || html === null) return;
@@ -57,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const menuItems = store.getMenu().filter(m => m.enabled !== false);
       if (menuItems.length > 0) {
         menuEl.innerHTML = menuItems.map(m => `
-          <a href="${escapeHtml(m.url)}" target="${m.target || '_self'}">${escapeHtml(m.label)}</a>
+          <a href="${escapeHtml(safeUrl(m.url))}" target="${m.target === '_blank' ? '_blank' : '_self'}">${escapeHtml(m.label)}</a>
         `).join('');
       }
     }
@@ -70,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cta.enabled !== false) {
           ctaEl.style.display = '';
           ctaEl.textContent = cta.text || 'Nhận mẫu thử';
-          ctaEl.href = cta.url || '#lien-he';
+          ctaEl.href = safeUrl(cta.url, '#lien-he');
         } else {
           ctaEl.style.display = 'none';
         }
@@ -92,12 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const introBtn1 = document.querySelector('[data-bind="intro-btn1"]');
     if (introBtn1) {
       introBtn1.textContent = intro.btn1Text || 'Tìm Hiểu Sản Phẩm';
-      introBtn1.href = intro.btn1Url || '#noi-bat';
+      introBtn1.href = safeUrl(intro.btn1Url, '#noi-bat');
     }
     const introBtn2 = document.querySelector('[data-bind="intro-btn2"]');
     if (introBtn2) {
       introBtn2.textContent = intro.btn2Text || 'Xem Công Thức Mẫu';
-      introBtn2.href = intro.btn2Url || '#cong-thuc-mau';
+      introBtn2.href = safeUrl(intro.btn2Url, '#cong-thuc-mau');
     }
 
     // Stats
@@ -174,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const certs = store.getCertifications().filter(c => c.enabled !== false);
       if (certs.length > 0) {
         certsRow.innerHTML = certs.map(c => `
-          <div class="cert-badge" data-cert-id="${c.id}" ${c.desc ? `title="${escapeHtml(c.desc)}"` : ''}>
+          <div class="cert-badge" data-cert-id="${escapeHtml(c.id)}" ${c.desc ? `title="${escapeHtml(c.desc)}"` : ''}>
             <b>${escapeHtml(c.code)}</b>
             <span>${escapeHtml(c.title)}</span>
           </div>
@@ -195,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.querySelectorAll('[data-bind="address-link"]').forEach(el => {
       if (settings.mapsUrl) {
-        el.href = settings.mapsUrl;
+        el.href = safeUrl(settings.mapsUrl, '#lien-he');
       }
     });
     document.querySelectorAll('[data-bind="zalo-link"]').forEach(el => {
@@ -204,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.querySelectorAll('[data-bind="facebook-link"]').forEach(el => {
       if (settings.facebookUrl) {
-        el.href = settings.facebookUrl;
+        el.href = safeUrl(settings.facebookUrl, '#lien-he');
       }
     });
 
@@ -213,15 +222,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (featuredGrid) {
       const featured = products.filter(p => p.isFeatured !== false);
       featuredGrid.innerHTML = featured.map(p => `
-        <article class="product-card" data-product-id="${p.id}" onclick="openProductModal('${p.id}')">
-          <div class="product-thumb" style="--c1:${p.bg1 || '#E6F1EA'};--c2:${p.bg2 || '#C9E3D3'}">
-            <img class="product-art" src="${p.image}" alt="${p.name}" loading="lazy">
-            <span class="product-tag ${p.tag === 'Organic' ? 'alt' : ''}">${p.tag || 'Bán chạy'}</span>
+        <article class="product-card" data-product-id="${escapeHtml(p.id)}" onclick="openProductModal(decodeURIComponent('${encodeURIComponent(String(p.id))}'))">
+          <div class="product-thumb" style="--c1:${safeColor(p.bg1, '#E6F1EA')};--c2:${safeColor(p.bg2, '#C9E3D3')}" data-product-id="${escapeHtml(p.id)}">
+            <img class="product-art" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy">
+            <span class="product-tag ${p.tag === 'Organic' ? 'alt' : ''}">${escapeHtml(p.tag || 'Bán chạy')}</span>
           </div>
           <div class="product-body">
-            <h3>${p.name}</h3>
-            <p>${p.desc}</p>
-            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openProductModal('${p.id}')">
+            <h3>${escapeHtml(p.name)}</h3>
+            <p>${escapeHtml(p.desc)}</p>
+            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openProductModal(decodeURIComponent('${encodeURIComponent(String(p.id))}'))">
               Chi tiết <span aria-hidden="true">→</span>
             </button>
           </div>
@@ -234,15 +243,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (newGrid) {
       const newProds = products.filter(p => p.isNew === true);
       newGrid.innerHTML = newProds.map(p => `
-        <article class="product-card wide" data-product-id="${p.id}" onclick="openProductModal('${p.id}')">
-          <div class="product-thumb tall" style="--c1:${p.bg1 || '#F3EFE2'};--c2:${p.bg2 || '#E0CFA6'}">
-            <img class="product-art" src="${p.image}" alt="${p.name}" loading="lazy">
-            <span class="product-tag">${p.tag || 'Mới'}</span>
+        <article class="product-card wide" data-product-id="${escapeHtml(p.id)}" onclick="openProductModal(decodeURIComponent('${encodeURIComponent(String(p.id))}'))">
+          <div class="product-thumb tall" style="--c1:${safeColor(p.bg1, '#F3EFE2')};--c2:${safeColor(p.bg2, '#E0CFA6')}" data-product-id="${escapeHtml(p.id)}">
+            <img class="product-art" src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy">
+            <span class="product-tag">${escapeHtml(p.tag || 'Mới')}</span>
           </div>
           <div class="product-body">
-            <h3>${p.name}</h3>
-            <p>${p.desc}</p>
-            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openProductModal('${p.id}')">
+            <h3>${escapeHtml(p.name)}</h3>
+            <p>${escapeHtml(p.desc)}</p>
+            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openProductModal(decodeURIComponent('${encodeURIComponent(String(p.id))}'))">
               Yêu cầu mẫu thử <span aria-hidden="true">→</span>
             </button>
           </div>
@@ -255,20 +264,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (formGrid && store.getFormulations) {
       const forms = store.getFormulations();
       formGrid.innerHTML = forms.map(f => `
-        <article class="formulation-card" data-formulation-id="${f.id}" onclick="openFormulationModal('${f.id}')">
+        <article class="formulation-card" data-formulation-id="${escapeHtml(f.id)}" onclick="openFormulationModal(decodeURIComponent('${encodeURIComponent(String(f.id))}'))">
           <div class="formulation-thumb">
-            <img src="${f.image}" alt="${f.name}" loading="lazy">
-            <span class="formulation-tag">${f.badge || 'Công thức mẫu'}</span>
+            <img src="${escapeHtml(f.image)}" alt="${escapeHtml(f.name)}" loading="lazy">
+            <span class="formulation-tag">${escapeHtml(f.badge || 'Công thức mẫu')}</span>
           </div>
           <div class="formulation-body">
-            <h3>${f.name}</h3>
-            <p>${f.desc}</p>
+            <h3>${escapeHtml(f.name)}</h3>
+            <p>${escapeHtml(f.desc)}</p>
             <div class="formulation-meta">
-              <div><b>Dạng bào chế:</b> ${f.dosageForm || '—'}</div>
-              <div><b>Hoạt chất PUCECO:</b> ${f.mainIngredient || '—'}</div>
+              <div><b>Dạng bào chế:</b> ${escapeHtml(f.dosageForm || '—')}</div>
+              <div><b>Hoạt chất PUCECO:</b> ${escapeHtml(f.mainIngredient || '—')}</div>
             </div>
             <div class="formulation-actions">
-              <button type="button" class="link-arrow" onclick="event.stopPropagation(); openFormulationModal('${f.id}')">
+              <button type="button" class="link-arrow" onclick="event.stopPropagation(); openFormulationModal(decodeURIComponent('${encodeURIComponent(String(f.id))}'))">
                 Chi tiết <span aria-hidden="true">→</span>
               </button>
             </div>
@@ -283,15 +292,15 @@ document.addEventListener('DOMContentLoaded', () => {
       newsGrid.innerHTML = news.map(n => {
         const cardImg = getNewsDisplayImage(n.image);
         return `
-        <article class="news-card" data-news-id="${n.id}" onclick="openNewsModal('${n.id}')">
-          <div class="news-thumb" style="--c1:${n.bg1 || '#E6F1EA'};--c2:${n.bg2 || '#C9E3D3'}">
+        <article class="news-card" data-news-id="${escapeHtml(n.id)}" onclick="openNewsModal(decodeURIComponent('${encodeURIComponent(String(n.id))}'))">
+          <div class="news-thumb" style="--c1:${safeColor(n.bg1, '#E6F1EA')};--c2:${safeColor(n.bg2, '#C9E3D3')}">
             <img class="news-art" src="${escapeHtml(cardImg)}" alt="${escapeHtml(n.title)}" loading="lazy">
           </div>
           <div class="news-body">
             <p class="news-date">${escapeHtml(n.date)}</p>
             <h3>${escapeHtml(n.title)}</h3>
             <p>${escapeHtml(n.excerpt)}</p>
-            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openNewsModal('${n.id}')">
+            <button type="button" class="link-arrow" onclick="event.stopPropagation(); openNewsModal(decodeURIComponent('${encodeURIComponent(String(n.id))}'))">
               Đọc tiếp <span aria-hidden="true">→</span>
             </button>
           </div>
@@ -305,8 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (prodSelect) {
       const currentValue = prodSelect.value;
       prodSelect.innerHTML = '<option value="">-- Chọn sản phẩm / công thức quan tâm --</option>' +
-        products.map(p => `<option value="${p.name}">${p.name} (${p.tag || 'Chuẩn'})</option>`).join('') +
-        (store.getFormulations ? store.getFormulations().map(f => `<option value="Công thức: ${f.name}">[Công thức] ${f.name}</option>`).join('') : '') +
+        products.map(p => `<option value="${escapeHtml(p.name)}">${escapeHtml(p.name)} (${escapeHtml(p.tag || 'Chuẩn')})</option>`).join('') +
+        (store.getFormulations ? store.getFormulations().map(f => `<option value="Công thức: ${escapeHtml(f.name)}">[Công thức] ${escapeHtml(f.name)}</option>`).join('') : '') +
         '<option value="Yêu cầu tư vấn khác">Yêu cầu nghiên cứu / Khác</option>';
       if (currentValue) prodSelect.value = currentValue;
     }
@@ -430,13 +439,13 @@ document.addEventListener('DOMContentLoaded', () => {
       html += `<div style="font-size:0.8rem;font-weight:700;color:var(--color-accent);margin:6px 12px 8px;text-transform:uppercase;letter-spacing:0.05em">Sản phẩm (${matchedProducts.length})</div>`;
       matchedProducts.forEach(p => {
         html += `
-          <div class="search-item" onclick="openProductModal('${p.id}'); closeSearch();">
-            <img class="search-thumb" src="${p.image}" alt="">
+          <div class="search-item" onclick="openProductModal(decodeURIComponent('${encodeURIComponent(String(p.id))}')); closeSearch();">
+            <img class="search-thumb" src="${escapeHtml(p.image)}" alt="">
             <div class="search-info">
               <h5>${escapeHtml(p.name)}</h5>
               <p>${escapeHtml(p.desc.substring(0, 75))}...</p>
             </div>
-            <span class="search-badge">${p.tag || 'Sản phẩm'}</span>
+            <span class="search-badge">${escapeHtml(p.tag || 'Sản phẩm')}</span>
           </div>
         `;
       });
@@ -446,13 +455,13 @@ document.addEventListener('DOMContentLoaded', () => {
       html += `<div style="font-size:0.8rem;font-weight:700;color:var(--color-accent-strong);margin:14px 12px 8px;text-transform:uppercase;letter-spacing:0.05em">Công thức mẫu (${matchedForms.length})</div>`;
       matchedForms.forEach(f => {
         html += `
-          <div class="search-item" onclick="openFormulationModal('${f.id}'); closeSearch();">
-            <img class="search-thumb" src="${f.image}" alt="">
+          <div class="search-item" onclick="openFormulationModal(decodeURIComponent('${encodeURIComponent(String(f.id))}')); closeSearch();">
+            <img class="search-thumb" src="${escapeHtml(f.image)}" alt="">
             <div class="search-info">
               <h5>${escapeHtml(f.name)}</h5>
               <p>${escapeHtml(f.desc.substring(0, 75))}...</p>
             </div>
-            <span class="search-badge">${f.badge || 'Công thức'}</span>
+            <span class="search-badge">${escapeHtml(f.badge || 'Công thức')}</span>
           </div>
         `;
       });
@@ -462,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
       html += `<div style="font-size:0.8rem;font-weight:700;color:var(--color-accent-2-ink);margin:14px 12px 8px;text-transform:uppercase;letter-spacing:0.05em">Tin tức & Nghiên cứu (${matchedNews.length})</div>`;
       matchedNews.forEach(n => {
         html += `
-          <div class="search-item" onclick="openNewsModal('${n.id}'); closeSearch();">
+          <div class="search-item" onclick="openNewsModal(decodeURIComponent('${encodeURIComponent(String(n.id))}')); closeSearch();">
             <img class="search-thumb" src="${escapeHtml(getNewsDisplayImage(n.image))}" alt="">
             <div class="search-info">
               <h5>${escapeHtml(n.title)}</h5>
@@ -503,8 +512,8 @@ document.addEventListener('DOMContentLoaded', () => {
           let titleFormatted = escapeHtml(s.title || '').replace(/\r?\n/g, '<br>');
           titleFormatted = titleFormatted.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
 
-          const g1 = s.g1 || '#18181B';
-          const g2 = s.g2 || (idx === 0 ? '#B72622' : idx === 1 ? '#991B1B' : '#D4322D');
+          const g1 = safeColor(s.g1, '#18181B');
+          const g2 = safeColor(s.g2, idx === 0 ? '#B72622' : idx === 1 ? '#991B1B' : '#D4322D');
           const bgImg = s.bgImage || (idx === 0 ? 'assets/images/hero-bg-1.jpg' : idx === 1 ? 'assets/images/hero-bg-2.jpg' : 'assets/images/hero-bg-3.jpg');
           const artImg = s.artImage || (idx === 0 ? 'assets/images/hero-botanical-1.svg' : idx === 1 ? 'assets/images/hero-botanical-2.svg' : 'assets/images/hero-botanical-3.svg');
           const badgeTop = s.badgeTop || (idx === 0 ? 'GMP' : idx === 1 ? '100%' : 'R&D');
@@ -524,8 +533,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   <h1 class="hero-title">${titleFormatted}</h1>
                   ${s.lede ? `<p class="hero-lede">${escapeHtml(s.lede)}</p>` : ''}
                   <div class="hero-actions">
-                    ${btn1Text ? `<a class="btn primary lg" href="${escapeHtml(btn1Link)}">${escapeHtml(btn1Text)}</a>` : ''}
-                    ${btn2Text ? `<a class="btn ghost lg light" href="${escapeHtml(btn2Link)}">${escapeHtml(btn2Text)}</a>` : ''}
+                    ${btn1Text ? `<a class="btn primary lg" href="${escapeHtml(safeUrl(btn1Link))}">${escapeHtml(btn1Text)}</a>` : ''}
+                    ${btn2Text ? `<a class="btn ghost lg light" href="${escapeHtml(safeUrl(btn2Link))}">${escapeHtml(btn2Text)}</a>` : ''}
                   </div>
                 </div>
                 <div class="hero-visual" aria-hidden="true">

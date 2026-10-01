@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/news
 // GET /api/news - Lấy danh sách tin tức/blog
 // POST /api/news - Thêm mới hoặc cập nhật bài viết
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestGet(context) {
   const db = context.env.DB;
@@ -32,6 +33,9 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestPost(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   if (!db) {
     return new Response(JSON.stringify({ error: 'Database binding not available' }), {

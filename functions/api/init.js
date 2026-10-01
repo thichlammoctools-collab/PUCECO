@@ -21,6 +21,7 @@ export async function onRequestPost(context) {
           tag TEXT DEFAULT 'Bán chạy',
           desc TEXT,
           image TEXT,
+          images TEXT,
           bg1 TEXT DEFAULT '#E6F1EA',
           bg2 TEXT DEFAULT '#C9E3D3',
           is_featured INTEGER DEFAULT 1,
@@ -84,6 +85,13 @@ export async function onRequestPost(context) {
     ]);
 
     // 2. Kiểm tra nếu chưa có sản phẩm nào thì chèn seed data
+    // Add columns introduced after the initial deployment without dropping data.
+    try {
+      await db.prepare('ALTER TABLE products ADD COLUMN images TEXT').run();
+    } catch (e) {
+      // The column already exists on initialized databases.
+    }
+
     const prodCount = await db.prepare('SELECT COUNT(*) as count FROM products').first();
     if (prodCount && prodCount.count === 0) {
       await db.batch([

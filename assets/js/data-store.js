@@ -527,11 +527,14 @@
       try {
         const s = JSON.parse(storedSettings);
         const updatedSettings = {
+          ...DEFAULT_SETTINGS,
           ...s,
-          slogan: DEFAULT_SETTINGS.slogan,
-          aboutIntro: DEFAULT_SETTINGS.aboutIntro,
-          values: DEFAULT_SETTINGS.values,
-          stats: (!s.stats || s.stats.years === 12 || s.stats.partners === 320) ? DEFAULT_SETTINGS.stats : (s.stats || DEFAULT_SETTINGS.stats),
+          // Preserve values edited in Admin. Only replace the old placeholder
+          // values from earlier releases during the one-time migration.
+          slogan: s.slogan || DEFAULT_SETTINGS.slogan,
+          aboutIntro: s.aboutIntro || DEFAULT_SETTINGS.aboutIntro,
+          values: { ...DEFAULT_SETTINGS.values, ...(s.values || {}) },
+          stats: { ...DEFAULT_SETTINGS.stats, ...(s.stats || {}) },
           email: s.email === 'info@puceco.vn' ? DEFAULT_SETTINGS.email : (s.email || DEFAULT_SETTINGS.email),
           hotline: s.hotline === '1900 123 456' ? DEFAULT_SETTINGS.hotline : (s.hotline || DEFAULT_SETTINGS.hotline),
           address: (s.address === 'Khu Công Nghệ Cao, Hà Nội, Việt Nam' || s.address === 'Khu Công Nghệ Cao, Hà Nội') ? DEFAULT_SETTINGS.address : (s.address || DEFAULT_SETTINGS.address),
@@ -698,6 +701,17 @@
           const normalized = cloudNews.map(normalizeNewsItem);
           localStorage.setItem(STORAGE_KEY_NEWS, JSON.stringify(normalized));
           emitSync('NEWS_SYNCED', normalized);
+        }
+      }
+
+      // 3.5. Đồng bộ Công thức mẫu từ D1. Keep local seed data when the
+      // backend has not been initialized yet, but hydrate it once records exist.
+      const formRes = await fetch('/api/formulations').catch(() => null);
+      if (formRes && formRes.ok) {
+        const cloudForms = await formRes.json();
+        if (Array.isArray(cloudForms) && cloudForms.length > 0) {
+          localStorage.setItem(STORAGE_KEY_FORMULATIONS, JSON.stringify(cloudForms));
+          emitSync('FORMULATIONS_SYNCED', cloudForms);
         }
       }
 

@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/news/:id
 // GET /api/news/:id - Lấy chi tiết 1 bài viết
 // DELETE /api/news/:id - Xóa bài viết khỏi CSDL
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestGet(context) {
   const db = context.env.DB;
@@ -34,6 +35,9 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestDelete(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   const id = context.params.id;
 

@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/formulations/:id
 // GET /api/formulations/:id - Lấy chi tiết 1 công thức mẫu
 // DELETE /api/formulations/:id - Xóa công thức khỏi CSDL
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestGet(context) {
   const db = context.env.DB;
@@ -56,6 +57,9 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestDelete(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   const id = context.params.id;
 

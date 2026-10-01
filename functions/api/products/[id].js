@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/products/:id
 // GET /api/products/:id - Lấy chi tiết 1 sản phẩm
 // DELETE /api/products/:id - Xóa sản phẩm khỏi CSDL
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestGet(context) {
   const db = context.env.DB;
@@ -22,6 +23,14 @@ export async function onRequestGet(context) {
       });
     }
 
+    let images = [];
+    try {
+      images = JSON.parse(r.images || '[]');
+    } catch (e) {
+      images = [];
+    }
+    if (!images.length && r.image) images = [r.image];
+
     const product = {
       id: r.id,
       name: r.name,
@@ -29,6 +38,7 @@ export async function onRequestGet(context) {
       tag: r.tag,
       desc: r.desc,
       image: r.image,
+      images,
       bg1: r.bg1,
       bg2: r.bg2,
       isFeatured: !!r.is_featured,
@@ -54,6 +64,9 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestDelete(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   const id = context.params.id;
 

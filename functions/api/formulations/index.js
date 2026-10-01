@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/formulations
 // GET /api/formulations - Lấy danh sách công thức mẫu
 // POST /api/formulations - Thêm hoặc cập nhật công thức mẫu
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestGet(context) {
   const db = context.env.DB;
@@ -52,6 +53,9 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestPost(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   if (!db) {
     return new Response(JSON.stringify({ error: 'Database binding not available' }), {

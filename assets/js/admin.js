@@ -30,10 +30,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const pass = loginPassword.value.trim();
-      if (store.verifyAdminPassword(pass)) {
+      let apiAuthenticated = false;
+      let apiUnavailable = false;
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        apiAuthenticated = response.ok;
+      } catch (error) {
+        // Keep local/offline mode usable when the API is unavailable.
+        apiUnavailable = true;
+      }
+
+      if (apiAuthenticated || (apiUnavailable && store.verifyAdminPassword(pass))) {
         store.setAdminSession(true);
         loginError.style.display = 'none';
         loginForm.reset();
@@ -47,9 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (logoutBtn) {
-    logoutBtn.addEventListener('click', (e) => {
+    logoutBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       if (confirm('Bạn có chắc chắn muốn đăng xuất khỏi trang Quản trị?')) {
+        try {
+          await fetch('/api/auth', { method: 'DELETE', credentials: 'include' });
+        } catch (error) {
+          // Local/offline mode has no remote session to clear.
+        }
         store.setAdminSession(false);
         checkAuth();
       }

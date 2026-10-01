@@ -8,10 +8,12 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const ROOT_DIR = __dirname;
 const DATA_FILE = path.join(ROOT_DIR, '.local-data.json');
+const adminSessions = new Set();
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -61,14 +63,32 @@ function parseBody(req) {
   });
 }
 
-function sendJson(res, data, status = 200) {
+function sendJson(res, data, status = 200, extraHeaders = {}) {
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
+    'Access-Control-Allow-Headers': 'Content-Type',
+    ...extraHeaders
   });
   res.end(JSON.stringify(data));
+}
+
+function getSessionToken(req) {
+  const cookieHeader = req.headers.cookie || '';
+  const item = cookieHeader.split(';').map(part => part.trim()).find(part => part.startsWith('puceco_admin_session='));
+  return item ? item.slice('puceco_admin_session='.length) : '';
+}
+
+function isAdminRequest(req) {
+  const token = getSessionToken(req);
+  return Boolean(token && adminSessions.has(token));
+}
+
+function requireAdmin(req, res) {
+  if (isAdminRequest(req)) return false;
+  sendJson(res, { error: 'Admin authentication required' }, 401);
+  return true;
 }
 
 const server = http.createServer(async (req, res) => {
@@ -101,6 +121,7 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, data.products || []);
       }
       if (req.method === 'POST') {
+        if (requireAdmin(req, res)) return;
         const item = await parseBody(req);
         if (!item.id) item.id = 'prod-' + Date.now();
         const idx = data.products.findIndex(p => p.id === item.id);
@@ -114,6 +135,7 @@ const server = http.createServer(async (req, res) => {
     if (pathname.startsWith('/api/products/')) {
       const id = pathname.replace('/api/products/', '');
       if (req.method === 'DELETE') {
+        if (requireAdmin(req, res)) return;
         data.products = data.products.filter(p => p.id !== id);
         saveLocalData(data);
         return sendJson(res, { success: true, id });
@@ -130,6 +152,7 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, data.news || []);
       }
       if (req.method === 'POST') {
+        if (requireAdmin(req, res)) return;
         const item = await parseBody(req);
         if (!item.id) item.id = 'news-' + Date.now();
         const idx = data.news.findIndex(n => n.id === item.id);
@@ -143,6 +166,7 @@ const server = http.createServer(async (req, res) => {
     if (pathname.startsWith('/api/news/')) {
       const id = pathname.replace('/api/news/', '');
       if (req.method === 'DELETE') {
+        if (requireAdmin(req, res)) return;
         data.news = data.news.filter(n => n.id !== id);
         saveLocalData(data);
         return sendJson(res, { success: true, id });
@@ -156,6 +180,7 @@ const server = http.createServer(async (req, res) => {
     // 4. /api/leads
     if (pathname === '/api/leads') {
       if (req.method === 'GET') {
+        if (requireAdmin(req, res)) return;
         return sendJson(res, data.leads || []);
       }
       if (req.method === 'POST') {
@@ -171,6 +196,7 @@ const server = http.createServer(async (req, res) => {
     if (pathname.startsWith('/api/leads/')) {
       const id = pathname.replace('/api/leads/', '');
       if (req.method === 'PATCH') {
+        if (requireAdmin(req, res)) return;
         const body = await parseBody(req);
         const item = data.leads.find(l => l.id === id);
         if (item) {
@@ -180,6 +206,7 @@ const server = http.createServer(async (req, res) => {
         }
       }
       if (req.method === 'DELETE') {
+        if (requireAdmin(req, res)) return;
         data.leads = data.leads.filter(l => l.id !== id);
         saveLocalData(data);
         return sendJson(res, { success: true, id });
@@ -189,9 +216,13 @@ const server = http.createServer(async (req, res) => {
     // 5. /api/settings
     if (pathname === '/api/settings') {
       if (req.method === 'GET') {
-        return sendJson(res, data.settings || {});
+        const publicSettings = { ...(data.settings || {}) };
+        delete publicSettings.adminPassword;
+        delete publicSettings.adminPasswordHash;
+        return sendJson(res, publicSettings);
       }
       if (req.method === 'POST') {
+        if (requireAdmin(req, res)) return;
         const body = await parseBody(req);
         data.settings = { ...data.settings, ...body };
         saveLocalData(data);
@@ -201,6 +232,7 @@ const server = http.createServer(async (req, res) => {
 
     // 6. /api/upload
     if (pathname === '/api/upload' && req.method === 'POST') {
+      if (requireAdmin(req, res)) return;
       const body = await parseBody(req);
       return sendJson(res, {
         success: true,
@@ -213,7 +245,20 @@ const server = http.createServer(async (req, res) => {
     if (pathname === '/api/auth' && req.method === 'POST') {
       const body = await parseBody(req);
       const isOk = body.password === 'admin123' || body.password === data.settings?.adminPassword;
-      return sendJson(res, { success: isOk }, isOk ? 200 : 401);
+      if (!isOk) return sendJson(res, { success: false }, 401);
+      const token = crypto.randomBytes(32).toString('hex');
+      adminSessions.add(token);
+      return sendJson(res, { success: true }, 200, {
+        'Set-Cookie': `puceco_admin_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=28800`
+      });
+    }
+
+    if (pathname === '/api/auth' && req.method === 'DELETE') {
+      const token = getSessionToken(req);
+      if (token) adminSessions.delete(token);
+      return sendJson(res, { success: true }, 200, {
+        'Set-Cookie': 'puceco_admin_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0'
+      });
     }
 
     // 8. /api/certifications
@@ -222,6 +267,7 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, data.certifications || []);
       }
       if (req.method === 'POST') {
+        if (requireAdmin(req, res)) return;
         const body = await parseBody(req);
         data.certifications = Array.isArray(body) ? body : (body.certifications || []);
         saveLocalData(data);
@@ -236,6 +282,7 @@ const server = http.createServer(async (req, res) => {
         return sendJson(res, data.formulations);
       }
       if (req.method === 'POST') {
+        if (requireAdmin(req, res)) return;
         const item = await parseBody(req);
         if (!item.id) item.id = 'form-' + Date.now();
         const idx = data.formulations.findIndex(f => f.id === item.id);
@@ -250,6 +297,7 @@ const server = http.createServer(async (req, res) => {
       const id = pathname.replace('/api/formulations/', '');
       if (!data.formulations) data.formulations = [];
       if (req.method === 'DELETE') {
+        if (requireAdmin(req, res)) return;
         data.formulations = data.formulations.filter(f => f.id !== id);
         saveLocalData(data);
         return sendJson(res, { success: true, id });
@@ -267,8 +315,11 @@ const server = http.createServer(async (req, res) => {
   }
 
   const filePath = path.normalize(path.join(ROOT_DIR, pathname));
+  const relativePath = path.relative(ROOT_DIR, filePath);
 
-  if (!filePath.startsWith(ROOT_DIR)) {
+  // A string prefix check allows sibling paths such as `PUCECO-backup`.
+  // Resolve the path relative to the document root and reject escapes.
+  if (relativePath.startsWith('..' + path.sep) || path.isAbsolute(relativePath)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('403 Forbidden');
     return;

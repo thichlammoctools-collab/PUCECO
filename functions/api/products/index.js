@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/products
 // GET /api/products - Lấy danh sách sản phẩm
 // POST /api/products - Thêm hoặc cập nhật sản phẩm
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestGet(context) {
   const db = context.env.DB;
@@ -15,13 +16,22 @@ export async function onRequestGet(context) {
     const { results } = await db.prepare('SELECT * FROM products ORDER BY is_featured DESC, created_at DESC').all();
     
     // Map D1 rows to format expected by client
-    const products = (results || []).map(r => ({
+    const products = (results || []).map(r => {
+      let images = [];
+      try {
+        images = JSON.parse(r.images || '[]');
+      } catch (e) {
+        images = [];
+      }
+      if (!images.length && r.image) images = [r.image];
+      return {
       id: r.id,
       name: r.name,
       category: r.category,
       tag: r.tag,
       desc: r.desc,
       image: r.image,
+      images,
       bg1: r.bg1,
       bg2: r.bg2,
       isFeatured: !!r.is_featured,
@@ -33,7 +43,8 @@ export async function onRequestGet(context) {
         origin: r.origin || ''
       },
       createdAt: r.created_at
-    }));
+      };
+    });
 
     return new Response(JSON.stringify(products), {
       headers: {
@@ -51,6 +62,9 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestPost(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   if (!db) {
     return new Response(JSON.stringify({ error: 'Database binding not available' }), {
@@ -67,6 +81,9 @@ export async function onRequestPost(context) {
     const tag = body.tag || 'Mới';
     const desc = body.desc || '';
     const image = body.image || 'assets/images/prod-green-tea.jpg';
+    const images = JSON.stringify(
+      Array.isArray(body.images) && body.images.length > 0 ? body.images.slice(0, 3) : [image]
+    );
     const bg1 = body.bg1 || '#E6F1EA';
     const bg2 = body.bg2 || '#C9E3D3';
     const isFeatured = body.isFeatured !== false ? 1 : 0;
@@ -78,14 +95,15 @@ export async function onRequestPost(context) {
     const createdAt = body.createdAt || new Date().toISOString().split('T')[0];
 
     await db.prepare(`
-      INSERT INTO products (id, name, category, tag, desc, image, bg1, bg2, is_featured, is_new, active_ingredient, coa_standard, formulation, origin, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO products (id, name, category, tag, desc, image, images, bg1, bg2, is_featured, is_new, active_ingredient, coa_standard, formulation, origin, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
         name = excluded.name,
         category = excluded.category,
         tag = excluded.tag,
         desc = excluded.desc,
         image = excluded.image,
+        images = excluded.images,
         bg1 = excluded.bg1,
         bg2 = excluded.bg2,
         is_featured = excluded.is_featured,
@@ -94,10 +112,10 @@ export async function onRequestPost(context) {
         coa_standard = excluded.coa_standard,
         formulation = excluded.formulation,
         origin = excluded.origin
-    `).bind(id, name, category, tag, desc, image, bg1, bg2, isFeatured, isNew, activeIngredient, coaStandard, formulation, origin, createdAt).run();
+    `).bind(id, name, category, tag, desc, image, images, bg1, bg2, isFeatured, isNew, activeIngredient, coaStandard, formulation, origin, createdAt).run();
 
     const savedProduct = {
-      id, name, category, tag, desc, image, bg1, bg2,
+      id, name, category, tag, desc, image, images: JSON.parse(images), bg1, bg2,
       isFeatured: !!isFeatured, isNew: !!isNew,
       details: { activeIngredient, coaStandard, formulation, origin },
       createdAt

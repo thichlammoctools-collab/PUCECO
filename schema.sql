@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS products (
   tag TEXT DEFAULT 'Bán chạy',
   desc TEXT,
   image TEXT,
+  images TEXT,
   bg1 TEXT DEFAULT '#E6F1EA',
   bg2 TEXT DEFAULT '#C9E3D3',
   is_featured INTEGER DEFAULT 1,

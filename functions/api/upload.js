@@ -1,7 +1,11 @@
 // Cloudflare Pages Function: /api/upload
 // POST /api/upload - Nhận file ảnh và lưu trữ vào Cloudflare R2 Storage (có fallback nếu chưa cấu hình R2)
+import { requireAdmin } from '../_shared/auth.js';
 
 export async function onRequestPost(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const bucket = context.env.BUCKET;
   const contentType = context.request.headers.get('content-type') || '';
 

@@ -1,9 +1,8 @@
 // Cloudflare Pages Function: /api/auth
 // POST /api/auth - Xác thực đăng nhập trang Quản trị Admin
+import { clearSessionCookie, createAdminSession, sessionCookie, verifyAdminPassword } from '../_shared/auth.js';
 
 export async function onRequestPost(context) {
-  const db = context.env.DB;
-  
   try {
     const { password } = await context.request.json();
     if (!password) {
@@ -13,23 +12,18 @@ export async function onRequestPost(context) {
       });
     }
 
-    let adminPass = 'admin123';
-    if (db) {
-      const row = await db.prepare('SELECT value FROM settings WHERE key = ?').bind('site_settings').first();
-      if (row && row.value) {
-        try {
-          const s = JSON.parse(row.value);
-          if (s.adminPasswordHash) adminPass = s.adminPasswordHash;
-        } catch (e) {}
-      }
-    }
-
-    if (password === adminPass) {
+    if (await verifyAdminPassword(context, password)) {
+      const token = await createAdminSession(context);
       return new Response(JSON.stringify({
         success: true,
         message: 'Authenticated successfully'
       }), {
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Credentials': 'true',
+          'Set-Cookie': sessionCookie(token, context.request)
+        }
       });
     } else {
       return new Response(JSON.stringify({
@@ -53,8 +47,19 @@ export async function onRequestOptions() {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type'
+    }
+  });
+}
+
+export async function onRequestDelete(context) {
+  return new Response(JSON.stringify({ success: true }), {
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+      'Set-Cookie': clearSessionCookie(context.request)
     }
   });
 }

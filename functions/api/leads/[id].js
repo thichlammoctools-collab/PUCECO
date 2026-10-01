@@ -1,8 +1,12 @@
 // Cloudflare Pages Function: /api/leads/:id
 // PATCH /api/leads/:id - Cập nhật trạng thái liên hệ (new, contacted, sample_sent, completed)
 // DELETE /api/leads/:id - Xóa liên hệ
+import { requireAdmin } from '../../_shared/auth.js';
 
 export async function onRequestPatch(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   const id = context.params.id;
 
@@ -31,6 +35,9 @@ export async function onRequestPatch(context) {
 }
 
 export async function onRequestDelete(context) {
+  const authError = await requireAdmin(context);
+  if (authError) return authError;
+
   const db = context.env.DB;
   const id = context.params.id;
 
